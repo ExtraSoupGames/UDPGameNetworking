@@ -1,6 +1,6 @@
 #include "MessageSender.h"
 
-void MessageSender::SendMessageDirect(NetworkMessageTypes type, string message, SDLNet_DatagramSocket* socket, SDLNet_Address* address, int port)
+void MessageSender::SendMessageDirect(NetworkMessageTypes type, std::string message, SDLNet_DatagramSocket* socket, SDLNet_Address* address, int port)
 {
 	NetworkUtilities::SendMessageDirect(type, message, socket, address, port);
 }
@@ -21,16 +21,16 @@ MessageSender::MessageSender(SDLNet_DatagramSocket* pSocket)
 	resendMessageRate = 100;
 }
 
-void MessageSender::SendImportantMessageTo(string message, NetworkMessageTypes type, SDLNet_Address* address, int port)
+void MessageSender::SendImportantMessageTo(std::string message, NetworkMessageTypes type, SDLNet_Address* address, int port)
 {
-	UnsentMessage* msg = new UnsentMessage(message, new ConnectedClient(address, port), nextMessageID, type);
+	UnsentMessage* msg = new UnsentMessage(message, new ClientInfo(address, port), nextMessageID, type);
 	messages.push_back(msg);
 	IncrementNextMessage();
 }
 
-void MessageSender::SendImportantMessageTo(string message, NetworkMessageTypes type, ConnectedClient* client)
+void MessageSender::SendImportantMessageTo(std::string message, NetworkMessageTypes type, ClientInfo* client)
 {
-	UnsentMessage* msg = new UnsentMessage(message, new ConnectedClient(*client), nextMessageID, type);
+	UnsentMessage* msg = new UnsentMessage(message, new ClientInfo(*client), nextMessageID, type);
 	messages.push_back(msg);
 	IncrementNextMessage();
 

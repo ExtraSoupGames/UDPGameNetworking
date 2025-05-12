@@ -1,19 +1,19 @@
 #include "ServerMessageSender.h"
-void ServerMessageSender::BroadcastImportantMessage(NetworkMessageTypes type, string message) {
+void ServerMessageSender::BroadcastImportantMessage(NetworkMessageTypes type, std::string message) {
 	if (clients.size() == 0) {
-		cout << "Tried to send an important message but no clients were available to receive it! " << endl;
+		std::cout << "Tried to send an important message but no clients were available to receive it! " << std::endl;
 		return;
 	}
 	broadcasts.push_back(new ImportantBroadcast(type, message, clients, nextMessageID));
 	IncrementNextMessage();
 }
-void ServerMessageSender::SendImportantMessage(NetworkMessageTypes type, string message, ConnectedClient* client)
+void ServerMessageSender::SendImportantMessage(NetworkMessageTypes type, std::string message, ClientInfo* client)
 {
 	MessageSender::SendImportantMessageTo(message, type, client);
 }
-ServerMessageSender::ServerMessageSender(SDLNet_DatagramSocket* socket, vector<ConnectedClient*> connectedClients) : MessageSender(socket)
+ServerMessageSender::ServerMessageSender(SDLNet_DatagramSocket* socket, std::vector<ClientInfo*>* connectedClients) : MessageSender(socket)
 {
-	clients = vector<ConnectedClient*>(connectedClients);
+	clients = std::vector<ClientInfo*>(*connectedClients);
 }
 void ServerMessageSender::ConfirmationRecieved(NetworkMessage* message)
 {
@@ -32,18 +32,18 @@ void ServerMessageSender::ConfirmationRecieved(NetworkMessage* message)
 	//Is this really necessary if it works and shouldnt need to be edited ever again?
 }
 
-void ServerMessageSender::NewClientConnected(ConnectedClient* client)
+void ServerMessageSender::NewClientConnected(ClientInfo* client)
 {
-	clients.push_back(new ConnectedClient(*client));
+	clients.push_back(new ClientInfo(*client));
 }
 
-void ServerMessageSender::ClientDisconnected(ConnectedClient* client)
+void ServerMessageSender::ClientDisconnected(ClientInfo* client)
 {
 	messageCheckers.erase(remove_if(messageCheckers.begin(), messageCheckers.end(),
 		[client](ClientMessageChecker* disconnector) {return (SDLNet_GetAddressString(disconnector->client->address) == SDLNet_GetAddressString(client->address) && disconnector->client->clientPort == client->clientPort); }),
 		messageCheckers.end());
 	clients.erase(remove_if(clients.begin(), clients.end(),
-		[client](ConnectedClient* disconnector) {return (SDLNet_GetAddressString(disconnector->address) == SDLNet_GetAddressString(client->address) && disconnector->clientPort == client->clientPort); }),
+		[client](ClientInfo* disconnector) {return (SDLNet_GetAddressString(disconnector->address) == SDLNet_GetAddressString(client->address) && disconnector->clientPort == client->clientPort); }),
 		clients.end());
 }
 
@@ -69,7 +69,7 @@ ImportantMessage* ServerMessageSender::ProcessImportantMessage(NetworkMessage* i
 		}
 	}
 	//new client sender, add new message checker
-	messageCheckers.push_back(new ClientMessageChecker(new ConnectedClient(importantMessage->GetAddress(), importantMessage->GetPort())));
+	messageCheckers.push_back(new ClientMessageChecker(new ClientInfo(importantMessage->GetAddress(), importantMessage->GetPort())));
 	return new ImportantMessage(importantMessage);
 }
 
@@ -86,7 +86,7 @@ void ServerMessageSender::SendUnsentMessages(bool skipCheck = false)
 void ServerMessageSender::SendUnsentBroadcasts()
 {
 	for (ImportantBroadcast* b : broadcasts) {
-		for (ConnectedClient* c : b->unconfirmedClients) {
+		for (ClientInfo* c : b->unconfirmedClients) {
 			SendMessageDirect(b->type, b->message, socket, c->address, c->clientPort);
 		}
 	}
@@ -96,7 +96,7 @@ void ImportantBroadcast::ConfirmationReceived(NetworkMessage* confirmationMessag
 {
 	auto client = find_if(unconfirmedClients.begin(),
 		unconfirmedClients.end(),
-		[confirmationMessage](ConnectedClient* c) {return (c->address == confirmationMessage->GetAddress() && c->clientPort == confirmationMessage->GetPort()); });
+		[confirmationMessage](ClientInfo* c) {return (c->address == confirmationMessage->GetAddress() && c->clientPort == confirmationMessage->GetPort()); });
 	if (client == unconfirmedClients.end()) {
 		return;
 	}
@@ -108,7 +108,7 @@ bool ImportantBroadcast::IsFullyConfirmed()
 	return unconfirmedClients.empty();
 }
 
-ImportantBroadcast::ImportantBroadcast(NetworkMessageTypes type, string message, vector<ConnectedClient*> clients, int ID)
+ImportantBroadcast::ImportantBroadcast(NetworkMessageTypes type, std::string message, std::vector<ClientInfo*> clients, int ID)
 	: UnsentMessage(message, nullptr, ID, type)
 {
 	unconfirmedClients = clients;

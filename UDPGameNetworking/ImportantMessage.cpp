@@ -20,7 +20,7 @@ int ImportantMessage::GetMessageID()
 	return messageID;;
 }
 
-string ImportantMessage::Debug()
+std::string ImportantMessage::Debug()
 {
-	return "This is an important message with ID: " + to_string(messageID) + " and with type: " + to_string(messageType) + " And the contents are : " + extraData;
+	return "This is an important message with ID: " + std::to_string(messageID) + " and with type: " + std::to_string(messageType) + " And the contents are : " + extraData;
 }

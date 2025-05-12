@@ -6,7 +6,7 @@ ClientMessageSender::ClientMessageSender(SDLNet_DatagramSocket* socket, SDLNet_A
 	serverPort = portForServer;
 }
 
-void ClientMessageSender::SendImportantMessage(NetworkMessageTypes type, string message)
+void ClientMessageSender::SendImportantMessage(NetworkMessageTypes type, std::string message)
 {
 	MessageSender::SendImportantMessageTo(message, type, server, serverPort);
 }

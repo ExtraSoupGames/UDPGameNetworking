@@ -1,17 +1,16 @@
 #pragma once
 #include "MessageSender.h"
-using namespace std;
 struct ImportantBroadcast : public UnsentMessage {
-	vector<ConnectedClient*> unconfirmedClients;
+	std::vector<ClientInfo*> unconfirmedClients;
 	void ConfirmationReceived(NetworkMessage* confirmationMessage);
 	bool IsFullyConfirmed();
-	ImportantBroadcast(NetworkMessageTypes type, string message, vector<ConnectedClient*> clients, int ID);
+	ImportantBroadcast(NetworkMessageTypes type, std::string message, std::vector<ClientInfo*> clients, int ID);
 };
 struct ClientMessageChecker {
-	ConnectedClient* client;
-	vector<int> receivedMessages;
-	//ConnectedClient is deleted automatically
-	ClientMessageChecker(ConnectedClient* c) {
+	ClientInfo* client;
+	std::vector<int> receivedMessages;
+	//ClientInfo is deleted automatically
+	ClientMessageChecker(ClientInfo* c) {
 		client = c;
 	}
 	~ClientMessageChecker() {
@@ -20,20 +19,20 @@ struct ClientMessageChecker {
 };
 class ServerMessageSender : public MessageSender {
 private:
-	vector<ConnectedClient*> clients;
-	vector<ImportantBroadcast*> broadcasts;
-	vector<ClientMessageChecker*> messageCheckers;
+	std::vector<ClientInfo*> clients;
+	std::vector<ImportantBroadcast*> broadcasts;
+	std::vector<ClientMessageChecker*> messageCheckers;
 	void SendUnsentBroadcasts();
 public:
-	ServerMessageSender(SDLNet_DatagramSocket* socket, vector<ConnectedClient*> clients);
-	void SendImportantMessage(NetworkMessageTypes type, string message, ConnectedClient* client);
-	void BroadcastImportantMessage(NetworkMessageTypes type, string message);
+	ServerMessageSender(SDLNet_DatagramSocket* socket, std::vector<ClientInfo*>* clients);
+	void SendImportantMessage(NetworkMessageTypes type, std::string message, ClientInfo* client);
+	void BroadcastImportantMessage(NetworkMessageTypes type, std::string message);
 
 	virtual void SendUnsentMessages(bool skipCheck) override;
 	virtual void ConfirmationRecieved(NetworkMessage* message) override;
 
-	void NewClientConnected(ConnectedClient* client);
-	void ClientDisconnected(ConnectedClient* client);
+	void NewClientConnected(ClientInfo* client);
+	void ClientDisconnected(ClientInfo* client);
 
 	virtual ImportantMessage* ProcessImportantMessage(NetworkMessage* importantMessage) override;
 };

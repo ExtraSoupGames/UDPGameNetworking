@@ -30,10 +30,13 @@ set(SOURCES
     UDPGameNetworking/NetworkUtilities.cpp
     UDPGameNetworking/ImportantMessage.cpp
     UDPGameNetworking/NetworkMessage.cpp
+    UDPGameNetworking/Server.cpp
+    UDPGameNetworking/Client.cpp
+    UDPGameNetworking/NetworkedObject.cpp
     UDPGameNetworking/Senders/MessageSender.cpp
     UDPGameNetworking/Senders/ServerMessageSender.cpp
     UDPGameNetworking/Senders/ClientMessageSender.cpp
- "UDPGameNetworking/Server.cpp")
+)
 add_executable(UDPGameNetworking ${SOURCES})
 
 target_include_directories(UDPGameNetworking PRIVATE 

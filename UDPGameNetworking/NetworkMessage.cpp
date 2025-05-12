@@ -7,21 +7,21 @@ NetworkMessage::NetworkMessage(SDLNet_Datagram* datagramToProcess)
 {
 	Uint8* buffer = (Uint8*)datagramToProcess->buf;
 	int bufferLength = datagramToProcess->buflen;
-	string outData = NetworkUtilities::UnpackMessage(buffer, bufferLength);
+	std::string outData = NetworkUtilities::UnpackMessage(buffer, bufferLength);
 	messageType = NetworkUtilities::UnpackHeader(outData);
 	extraData = outData.substr(4);
 	fromAddress = SDLNet_RefAddress(datagramToProcess->addr);
 	fromPort = datagramToProcess->port;
 }
 
-string NetworkMessage::Debug()
+std::string NetworkMessage::Debug()
 {
-	return "The type of this message is: " + to_string(messageType) + " And the contents are: " + extraData;
+	return "The type of this message is: " + std::to_string(messageType) + " And the contents are: " + extraData;
 }
 NetworkMessageTypes NetworkMessage::GetMessageType() {
 	return messageType;
 }
-string NetworkMessage::GetExtraData()
+std::string NetworkMessage::GetExtraData()
 {
 	return extraData;
 }
@@ -34,13 +34,13 @@ int NetworkMessage::GetPort()
 	return fromPort;
 }
 
-string NetworkMessage::RemoveStateVerification()
+std::string NetworkMessage::RemoveStateVerification()
 {
 	if (extraData.size() < 4) {
-		cout << "State verification remove from network message requested of a message smaller than 4 bits" << endl;
+		std::cout << "State verification remove from network message requested of a message smaller than 4 bits" << std::endl;
 		return "";
 	}
-	string out = extraData.substr(0, 4);
+	std::string out = extraData.substr(0, 4);
 	extraData = extraData.substr(4);
 	return out;
 }

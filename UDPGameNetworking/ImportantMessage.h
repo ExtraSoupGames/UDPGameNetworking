@@ -9,5 +9,5 @@ public:
 	ImportantMessage(NetworkMessage* msg);
 	~ImportantMessage();
 	int GetMessageID();
-	virtual string Debug() override;
+	virtual std::string Debug() override;
 };

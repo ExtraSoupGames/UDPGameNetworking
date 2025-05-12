@@ -5,15 +5,14 @@
 #include <SDL3/SDL.h>
 #include <SDL3_net/SDL_net.h>
 #include "../NetworkUtilities.h"
-#include "../ConnectedClient.h"
+#include "../ClientInfo.h"
 #include "../ImportantMessage.h"
-using namespace std;
 struct UnsentMessage {
 	int ID;
-	ConnectedClient* target;
+	ClientInfo* target;
 	NetworkMessageTypes type;
-	string message;
-	UnsentMessage(string msg, ConnectedClient* msgTarget, int id, NetworkMessageTypes t) {
+	std::string message;
+	UnsentMessage(std::string msg, ClientInfo* msgTarget, int id, NetworkMessageTypes t) {
 		message = NetworkUtilities::AsBinaryString(3, id) + msg;
 		ID = id;
 		target = msgTarget;
@@ -29,13 +28,13 @@ private:
 	int resendMessageRate;
 protected:
 	SDLNet_DatagramSocket* socket;
-	vector<UnsentMessage*> messages;
-	vector<int> receivedMessages;
+	std::vector<UnsentMessage*> messages;
+	std::vector<int> receivedMessages;
 	void IncrementNextMessage();
 	int nextMessageID;
 	MessageSender(SDLNet_DatagramSocket* socket);
-	void SendImportantMessageTo(string message, NetworkMessageTypes type, ConnectedClient* client);
-	void SendMessageDirect(NetworkMessageTypes type, string message, SDLNet_DatagramSocket* socket, SDLNet_Address* address, int port);
+	void SendImportantMessageTo(std::string message, NetworkMessageTypes type, ClientInfo* client);
+	void SendMessageDirect(NetworkMessageTypes type, std::string message, SDLNet_DatagramSocket* socket, SDLNet_Address* address, int port);
 	bool ShouldResendMessages();
 public:
 	virtual void SendUnsentMessages(bool skipCheck);
@@ -50,5 +49,5 @@ public:
 	//	return;
 	//}
 	virtual ImportantMessage* ProcessImportantMessage(NetworkMessage* importantMessage);
-	void SendImportantMessageTo(string message, NetworkMessageTypes type, SDLNet_Address* address, int port);
+	void SendImportantMessageTo(std::string message, NetworkMessageTypes type, SDLNet_Address* address, int port);
 };

@@ -2,21 +2,20 @@
 #include <string>
 #include "SDL3_net/SDL_net.h"
 enum NetworkMessageTypes;
-using namespace std;
 class NetworkMessage {
 private:
 protected:
 	NetworkMessageTypes messageType;
 	SDLNet_Address* fromAddress;
 	int fromPort;
-	string extraData;
+	std::string extraData;
 public:
 	NetworkMessage();
 	NetworkMessage(SDLNet_Datagram* datagramToProcess);
-	virtual string Debug();
+	virtual std::string Debug();
 	NetworkMessageTypes GetMessageType();
-	string GetExtraData();
+	std::string GetExtraData();
 	SDLNet_Address* GetAddress();
 	int GetPort();
-	string RemoveStateVerification();
+	std::string RemoveStateVerification();
 };

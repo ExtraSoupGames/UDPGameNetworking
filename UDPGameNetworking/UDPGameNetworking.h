@@ -3,5 +3,7 @@
 //See README.md
 #pragma once
 
-#include <iostream>
+#include "Client.h"
+#include "Server.h"
+#include "NetworkedObject.h"
 
