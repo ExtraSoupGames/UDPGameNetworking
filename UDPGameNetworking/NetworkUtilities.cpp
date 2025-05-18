@@ -68,6 +68,7 @@ bool NetworkUtilities::GetNextIncoming(SDLNet_DatagramSocket* socket, NetworkMes
 		message = tempMessage;
 		return message != nullptr;
 	}
+	std::cout << SDL_GetError() << std::endl;
 	return false;
 }
 

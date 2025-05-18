@@ -30,6 +30,7 @@ set(SOURCES
     UDPGameNetworking/NetworkUtilities.cpp
     UDPGameNetworking/ImportantMessage.cpp
     UDPGameNetworking/NetworkMessage.cpp
+    UDPGameNetworking/TestingFunctions.cpp
     UDPGameNetworking/Server.cpp
     UDPGameNetworking/Client.cpp
     UDPGameNetworking/NetworkedObject.cpp

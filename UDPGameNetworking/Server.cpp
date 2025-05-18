@@ -47,7 +47,7 @@ Server::Server(std::string ip, int port)
     }
     //TODO fix blocking until address is resolved
     SDLNet_WaitUntilResolved(address, -1);
-    socket = SDLNet_CreateDatagramSocket(address, 66661);
+    socket = SDLNet_CreateDatagramSocket(address, port);
     if (!socket) {
         printf("Failed to create UDP socket: %s\n", SDL_GetError());
         return;
@@ -68,7 +68,8 @@ void Server::Update(float deltaTime)
     NetworkMessage* msg = nullptr;
     while (NetworkUtilities::GetNextIncoming(socket, msg, sender)) {
         std::cout << "Done: extra data was" << msg->GetExtraData() << std::endl;
-
+        delete msg;
+        msg = nullptr;
     }
 }
 

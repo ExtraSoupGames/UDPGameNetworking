@@ -20,9 +20,8 @@ public:
 	//disconnects from a server (with no warning to the server) and cleares network pointers
 	void Disconnect();
 	//process incoming packets and trigger relevant callbacks
-	void Update();
+	void Update(float deltaTime);
 	bool IsConnected();
 	void SendServerMessage(NetworkMessageTypes type, std::string msg, std::string stateCode);
 	ImportantMessage* ProcessImportantMessage(NetworkMessage* msg);
-
 };

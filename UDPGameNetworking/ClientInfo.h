@@ -2,17 +2,17 @@
 #include <SDL3_net/SDL_net.h>
 struct ClientInfo {
 	SDLNet_Address* address;
-	int clientPort; // TODO rename to port
-	ClientInfo(SDLNet_Address* pAddress, int pClientPort) {
+	int port;
+	ClientInfo(SDLNet_Address* pAddress, int pPort) {
 		address = pAddress;
-		clientPort = pClientPort;
+		port = pPort;
 	}
 	~ClientInfo() {
 		delete address;
 	}
 	bool operator==(const ClientInfo& other) {
-		return other.clientPort
-			== clientPort
+		return other.port
+			== port
 			&& SDLNet_GetAddressString(other.address)
 			== SDLNet_GetAddressString(address);
 	}
