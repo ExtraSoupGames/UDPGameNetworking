@@ -24,4 +24,6 @@ public:
 	bool IsConnected();
 	void SendServerMessage(NetworkMessageTypes type, std::string msg, std::string stateCode);
 	ImportantMessage* ProcessImportantMessage(NetworkMessage* msg);
+
+	//TODO add creating owned objects
 };

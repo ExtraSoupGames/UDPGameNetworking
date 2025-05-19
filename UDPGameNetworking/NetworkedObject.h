@@ -9,4 +9,19 @@ private:
 	int ID;
 protected:
 public:
+	/*
+	owned objects need to:
+		stream their data
+	non owned objects need to:
+		process incoming stream data
+		tell wrapper how to render them
+	*/
+	//so little to no functionality is shared
+	//TODO seperate into owned and non owned
+	//For owned:
+	//TODO Stream data
+	//For non owned:
+	//TODO basic stream processing
+	//TODO lerping
+	//TODO wrapper render instructions
 };
