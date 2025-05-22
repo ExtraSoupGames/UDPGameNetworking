@@ -64,6 +64,7 @@ void Client::Update(float deltaTime)
 		NetworkMessage* msg = nullptr;
 		while (NetworkUtilities::GetNextIncoming(socket, msg, sender)) {
 			//TODO user managed callbacks on messages received
+			//TODO library managed non owned objects updated and wrapper notified
 			delete msg;
 			msg = nullptr;
 		}

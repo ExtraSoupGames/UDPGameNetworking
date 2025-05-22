@@ -93,6 +93,7 @@ NetworkMessageTypes NetworkUtilities::UnpackHeader(std::string inData)
 	case 2: return UserImportant; // Important
 	case 3: return UserUnImportant;
 	case 4: return ImportantMessageConfirmation;
+	case 5: return IDRequest;
 	default: return Error;
 	}
 }
@@ -102,6 +103,7 @@ std::string NetworkUtilities::PackHeader(NetworkMessageTypes type) {
 	case UserImportant: return "0010";
 	case UserUnImportant: return "0011";
 	case ImportantMessageConfirmation: return "0100";
+	case IDRequest: return "0101";
 	default: return "0000";
 	}
 }

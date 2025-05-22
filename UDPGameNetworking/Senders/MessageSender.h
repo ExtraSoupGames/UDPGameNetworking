@@ -5,14 +5,14 @@
 #include <SDL3/SDL.h>
 #include <SDL3_net/SDL_net.h>
 #include "../NetworkUtilities.h"
-#include "../ClientInfo.h"
+#include "../EndpointInfo.h"
 #include "../ImportantMessage.h"
 struct UnsentMessage {
 	int ID;
-	ClientInfo* target;
+	EndpointInfo* target;
 	NetworkMessageTypes type;
 	std::string message;
-	UnsentMessage(std::string msg, ClientInfo* msgTarget, int id, NetworkMessageTypes t) {
+	UnsentMessage(std::string msg, EndpointInfo* msgTarget, int id, NetworkMessageTypes t) {
 		message = NetworkUtilities::AsBinaryString(3, id) + msg;
 		ID = id;
 		target = msgTarget;
@@ -33,7 +33,7 @@ protected:
 	void IncrementNextMessage();
 	int nextMessageID;
 	MessageSender(SDLNet_DatagramSocket* socket);
-	void SendImportantMessageTo(std::string message, NetworkMessageTypes type, ClientInfo* client);
+	void SendImportantMessageTo(std::string message, NetworkMessageTypes type, EndpointInfo* client);
 	void SendMessageDirect(NetworkMessageTypes type, std::string message, SDLNet_DatagramSocket* socket, SDLNet_Address* address, int port);
 	bool ShouldResendMessages();
 public:

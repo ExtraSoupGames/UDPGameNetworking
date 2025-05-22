@@ -14,6 +14,7 @@ enum NetworkMessageTypes {
 	UserImportant,
 	UserUnImportant,
 	ImportantMessageConfirmation,
+	IDRequest,
 	Error // used for testing
 };
 

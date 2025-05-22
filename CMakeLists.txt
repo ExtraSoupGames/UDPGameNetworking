@@ -33,12 +33,14 @@ set(SOURCES
     UDPGameNetworking/TestingFunctions.cpp
     UDPGameNetworking/Server.cpp
     UDPGameNetworking/Client.cpp
-    UDPGameNetworking/NetworkedObject.cpp
+    "UDPGameNetworking/NetworkedObject/NetworkObject.cpp"
+    UDPGameNetworking/NetworkedObject/OwnedNO.cpp
+    UDPGameNetworking/NetworkedObject/UnownedNO.cpp
     UDPGameNetworking/Senders/MessageSender.cpp
     UDPGameNetworking/Senders/ServerMessageSender.cpp
     UDPGameNetworking/Senders/ClientMessageSender.cpp
 )
-add_executable(UDPGameNetworking ${SOURCES})
+add_executable(UDPGameNetworking ${SOURCES} "UDPGameNetworking/NetworkedObject/OwnedNO.h" "UDPGameNetworking/NetworkedObject/UnownedNO.cpp" "UDPGameNetworking/NetworkedObject/UnownedNO.h" "UDPGameNetworking/NetworkedObject/NetworkedValue.cpp" "UDPGameNetworking/NetworkedObject/NetworkedValue.h" "UDPGameNetworking/NetworkedObject/ObjectDataProcessor.h" "UDPGameNetworking/NetworkedObject/ObjectDataProcessor.cpp")
 
 target_include_directories(UDPGameNetworking PRIVATE 
     ${SDL3_INCLUDE_DIR} 
