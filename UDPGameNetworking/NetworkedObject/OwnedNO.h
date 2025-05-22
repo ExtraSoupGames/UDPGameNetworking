@@ -4,7 +4,9 @@
 #include "../NetworkUtilities.h"
 #include "SDL3_net/SDL_net.h"
 #include "NetworkedValue.h"
-static int objectIDLength = 8;
+#include "ObjectDataProcessor.h"
+static int objectIDLength = 8; // number of digits in an object ID
+//Note that object IDs are sent in BCD format so ID length in messages will be 4x this
 static float objectStreamRate = 100; // one data stream message per X ms
 //A network object owned by this client, it's incoming data is provided by the wrapper and it streams data
 // to other clients

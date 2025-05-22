@@ -2,7 +2,7 @@
 
 void OwnedNetworkObject::StreamSend(EndpointInfo* server, SDLNet_DatagramSocket* socket)
 {
-	NetworkUtilities::SendMessageTo(NetworkedObjectMsg, "", socket, server->address, server->port);
+	NetworkUtilities::SendMessageTo(NetworkedObjectMsg, ObjectDataProcessor::ConstructDataStream(networkedValues), socket, server->address, server->port);
 }
 
 void OwnedNetworkObject::SendIDRequest(EndpointInfo* server, SDLNet_DatagramSocket* socket)

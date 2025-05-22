@@ -2,6 +2,7 @@
 #include "NetworkObject.h"
 #include "../NetworkMessage.h"
 #include "NetworkedValue.h"
+#include "ObjectDataProcessor.h"
 #include <vector>
 //A network object owned by another client, it's incoming data is provided by the owning client, 
 // and it streams data to the wrapper for rendering
