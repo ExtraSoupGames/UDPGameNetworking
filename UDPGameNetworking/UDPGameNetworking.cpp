@@ -10,7 +10,7 @@
 
 int main()
 {
-	if (SDLNet_Init() < 0) {
+	if (!SDLNet_Init()) {
 		return 0;
 	}
 	std::cout << "Hello CMake." << std::endl;

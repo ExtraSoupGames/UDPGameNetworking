@@ -4,11 +4,11 @@ struct EndpointInfo {
 	SDLNet_Address* address;
 	int port;
 	EndpointInfo(SDLNet_Address* pAddress, int pPort) {
-		address = pAddress;
+		address = SDLNet_RefAddress(pAddress);
 		port = pPort;
 	}
 	~EndpointInfo() {
-		delete address;
+		SDLNet_UnrefAddress(address);
 	}
 	bool operator==(const EndpointInfo& other) {
 		return other.port

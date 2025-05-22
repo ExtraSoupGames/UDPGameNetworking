@@ -1,6 +1,7 @@
 #pragma once
 #include "Senders/ClientMessageSender.h"
-#include "NetworkedObject.h"
+#include "NetworkObjects/OwnedNo.h"
+#include "NetworkObjects/UnownedNO.h"
 class Client {
 private:
 	//TODO extract to UDPEndpoint
@@ -9,8 +10,8 @@ private:
 	ClientMessageSender* sender;
 	SDLNet_DatagramSocket* socket;
 
-	std::vector<NetworkedObject*>* ownedObjects;
-	std::vector<NetworkedObject*>* nonOwnedObjects;
+	std::vector<OwnedNetworkObject*>* ownedObjects;
+	std::vector<UnownedNetworkObject*>* nonOwnedObjects;
 protected:
 public:
 	Client(int portToUse);

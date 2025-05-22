@@ -23,14 +23,14 @@ MessageSender::MessageSender(SDLNet_DatagramSocket* pSocket)
 
 void MessageSender::SendImportantMessageTo(std::string message, NetworkMessageTypes type, SDLNet_Address* address, int port)
 {
-	UnsentMessage* msg = new UnsentMessage(message, new ClientInfo(address, port), nextMessageID, type);
+	UnsentMessage* msg = new UnsentMessage(message, new EndpointInfo(address, port), nextMessageID, type);
 	messages.push_back(msg);
 	IncrementNextMessage();
 }
 
-void MessageSender::SendImportantMessageTo(std::string message, NetworkMessageTypes type, ClientInfo* client)
+void MessageSender::SendImportantMessageTo(std::string message, NetworkMessageTypes type, EndpointInfo* client)
 {
-	UnsentMessage* msg = new UnsentMessage(message, new ClientInfo(*client), nextMessageID, type);
+	UnsentMessage* msg = new UnsentMessage(message, new EndpointInfo(*client), nextMessageID, type);
 	messages.push_back(msg);
 	IncrementNextMessage();
 
@@ -55,7 +55,7 @@ void MessageSender::SendUnsentMessages(bool skipCheck = false)
 	}
 	for (UnsentMessage* message : messages) {
 
-		NetworkUtilities::SendMessageDirect(message->type, message->message, socket, message->target->address, message->target->clientPort);
+		NetworkUtilities::SendMessageDirect(message->type, message->message, socket, message->target->address, message->target->port);
 	}
 }
 

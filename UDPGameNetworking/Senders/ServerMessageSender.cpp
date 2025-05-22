@@ -7,13 +7,13 @@ void ServerMessageSender::BroadcastImportantMessage(NetworkMessageTypes type, st
 	broadcasts.push_back(new ImportantBroadcast(type, message, clients, nextMessageID));
 	IncrementNextMessage();
 }
-void ServerMessageSender::SendImportantMessage(NetworkMessageTypes type, std::string message, ClientInfo* client)
+void ServerMessageSender::SendImportantMessage(NetworkMessageTypes type, std::string message, EndpointInfo* client)
 {
 	MessageSender::SendImportantMessageTo(message, type, client);
 }
-ServerMessageSender::ServerMessageSender(SDLNet_DatagramSocket* socket, std::vector<ClientInfo*>* connectedClients) : MessageSender(socket)
+ServerMessageSender::ServerMessageSender(SDLNet_DatagramSocket* socket, std::vector<EndpointInfo*>* connectedClients) : MessageSender(socket)
 {
-	clients = std::vector<ClientInfo*>(*connectedClients);
+	clients = std::vector<EndpointInfo*>(*connectedClients);
 }
 void ServerMessageSender::ConfirmationRecieved(NetworkMessage* message)
 {
@@ -32,18 +32,18 @@ void ServerMessageSender::ConfirmationRecieved(NetworkMessage* message)
 	//Is this really necessary if it works and shouldnt need to be edited ever again?
 }
 
-void ServerMessageSender::NewClientConnected(ClientInfo* client)
+void ServerMessageSender::NewClientConnected(EndpointInfo* client)
 {
-	clients.push_back(new ClientInfo(*client));
+	clients.push_back(new EndpointInfo(*client));
 }
 
-void ServerMessageSender::ClientDisconnected(ClientInfo* client)
+void ServerMessageSender::ClientDisconnected(EndpointInfo* client)
 {
 	messageCheckers.erase(remove_if(messageCheckers.begin(), messageCheckers.end(),
-		[client](ClientMessageChecker* disconnector) {return (SDLNet_GetAddressString(disconnector->client->address) == SDLNet_GetAddressString(client->address) && disconnector->client->clientPort == client->clientPort); }),
+		[client](ClientMessageChecker* disconnector) {return (SDLNet_GetAddressString(disconnector->client->address) == SDLNet_GetAddressString(client->address) && disconnector->client->port == client->port); }),
 		messageCheckers.end());
 	clients.erase(remove_if(clients.begin(), clients.end(),
-		[client](ClientInfo* disconnector) {return (SDLNet_GetAddressString(disconnector->address) == SDLNet_GetAddressString(client->address) && disconnector->clientPort == client->clientPort); }),
+		[client](EndpointInfo* disconnector) {return (SDLNet_GetAddressString(disconnector->address) == SDLNet_GetAddressString(client->address) && disconnector->port == client->port); }),
 		clients.end());
 }
 
@@ -56,7 +56,7 @@ ImportantMessage* ServerMessageSender::ProcessImportantMessage(NetworkMessage* i
 	//find the relevant message checker
 
 	for (ClientMessageChecker* c : messageCheckers) {
-		if (SDLNet_GetAddressString(c->client->address) == SDLNet_GetAddressString(importantMessage->GetAddress()) && c->client->clientPort == importantMessage->GetPort()) {
+		if (SDLNet_GetAddressString(c->client->address) == SDLNet_GetAddressString(importantMessage->GetAddress()) && c->client->port == importantMessage->GetPort()) {
 			//check if the message checker contains the message and if so return the new message
 			//construct an important message to read the message id
 			ImportantMessage* message = new ImportantMessage(importantMessage);
@@ -69,7 +69,7 @@ ImportantMessage* ServerMessageSender::ProcessImportantMessage(NetworkMessage* i
 		}
 	}
 	//new client sender, add new message checker
-	messageCheckers.push_back(new ClientMessageChecker(new ClientInfo(importantMessage->GetAddress(), importantMessage->GetPort())));
+	messageCheckers.push_back(new ClientMessageChecker(new EndpointInfo(importantMessage->GetAddress(), importantMessage->GetPort())));
 	return new ImportantMessage(importantMessage);
 }
 
@@ -86,8 +86,8 @@ void ServerMessageSender::SendUnsentMessages(bool skipCheck = false)
 void ServerMessageSender::SendUnsentBroadcasts()
 {
 	for (ImportantBroadcast* b : broadcasts) {
-		for (ClientInfo* c : b->unconfirmedClients) {
-			SendMessageDirect(b->type, b->message, socket, c->address, c->clientPort);
+		for (EndpointInfo* c : b->unconfirmedClients) {
+			SendMessageDirect(b->type, b->message, socket, c->address, c->port);
 		}
 	}
 }
@@ -96,7 +96,7 @@ void ImportantBroadcast::ConfirmationReceived(NetworkMessage* confirmationMessag
 {
 	auto client = find_if(unconfirmedClients.begin(),
 		unconfirmedClients.end(),
-		[confirmationMessage](ClientInfo* c) {return (c->address == confirmationMessage->GetAddress() && c->clientPort == confirmationMessage->GetPort()); });
+		[confirmationMessage](EndpointInfo* c) {return (c->address == confirmationMessage->GetAddress() && c->port == confirmationMessage->GetPort()); });
 	if (client == unconfirmedClients.end()) {
 		return;
 	}
@@ -108,7 +108,7 @@ bool ImportantBroadcast::IsFullyConfirmed()
 	return unconfirmedClients.empty();
 }
 
-ImportantBroadcast::ImportantBroadcast(NetworkMessageTypes type, std::string message, std::vector<ClientInfo*> clients, int ID)
+ImportantBroadcast::ImportantBroadcast(NetworkMessageTypes type, std::string message, std::vector<EndpointInfo*> clients, int ID)
 	: UnsentMessage(message, nullptr, ID, type)
 {
 	unconfirmedClients = clients;

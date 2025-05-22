@@ -3,7 +3,9 @@ class NetworkedValue {
 
 };
 class LerpedValue : public NetworkedValue {
-
+private:
+protected:
+public:
 };
 class PositionLerp2D : public LerpedValue {
 private:

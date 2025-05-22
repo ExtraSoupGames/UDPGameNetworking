@@ -7,8 +7,8 @@ Client::Client(int portToUse)
 	socket = nullptr;
 	serverAddress = nullptr;
 
-	ownedObjects = new std::vector<NetworkedObject*>();
-	nonOwnedObjects = new std::vector<NetworkedObject*>();
+	ownedObjects = new std::vector<OwnedNetworkObject*>();
+	nonOwnedObjects = new std::vector<UnownedNetworkObject*>();
 
 }
 

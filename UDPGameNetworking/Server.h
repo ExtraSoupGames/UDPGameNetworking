@@ -2,7 +2,8 @@
 #include "Senders/ServerMessageSender.h"
 #include <string>
 #include "Wrapper/IWrapper.h"
-#include "NetworkedObject.h"
+#include "NetworkObjects/OwnedNO.h"
+#include "NetworkObjects/UnownedNO.h"
 class Server {
 private:
 	//Extract to UDPEndpoint
@@ -11,18 +12,18 @@ private:
 	ServerMessageSender* sender;
 	SDLNet_DatagramSocket* socket;
 
-	std::vector<ClientInfo*>* connectedClients;
+	std::vector<EndpointInfo*>* connectedClients;
 
-	ClientInfo* connectorInfo;
+	EndpointInfo* connectorInfo;
 	int nextClientID;
 	bool connectingAClient;
 
-	std::vector<NetworkedObject*>* ownedObjects;
-	std::vector<NetworkedObject*>* nonOwnedObjects;
+	std::vector<OwnedNetworkObject*>* ownedObjects;
+	std::vector<UnownedNetworkObject*>* nonOwnedObjects;
 
-	void ConfirmClientConnection(ClientInfo* client);
-	void TryConnectClient(std::string inData, ClientInfo* client);
-	bool IsAlreadyConnected(ClientInfo* client);
+	void ConfirmClientConnection(EndpointInfo* client);
+	void TryConnectClient(std::string inData, EndpointInfo* client);
+	bool IsAlreadyConnected(EndpointInfo* client);
 protected:
 public:
 	Server(std::string ipAddress, int port);
@@ -31,7 +32,7 @@ public:
 	void ImportantBroadcast(NetworkMessageTypes type, std::string message);
 
 	int GetConnectedClientCount();
-	void SendMessageTo(NetworkMessageTypes type, std::string message, ClientInfo* receiver);
+	void SendMessageTo(NetworkMessageTypes type, std::string message, EndpointInfo* receiver);
 	ImportantMessage* ProcessImportantMessage(NetworkMessage* msg);
 	~Server();
 };
