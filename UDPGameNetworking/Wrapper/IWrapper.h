@@ -5,5 +5,4 @@ class IWrapper {
 private:
 protected:
 public:
-	
 };

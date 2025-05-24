@@ -1,8 +1,20 @@
 #include "ObjectDataProcessor.h"
-
+//Object data stream message format:
+//first object data ID
 void ObjectDataProcessor::UpdateValues(std::vector<NetworkedValue*>* values, NetworkMessage* msg)
 {
-	//TODO update each value inside by processing contents of network message
+	int msgLength = msg->GetExtraData().size();
+	int describedValueCount = msgLength / streamedValueSize;
+	if (describedValueCount < 1) return;
+	for (int i = 0; i < describedValueCount; i++) {
+		std::string streamData = msg->GetExtraData().substr(i * streamedValueSize, streamedValueSize);
+		int valueID = NetworkUtilities::IntFromBinaryString(streamData.substr(0,8), 2);
+		for (NetworkedValue* val : *values) {
+			if (val->GetID() == valueID) {
+				//TODO Update value with streamData.substr(8,56)
+			}
+		}
+	}
 	throw new std::exception; // Not yet implemented
 }
 

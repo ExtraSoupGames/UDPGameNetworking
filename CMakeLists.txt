@@ -41,6 +41,7 @@ set(SOURCES
     UDPGameNetworking/Senders/MessageSender.cpp
     UDPGameNetworking/Senders/ServerMessageSender.cpp
     UDPGameNetworking/Senders/ClientMessageSender.cpp
+    UDPGameNetworking/Wrapper/TestWrapper.cpp
 )
 add_executable(UDPGameNetworking ${SOURCES} )
 

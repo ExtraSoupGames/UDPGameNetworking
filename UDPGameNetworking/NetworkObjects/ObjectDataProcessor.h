@@ -2,6 +2,7 @@
 #include <vector>
 #include "NetworkedValue.h"
 #include "../NetworkMessage.h"
+#include "OwnedNO.h"
 class ObjectDataProcessor {
 private:
 protected:

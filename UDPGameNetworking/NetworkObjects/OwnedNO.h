@@ -10,6 +10,7 @@ static int objectIDLength = 8; // number of digits in an object ID
 static float objectStreamRate = 100; // one data stream message per X ms
 //A network object owned by this client, it's incoming data is provided by the wrapper and it streams data
 // to other clients
+static int streamedValueSize = 64; //number of bits per streamed value (8 for value ID, 56 for actual data)
 class OwnedNetworkObject : public NetworkObject {
 	//TODO Stream data
 private:
