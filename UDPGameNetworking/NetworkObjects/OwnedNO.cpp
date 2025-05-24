@@ -26,6 +26,7 @@ bool OwnedNetworkObject::IDRequestReceived(NetworkMessage* msg)
 	}
 	ID = NetworkUtilities::IntFromBinaryString(msg->GetExtraData(), objectIDLength);
 	initialized = true;
+	return true;
 }
 
 void OwnedNetworkObject::Update(float deltaTime, EndpointInfo* server, SDLNet_DatagramSocket* socket)

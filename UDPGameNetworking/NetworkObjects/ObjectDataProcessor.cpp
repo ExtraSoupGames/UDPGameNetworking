@@ -3,7 +3,7 @@
 //first object data ID
 void ObjectDataProcessor::UpdateValues(std::vector<NetworkedValue*>* values, NetworkMessage* msg)
 {
-	int msgLength = msg->GetExtraData().size();
+	int msgLength = (int)msg->GetExtraData().size();
 	int describedValueCount = msgLength / streamedValueSize;
 	if (describedValueCount < 1) return;
 	for (int i = 0; i < describedValueCount; i++) {

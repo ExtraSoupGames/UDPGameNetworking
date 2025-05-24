@@ -34,7 +34,6 @@ public:
 	//Returns true if object was initialized
 	bool IDRequestReceived(NetworkMessage* msg);
 
-
 	//Updates the object, sending a message if required
 	// @param deltaTime - the time in seconds since last update was called on this object
 	void Update(float deltaTime, EndpointInfo* server, SDLNet_DatagramSocket* socket); //TODO expand to include value updating

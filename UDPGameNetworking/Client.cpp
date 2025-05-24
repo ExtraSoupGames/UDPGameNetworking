@@ -25,9 +25,8 @@ Client::~Client()
 	delete nonOwnedObjects;
 
 	delete sender;
-	delete serverAddress;
+	SDLNet_UnrefAddress(serverAddress);
 	SDLNet_DestroyDatagramSocket(socket);
-	delete socket;
 }
 
 void Client::ConnectToServer(std::string address)

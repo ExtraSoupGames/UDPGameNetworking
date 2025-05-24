@@ -42,8 +42,9 @@ set(SOURCES
     UDPGameNetworking/Senders/ServerMessageSender.cpp
     UDPGameNetworking/Senders/ClientMessageSender.cpp
     UDPGameNetworking/Wrapper/TestWrapper.cpp
+    UDPGameNetworking/Wrapper/Callback.cpp
 )
-add_executable(UDPGameNetworking ${SOURCES} )
+add_executable(UDPGameNetworking ${SOURCES})
 
 target_include_directories(UDPGameNetworking PRIVATE 
     ${SDL3_INCLUDE_DIR} 
