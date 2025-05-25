@@ -1,5 +1,9 @@
 # UDPGameNetworking Library
-This is a Library for game networking over UDP
-It is intended to provide generic data streaming, networked value lerping, as well as message confirmations for user specific messages
-This library is still in development and most functionality is not yet implemented
-This library is intended to be wrapped for engine specific use
+UDPGameNetworking is a C++ library for game development networking, built on UDP. It is designed with Engine Agnosticity in mind, providing core functionality
+that can be wrapped or extended for use in game engines.
+
+### Features
+- Generic data streaming over UDP (WIP)
+- Networked value lerping (WIP)
+- Important message confirmation
+- Engine agnostic design

@@ -14,4 +14,5 @@ protected:
 public:
 	TestCallback(int callbackID);
 	virtual void Invoke() override;
+	virtual void RegisterObject() override;
 };
