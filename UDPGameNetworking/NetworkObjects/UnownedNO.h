@@ -14,5 +14,7 @@ private:
 	std::vector<NetworkedValue*>* networkedValues;
 protected:
 public:
-	void StreamDataReceived(NetworkMessage* msg);
+	UnownedNetworkObject();
+	~UnownedNetworkObject();
+	bool StreamDataReceived(NetworkMessage* msg);
 };

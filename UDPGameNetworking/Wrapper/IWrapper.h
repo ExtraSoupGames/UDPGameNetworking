@@ -1,7 +1,8 @@
 #pragma once
 #include <unordered_map>
-#include "Client.h"
-#include "Server.h"
+#include <vector>
+#include "../Client.h"
+#include "../Server.h"
 //This class should be inherited with a reference to an engine specific object
 // for registering
 class IEngineObject {};
@@ -10,8 +11,15 @@ class IEngineObject {};
 class IWrapper {
 private:
 protected:
-	std::unordered_map<int, IEngineObject*> registeredObjects;
+	//objects being registered, currently waiting for an ID from the server
+	std::vector<IEngineObject*> registeringOwnedObjects;
+	//objects that have been registered, and are currently being streamed
+	std::unordered_map<int, IEngineObject*> registeredOwnedObjects;
+	//objects that other clients have registered, and are (hopefully) being rendered by this client
+	std::unordered_map<int, IEngineObject*> registeredUnownedObjects;
+	//Manages networking and server connection
 	Client* client;
+	//Not necessary for every client, manages multiple client connections
 	Server* server;
 public:
 	// --- To be called by engine plugin/engine ---
@@ -25,4 +33,8 @@ public:
 	virtual void ApplySettings() = 0;
 	// --- To be called by library ---
 	virtual void InvokeRegisteredCallback(int callbackID) = 0;
+	//This should define how the engine should respond when another client, or the server,
+	// sends information about a new object (typically should instantiate a new object of 
+	// the specified type ready for streaming)
+	virtual void NewNetworkedObject(int objectType) = 0;
 };

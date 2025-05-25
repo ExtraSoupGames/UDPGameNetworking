@@ -1,4 +1,40 @@
 #include "TestWrapper.h"
+//TODO populate
+void TestWrapper::Update(float deltaTime)
+{
+}
+
+void TestWrapper::Initialize()
+{
+}
+
+void TestWrapper::RegisterObject(IEngineObject*)
+{
+}
+
+void TestWrapper::UnregisterObject(int ID)
+{
+}
+
+void TestWrapper::RegisterCallback()
+{
+}
+
+void TestWrapper::StartClient()
+{
+}
+
+void TestWrapper::StartServer()
+{
+}
+
+void TestWrapper::ApplySettings()
+{
+}
+
+void TestWrapper::InvokeRegisteredCallback(int callbackID)
+{
+}
 
 TestCallback::TestCallback(int callbackID) : Callback(callbackID)
 {

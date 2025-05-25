@@ -38,3 +38,7 @@ std::string PositionLerp2D::GetStreamData()
 	streamData.append(NetworkUtilities::AsBinaryString(y, 7));
 	return streamData;
 }
+
+NetworkedValue::~NetworkedValue()
+{
+}

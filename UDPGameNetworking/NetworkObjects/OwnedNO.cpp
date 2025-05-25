@@ -19,12 +19,21 @@ OwnedNetworkObject::OwnedNetworkObject(EndpointInfo* server, SDLNet_DatagramSock
 	SendIDRequest(server, socket);
 }
 
-bool OwnedNetworkObject::IDRequestReceived(NetworkMessage* msg)
+OwnedNetworkObject::~OwnedNetworkObject()
+{
+	//Here we will attempt to send a message to the server notifying it of this object's deletion,
+	// in the case that this message's sending is unsuccessful, the object will no longer be around
+	// to resend it so the server side instance of the object will just be timed out
+
+	//TODO Send a message to the server notifying of deletion
+}
+
+bool OwnedNetworkObject::IDRequestReceived(int newID)
 {
 	if (initialized || ID != 0) {
 		return false;
 	}
-	ID = NetworkUtilities::IntFromBinaryString(msg->GetExtraData(), objectIDLength);
+	ID = newID;
 	initialized = true;
 	return true;
 }

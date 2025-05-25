@@ -1,7 +1,78 @@
 #include "Client.h"
-
-Client::Client(int portToUse)
+#include "Wrapper/IWrapper.h"
+void Client::PollSocket()
 {
+	NetworkMessage* nextMessage;
+	while (NetworkUtilities::GetNextIncoming(socket, nextMessage, sender)) {
+		ProcessMessage(nextMessage);
+		delete nextMessage;
+	}
+}
+
+void Client::ProcessMessage(NetworkMessage* msg)
+{
+	std::string msgData = msg->GetExtraData();
+	switch (msg->GetMessageType()) {
+	case UserImportant:
+		ProcessImportantMessage(msg);
+		//no break here as the message should still be processed as a user message as well
+	case UserUnImportant:
+		ProcessUserMessage();
+		break;
+	case IDRequest:
+		ProcessIncomingIDRequest(msg);
+		break;
+	case NetworkedObjectMsg:
+		break;
+	case ImportantMessageConfirmation:
+		break;
+	}
+}
+
+ImportantMessage* Client::ProcessImportantMessage(NetworkMessage* msg)
+{
+	if (!IsConnected()) return nullptr;
+	return sender->ProcessImportantMessage(msg);
+}
+
+void Client::ProcessIncomingIDRequest(NetworkMessage* msg)
+{
+	int ID = NetworkUtilities::IntFromBinaryString(msg->GetExtraData().substr(0, objectIDBits),objectIDDigits);
+	for (OwnedNetworkObject* ono : *ownedObjects) {
+		if (ono->IDRequestReceived(ID)) {
+			return;
+		}
+	}
+}
+
+void Client::ProcessUserMessage(NetworkMessage* msg)
+{
+	//TODO include optional extra data parsing
+	//I.E any data included after the initial 8 bits will be passed to the callback to allow
+	// more custom functionality and fewer unique callback registers
+	std::string msgData = msg->GetExtraData();
+	int callbackID = NetworkUtilities::IntFromBinaryString(msgData.substr(0, 8), 4);
+	wrapper->InvokeRegisteredCallback(callbackID);
+}
+
+void Client::ProcessObjectMessage(NetworkMessage* msg)
+{
+	for (UnownedNetworkObject* uno : *nonOwnedObjects) {
+		if (uno->StreamDataReceived(msg)) {
+			return;
+		}
+	}
+}
+
+void Client::ProcessImportantMessageConfirmation(NetworkMessage* msg)
+{
+	sender->ConfirmationRecieved(msg);
+}
+
+Client::Client(int portToUse, IWrapper* libWrapper)
+{
+	wrapper = libWrapper;
+
 	port = portToUse;
 	sender = nullptr;
 	socket = nullptr;
@@ -9,7 +80,6 @@ Client::Client(int portToUse)
 
 	ownedObjects = new std::vector<OwnedNetworkObject*>();
 	nonOwnedObjects = new std::vector<UnownedNetworkObject*>();
-
 }
 
 Client::~Client()
@@ -82,10 +152,4 @@ void Client::SendServerMessage(NetworkMessageTypes type, std::string msg, std::s
 {
 	if (!IsConnected()) return;
 	NetworkUtilities::SendMessageTo(type, msg, socket, serverAddress, 66661, sender);
-}
-
-ImportantMessage* Client::ProcessImportantMessage(NetworkMessage* msg)
-{
-	if (!IsConnected()) return nullptr;
-	return sender->ProcessImportantMessage(msg);
 }

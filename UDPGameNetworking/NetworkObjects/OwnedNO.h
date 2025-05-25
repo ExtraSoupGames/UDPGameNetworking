@@ -5,8 +5,9 @@
 #include "SDL3_net/SDL_net.h"
 #include "NetworkedValue.h"
 #include "ObjectDataProcessor.h"
-static int objectIDLength = 8; // number of digits in an object ID
-//Note that object IDs are sent in BCD format so ID length in messages will be 4x this
+//Note that object IDs are sent in BCD format so ID digits is this / 4
+static int objectIDBits = 8; // number of digits in an object ID
+static int objectIDDigits = objectIDBits / 4;
 static float objectStreamRate = 100; // one data stream message per X ms
 //A network object owned by this client, it's incoming data is provided by the wrapper and it streams data
 // to other clients
@@ -30,9 +31,10 @@ protected:
 public:
 	//Create the object in an uninitialized state and request an ID from the server
 	OwnedNetworkObject(EndpointInfo* server, SDLNet_DatagramSocket* socket);
+	~OwnedNetworkObject();
 	//Initialize the object with an ID provided by the server
 	//Returns true if object was initialized
-	bool IDRequestReceived(NetworkMessage* msg);
+	bool IDRequestReceived(int ID);
 
 	//Updates the object, sending a message if required
 	// @param deltaTime - the time in seconds since last update was called on this object

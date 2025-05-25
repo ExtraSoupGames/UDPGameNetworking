@@ -7,6 +7,7 @@ protected:
 	int ID;
 public:
 	NetworkedValue(int valueID) { ID = valueID; };
+	~NetworkedValue();
 	int GetID() { return ID; }; // TODO flesh out and fix and annotate
 	//Checks if an incoming stream data segment is relevant to this networked value
 	// and, if so, processes it and returns true, otherwise returns false
