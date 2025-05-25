@@ -15,7 +15,7 @@ UnownedNetworkObject::~UnownedNetworkObject()
 
 bool UnownedNetworkObject::StreamDataReceived(NetworkMessage* msg)
 {
-	std::string IDData = msg->GetExtraData(0, 8);
+	std::string IDData = msg->GetExtraData().substr(0,8);
 	int streamObjectID = NetworkUtilities::IntFromBinaryString(IDData, 2);
 	if (streamObjectID != ID) {
 		return false;

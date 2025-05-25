@@ -3,8 +3,9 @@
 
 #include "UDPGameNetworking.h"
 #include <iostream>
-#include "Client.h"
-#include "Server.h"
+#include "Endpoints/Client.h"
+#include "Endpoints/Server.h"
+#include "Wrapper/TestWrapper.h"
 
 #include "TestingFunctions.h"
 
@@ -14,8 +15,9 @@ int main()
 		return 0;
 	}
 	std::cout << "Hello CMake." << std::endl;
+	IWrapper* wrapper = new TestWrapper();
 	Server* s = new Server("127.0.0.1", 66661);
-	Client* c = new Client(55555);
+	Client* c = new Client(55555, wrapper);
 	c->ConnectToServer("127.0.0.1");
 	bool done = false;
 	c->SendServerMessage(UserUnImportant, "11111111", "1111");

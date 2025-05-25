@@ -125,10 +125,10 @@ std::string NetworkUtilities::UnpackMessage(Uint8* inData, int messageLength)
 
 }
 //returns the int in BCD(Binary coded decimal) form
-std::string NetworkUtilities::AsBinaryString(int outNibbles, int value)
+std::string NetworkUtilities::AsBinaryString(int value, int digitCount)
 {
 	std::string digits = std::to_string(value);
-	while (digits.size() < outNibbles) {
+	while (digits.size() < digitCount) {
 		digits = "0" + digits;
 	}
 	std::string outString = "";
@@ -141,7 +141,7 @@ std::string NetworkUtilities::AsBinaryString(int outNibbles, int value)
 		}
 		outString += (newNibble);
 	}
-	outString = outString.substr(0, outNibbles * 4);
+	outString = outString.substr(0, digitCount * 4);
 	return outString;
 }
 //digits is the number of nibbles to process

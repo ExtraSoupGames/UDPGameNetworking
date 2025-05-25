@@ -31,8 +31,8 @@ set(SOURCES
     UDPGameNetworking/ImportantMessage.cpp
     UDPGameNetworking/NetworkMessage.cpp
     UDPGameNetworking/TestingFunctions.cpp
-    UDPGameNetworking/Server.cpp
-    UDPGameNetworking/Client.cpp
+    "UDPGameNetworking/Endpoints/Server.cpp"
+    "UDPGameNetworking/Endpoints/Client.cpp"
     UDPGameNetworking/NetworkObjects/NetworkObject.cpp
     UDPGameNetworking/NetworkObjects/OwnedNO.cpp
     UDPGameNetworking/NetworkObjects/UnownedNO.cpp

@@ -1,8 +1,8 @@
 #include "Client.h"
-#include "Wrapper/IWrapper.h"
+#include "../Wrapper/IWrapper.h"
 void Client::PollSocket()
 {
-	NetworkMessage* nextMessage;
+	NetworkMessage* nextMessage = nullptr;
 	while (NetworkUtilities::GetNextIncoming(socket, nextMessage, sender)) {
 		ProcessMessage(nextMessage);
 		delete nextMessage;
@@ -11,29 +11,27 @@ void Client::PollSocket()
 
 void Client::ProcessMessage(NetworkMessage* msg)
 {
-	std::string msgData = msg->GetExtraData();
 	switch (msg->GetMessageType()) {
 	case UserImportant:
-		ProcessImportantMessage(msg);
+		msg = sender->ProcessImportantMessage(msg);
+		//this will return if the message has already been received
+		if (msg == nullptr) {return;}
 		//no break here as the message should still be processed as a user message as well
 	case UserUnImportant:
-		ProcessUserMessage();
+		ProcessUserMessage(msg);
 		break;
 	case IDRequest:
 		ProcessIncomingIDRequest(msg);
 		break;
 	case NetworkedObjectMsg:
+		ProcessObjectMessage(msg);
 		break;
 	case ImportantMessageConfirmation:
+		sender->ConfirmationRecieved(msg);
 		break;
 	}
 }
 
-ImportantMessage* Client::ProcessImportantMessage(NetworkMessage* msg)
-{
-	if (!IsConnected()) return nullptr;
-	return sender->ProcessImportantMessage(msg);
-}
 
 void Client::ProcessIncomingIDRequest(NetworkMessage* msg)
 {
@@ -62,11 +60,6 @@ void Client::ProcessObjectMessage(NetworkMessage* msg)
 			return;
 		}
 	}
-}
-
-void Client::ProcessImportantMessageConfirmation(NetworkMessage* msg)
-{
-	sender->ConfirmationRecieved(msg);
 }
 
 Client::Client(int portToUse, IWrapper* libWrapper)
@@ -130,14 +123,9 @@ void Client::Update(float deltaTime)
 	if (IsConnected()) {
 
 		sender->SendUnsentMessages(false);
-		NetworkMessage* msg = nullptr;
-		while (NetworkUtilities::GetNextIncoming(socket, msg, sender)) {
-			//TODO user managed callbacks on messages received
-			//TODO library managed non owned objects updated and wrapper notified
-			delete msg;
-			msg = nullptr;
-		}
+		PollSocket();
 	}
+
 }
 
 bool Client::IsConnected()

@@ -5,7 +5,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3_net/SDL_net.h>
 #include "../NetworkUtilities.h"
-#include "../EndpointInfo.h"
+#include "../Endpoints/EndpointInfo.h"
 #include "../ImportantMessage.h"
 struct UnsentMessage {
 	int ID;

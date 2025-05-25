@@ -1,5 +1,21 @@
 #include "Server.h"
-
+#include "../Wrapper/IWrapper.h"
+int Server::GetNextFreeID()
+{
+    //vector of free IDs?
+    //vector of used IDs?
+    //is there a data structure for this?
+    //TODO get next free ID
+    //research optimal way to find first non occuring number across 2 maps
+    return 0;
+    //maybe a method where "newly available ids" are held in a queue:
+    // - new id is requested
+    // - if only 1 ID is available that means it is the highest one
+    // - if so, available id is returned and that + 1 is added to queue
+    // - if not, first available id is returned and removed
+    // - whenever objects are deleted, their id is added to the queue to fill in gaps created by object destruction
+    // - this would require safe object destruction
+}
 void Server::ConfirmClientConnection(EndpointInfo* client)
 {
     if (!connectingAClient) {
@@ -38,8 +54,45 @@ bool Server::IsAlreadyConnected(EndpointInfo* client)
     return false;
 }
 
-Server::Server(std::string ip, int serverPort)
+void Server::PollSocket()
 {
+    NetworkMessage* nextMessage = nullptr;
+    while (NetworkUtilities::GetNextIncoming(socket, nextMessage, sender)) {
+        ProcessMessage(nextMessage);
+        delete nextMessage;
+    }
+}
+
+void Server::ProcessMessage(NetworkMessage* msg)
+{
+    switch (msg->GetMessageType()) {
+    case UserImportant:
+        msg = sender->ProcessImportantMessage(msg);
+        if (msg == nullptr) { return; }
+    case UserUnImportant:
+        ProcessUserMessage(msg);
+    }
+}
+
+void Server::ProcessIncomingIDRequest(NetworkMessage* msg)
+{
+    std::string idValue = NetworkUtilities::AsBinaryString(GetNextFreeID(), objectIDDigits);
+    NetworkUtilities::SendMessageTo(IDRequest, idValue, socket, msg->GetAddress(), msg->GetPort(), sender);
+}
+
+void Server::ProcessUserMessage(NetworkMessage* msg)
+{
+    //TODO implement
+}
+
+void Server::ProcessObjectMessage(NetworkMessage* msg)
+{
+    //TODO implement
+}
+
+Server::Server(std::string ip, int serverPort, IWrapper* libWrapper)
+{
+    wrapper = libWrapper;
     connectingAClient = false;
     connectorInfo = nullptr;
     nextClientID = 0;
@@ -67,12 +120,7 @@ Server::Server(std::string ip, int serverPort)
 
 void Server::Update(float deltaTime)
 {
-    NetworkMessage* msg = nullptr;
-    while (NetworkUtilities::GetNextIncoming(socket, msg, sender)) {
-        std::cout << "Done: extra data was" << msg->GetExtraData() << std::endl;
-        delete msg;
-        msg = nullptr;
-    }
+    PollSocket();
 }
 
 void Server::Broadcast(std::string message)
@@ -102,10 +150,6 @@ void Server::SendMessageTo(NetworkMessageTypes type, std::string message, Endpoi
     NetworkUtilities::SendMessageTo(type, message, socket, address, port, sender);
 }
 
-ImportantMessage* Server::ProcessImportantMessage(NetworkMessage* msg)
-{
-    return sender->ProcessImportantMessage(msg);
-}
 
 Server::~Server()
 {

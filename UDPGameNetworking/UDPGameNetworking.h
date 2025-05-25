@@ -3,6 +3,6 @@
 //See README.md
 #pragma once
 
-#include "Client.h"
-#include "Server.h"
+#include "Endpoints/Client.h"
+#include "Endpoints/Server.h"
 

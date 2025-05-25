@@ -1,12 +1,11 @@
 #pragma once
-#include "Senders/ClientMessageSender.h"
-#include "NetworkObjects/OwnedNo.h"
-#include "NetworkObjects/UnownedNO.h"
+#include "../Senders/ClientMessageSender.h"
+#include "../NetworkObjects/OwnedNo.h"
+#include "../NetworkObjects/UnownedNO.h"
 class IWrapper; // Forward declaration as Wrapper needs client implementation
 class Client {
 private:
 	IWrapper* wrapper;
-	//TODO extract to UDPEndpoint
 	SDLNet_Address* serverAddress;
 	int port;
 	ClientMessageSender* sender;
@@ -15,14 +14,13 @@ private:
 	std::vector<OwnedNetworkObject*>* ownedObjects; //TODO try changing to a queue as newly created objects are those more frequently searched for?
 	std::vector<UnownedNetworkObject*>* nonOwnedObjects;
 
+	//TODO extract to socket holder - too much in common with server
 	void PollSocket();
 	void ProcessMessage(NetworkMessage* msg);
-	ImportantMessage* ProcessImportantMessage(NetworkMessage* msg);
 
 	void ProcessIncomingIDRequest(NetworkMessage* msg);
 	void ProcessUserMessage(NetworkMessage* msg);
 	void ProcessObjectMessage(NetworkMessage* msg);
-	void ProcessImportantMessageConfirmation(NetworkMessage* msg);
 protected:
 public:
 	Client(int portToUse, IWrapper* libWrapper);
@@ -37,4 +35,6 @@ public:
 	void SendServerMessage(NetworkMessageTypes type, std::string msg, std::string stateCode);
 
 	//TODO add creating owned objects
+	//something like this: void RegisterObject(); <- except it needs a way of linking the registered
+	// object to the wrapper's map once the ID has been confirmed, perhaps another ID in another map?
 };

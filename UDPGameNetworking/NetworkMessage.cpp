@@ -44,3 +44,8 @@ std::string NetworkMessage::RemoveStateVerification()
 	extraData = extraData.substr(4);
 	return out;
 }
+
+EndpointInfo* NetworkMessage::GetSender()
+{
+	return new EndpointInfo(fromAddress, fromPort);
+}

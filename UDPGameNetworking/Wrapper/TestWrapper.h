@@ -18,6 +18,7 @@ public:
 	virtual void ApplySettings() override;
 	// --- To be called by library ---
 	virtual void InvokeRegisteredCallback(int callbackID) override;
+	virtual void NewNetworkedObject(int objectType) override;
 };
 class TestCallback : public Callback {
 private:
@@ -25,4 +26,6 @@ protected:
 public:
 	TestCallback(int callbackID);
 	virtual void Invoke() override;
+
+
 };

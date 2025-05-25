@@ -1,6 +1,6 @@
 #pragma once
 #include "NetworkObject.h"
-#include "../EndpointInfo.h"
+#include "../Endpoints/EndpointInfo.h"
 #include "../NetworkUtilities.h"
 #include "SDL3_net/SDL_net.h"
 #include "NetworkedValue.h"

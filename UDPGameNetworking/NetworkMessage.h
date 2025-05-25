@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "SDL3_net/SDL_net.h"
+#include "Endpoints/EndpointInfo.h"
 enum NetworkMessageTypes;
 class NetworkMessage {
 private:
@@ -18,4 +19,6 @@ public:
 	SDLNet_Address* GetAddress();
 	int GetPort();
 	std::string RemoveStateVerification();
+	//IMPORTANT: returned value must be deleted
+	EndpointInfo* GetSender();
 };

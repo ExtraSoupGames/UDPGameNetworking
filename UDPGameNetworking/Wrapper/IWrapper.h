@@ -1,8 +1,8 @@
 #pragma once
 #include <unordered_map>
 #include <vector>
-#include "../Client.h"
-#include "../Server.h"
+#include "../Endpoints/Client.h"
+#include "../Endpoints/Server.h"
 //This class should be inherited with a reference to an engine specific object
 // for registering
 class IEngineObject {};
@@ -20,7 +20,7 @@ protected:
 	//Manages networking and server connection
 	Client* client;
 	//Not necessary for every client, manages multiple client connections
-	Server* server;
+	//Server* server;
 public:
 	// --- To be called by engine plugin/engine ---
 	virtual void Update(float deltaTime) = 0;

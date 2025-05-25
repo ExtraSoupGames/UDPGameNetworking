@@ -36,6 +36,10 @@ void TestWrapper::InvokeRegisteredCallback(int callbackID)
 {
 }
 
+void TestWrapper::NewNetworkedObject(int objectType)
+{
+}
+
 TestCallback::TestCallback(int callbackID) : Callback(callbackID)
 {
 }
