@@ -1,15 +1,6 @@
 #include "TestEngineObject.h"
-
-TestEngineObject::TestEngineObject(int serverID, int initX, int initY)
-{
-	ID = serverID;
-	x = 0;
-	y = 0;
-}
-
 TestEngineObject::TestEngineObject(int initX, int initY)
 {
-	ID = -1;
 	x = initX;
 	y = initY;
 }

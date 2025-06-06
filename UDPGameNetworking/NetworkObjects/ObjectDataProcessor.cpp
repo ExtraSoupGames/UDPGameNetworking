@@ -3,7 +3,8 @@
 //first object data ID
 void ObjectDataProcessor::UpdateValues(std::vector<NetworkedValue*>* values, NetworkMessage* msg)
 {
-	int msgLength = (int)msg->GetExtraData().size();
+	std::string objectData = msg->GetExtraData().substr(objectIDBits);
+	int msgLength = (int)objectData.size();
 	int describedValueCount = msgLength / streamedValueSize;
 	if (describedValueCount < 1) return;
 	for (int i = 0; i < describedValueCount; i++) {
@@ -19,6 +20,10 @@ void ObjectDataProcessor::UpdateValues(std::vector<NetworkedValue*>* values, Net
 
 std::string ObjectDataProcessor::ConstructDataStream(std::vector<NetworkedValue*>* values)
 {
+	std::string msgData = "";
 	//TODO construct a data stream containing all data needed to update all values
-	throw new std::exception; // Not yet implemented
+	for (NetworkedValue* val : *values) {
+		msgData.append(val->GetStreamData());
+	}
+	return msgData;
 }

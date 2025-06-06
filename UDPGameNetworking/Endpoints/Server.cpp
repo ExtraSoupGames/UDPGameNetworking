@@ -2,19 +2,13 @@
 #include "../Wrapper/IWrapper.h"
 int Server::GetNextFreeID()
 {
-    //vector of free IDs?
-    //vector of used IDs?
-    //is there a data structure for this?
-    //TODO get next free ID
-    //research optimal way to find first non occuring number across 2 maps
-    return 0;
-    //maybe a method where "newly available ids" are held in a queue:
-    // - new id is requested
-    // - if only 1 ID is available that means it is the highest one
-    // - if so, available id is returned and that + 1 is added to queue
-    // - if not, first available id is returned and removed
-    // - whenever objects are deleted, their id is added to the queue to fill in gaps created by object destruction
-    // - this would require safe object destruction
+    int out = availableIDs->front();
+    availableIDs->pop();
+    if (availableIDs->size() == 0) {
+        availableIDs->push(out + 1);
+    }
+    std::cout << "Next free id was: " << out << std::endl;
+    return out;
 }
 void Server::ConfirmClientConnection(EndpointInfo* client)
 {
@@ -71,6 +65,13 @@ void Server::ProcessMessage(NetworkMessage* msg)
         if (msg == nullptr) { return; }
     case UserUnImportant:
         ProcessUserMessage(msg);
+        break;
+    case IDRequest:
+        ProcessIncomingIDRequest(msg);
+        break;
+    case NetworkedObjectMsg:
+        ProcessObjectMessage(msg);
+        break;
     }
 }
 
@@ -89,7 +90,9 @@ void Server::ProcessUserMessage(NetworkMessage* msg)
 void Server::ProcessObjectMessage(NetworkMessage* msg)
 {
     //TODO implement
+    std::cout << "object data received by server! object ID: " << NetworkUtilities::IntFromBinaryString(msg->GetExtraData().substr(0, 8), 2) << std::endl;
 }
+
 
 Server::Server(std::string ip, int serverPort, IWrapper* libWrapper)
 {
@@ -101,6 +104,8 @@ Server::Server(std::string ip, int serverPort, IWrapper* libWrapper)
 
     ownedObjects = new std::vector<OwnedNetworkObject*>();
     nonOwnedObjects = new std::vector<UnownedNetworkObject*>();
+    availableIDs = new std::queue<int>();
+    availableIDs->push(1);
     connectedClients = new std::vector<EndpointInfo*>();
 
 
@@ -160,4 +165,5 @@ Server::~Server()
 		delete client;
 	}
     delete connectedClients;
+    delete availableIDs;
 }

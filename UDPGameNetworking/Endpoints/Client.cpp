@@ -35,9 +35,12 @@ void Client::ProcessMessage(NetworkMessage* msg)
 
 void Client::ProcessIncomingIDRequest(NetworkMessage* msg)
 {
-	int ID = NetworkUtilities::IntFromBinaryString(msg->GetExtraData().substr(0, objectIDBits),objectIDDigits);
+	int ID = NetworkUtilities::IntFromBinaryString(msg->GetExtraData().substr(0, objectIDBits), objectIDDigits);
+	std::cout << "ID confirmation received, ID is: " << ID << std::endl;
+	std::cout << "size of onos is: " << ownedObjects->size() << std::endl;
 	for (OwnedNetworkObject* ono : *ownedObjects) {
 		if (ono->IDRequestReceived(ID)) {
+			std::cout << "Object with ID " << ID << " registered successfully!" << std::endl;
 			return;
 		}
 	}
@@ -67,6 +70,14 @@ void Client::ProcessObjectMessage(NetworkMessage* msg)
 		IEngineObject* engineObj = wrapper->NewNetworkedObject(0);
 		UnownedNetworkObject* uno = new UnownedNetworkObject(engineObj);
 		nonOwnedObjects->push_back(uno);
+	}
+}
+
+void Client::UpdateObjects(float deltaTime)
+{
+	for (OwnedNetworkObject* ono : *ownedObjects) {
+		ono->Update(deltaTime, serverInfo, socket);
+
 	}
 }
 
@@ -130,6 +141,7 @@ void Client::Update(float deltaTime)
 
 		sender->SendUnsentMessages(false);
 		PollSocket();
+		UpdateObjects(deltaTime);
 	}
 
 }

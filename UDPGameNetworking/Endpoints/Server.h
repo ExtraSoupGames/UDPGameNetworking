@@ -1,6 +1,7 @@
 #pragma once
 #include "../Senders/ServerMessageSender.h"
 #include <string>
+#include <queue>
 #include "../NetworkObjects/OwnedNO.h"
 #include "../NetworkObjects/UnownedNO.h"
 class IWrapper; // // Forward declaration as Wrapper needs server implementation
@@ -20,6 +21,7 @@ private:
 
 	std::vector<OwnedNetworkObject*>* ownedObjects;
 	std::vector<UnownedNetworkObject*>* nonOwnedObjects;
+	std::queue<int>* availableIDs;
 
 	int GetNextFreeID();
 

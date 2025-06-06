@@ -23,6 +23,8 @@ private:
 	void ProcessIncomingIDRequest(NetworkMessage* msg);
 	void ProcessUserMessage(NetworkMessage* msg);
 	void ProcessObjectMessage(NetworkMessage* msg);
+
+	void UpdateObjects(float deltaTime);
 protected:
 public:
 	Client(int portToUse, IWrapper* libWrapper);

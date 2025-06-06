@@ -3,7 +3,10 @@
 void OwnedNetworkObject::StreamSend(EndpointInfo* server, SDLNet_DatagramSocket* socket)
 {
 	engineObject->UpdateLibraryValues(networkedValues);
-	NetworkUtilities::SendMessageTo(NetworkedObjectMsg, ObjectDataProcessor::ConstructDataStream(networkedValues), socket, server->address, server->port);
+	std::string messageData = NetworkUtilities::AsBinaryString(ID, objectIDDigits);
+	messageData.append(ObjectDataProcessor::ConstructDataStream(networkedValues));
+	//std::cout << "message data: " << messageData << std::endl;
+	NetworkUtilities::SendMessageTo(NetworkedObjectMsg, messageData, socket, server->address, server->port);
 }
 
 void OwnedNetworkObject::SendIDRequest(EndpointInfo* server, SDLNet_DatagramSocket* socket)
@@ -19,6 +22,9 @@ OwnedNetworkObject::OwnedNetworkObject(EndpointInfo* server, SDLNet_DatagramSock
 	streamTimer = 0;
 	SendIDRequest(server, socket);
 	engineObject = engineObj;
+	networkedValues = new std::vector<NetworkedValue*>();
+	//TODO remove next line - just for testing
+	networkedValues->push_back(new PositionLerp2D(18, 9));
 }
 
 OwnedNetworkObject::~OwnedNetworkObject()

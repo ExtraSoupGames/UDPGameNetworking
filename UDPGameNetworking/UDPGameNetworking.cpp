@@ -21,10 +21,17 @@ int main()
 	c->ConnectToServer("127.0.0.1");
 	bool done = false;
 	c->SendServerMessage(UserUnImportant, "11111111", "1111");
+	TestEngineObject* obj = new TestEngineObject(6, 7);
+	c->RegisterObject(obj);
+
+	TestEngineObject* obj2 = new TestEngineObject(9, 16);
+	c->RegisterObject(obj2);
+	TestEngineObject* obj3 = new TestEngineObject(9, 16);
+	c->RegisterObject(obj3);
 	while (!done) {
 		c->Update(1);
 		s->Update(1);
-		if (SDL_GetTicks() > 10000) {
+		if (SDL_GetTicks() > 500) {
 			done = true;
 		}
 	}
