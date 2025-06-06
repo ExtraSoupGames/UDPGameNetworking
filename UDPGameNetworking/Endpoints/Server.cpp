@@ -90,7 +90,17 @@ void Server::ProcessUserMessage(NetworkMessage* msg)
 void Server::ProcessObjectMessage(NetworkMessage* msg)
 {
     //TODO implement
-    std::cout << "object data received by server! object ID: " << NetworkUtilities::IntFromBinaryString(msg->GetExtraData().substr(0, 8), 2) << std::endl;
+    //TODO remove this - just for testing
+    int objectID = NetworkUtilities::IntFromBinaryString(msg->GetExtraData().substr(0, 8), objectIDDigits);
+    int objectX = NetworkUtilities::IntFromBinaryString(msg->GetExtraData().substr(16,28), 7);
+    int objectY = NetworkUtilities::IntFromBinaryString(msg->GetExtraData().substr(44, 28), 7);
+    if (objectX == objectY && objectY == objectID) {
+        std::cout << "YAY";
+    }
+    else {
+        std::cout << "UH OH!!!!!" << std::endl;
+    }
+    
 }
 
 

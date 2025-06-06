@@ -21,12 +21,12 @@ int main()
 	c->ConnectToServer("127.0.0.1");
 	bool done = false;
 	c->SendServerMessage(UserUnImportant, "11111111", "1111");
-	TestEngineObject* obj = new TestEngineObject(6, 7);
+	//initialize 3 testing objects to test data streaming to server (set up so in theory IDs should match x and y values)
+	TestEngineObject* obj = new TestEngineObject(1, 1);
 	c->RegisterObject(obj);
-
-	TestEngineObject* obj2 = new TestEngineObject(9, 16);
+	TestEngineObject* obj2 = new TestEngineObject(2, 2);
 	c->RegisterObject(obj2);
-	TestEngineObject* obj3 = new TestEngineObject(9, 16);
+	TestEngineObject* obj3 = new TestEngineObject(3, 3);
 	c->RegisterObject(obj3);
 	while (!done) {
 		c->Update(1);
