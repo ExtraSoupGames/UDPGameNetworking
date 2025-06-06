@@ -83,6 +83,7 @@ void Server::ProcessIncomingIDRequest(NetworkMessage* msg)
 void Server::ProcessUserMessage(NetworkMessage* msg)
 {
     //TODO implement
+    std::cout << "User message received by server!" << std::endl;
 }
 
 void Server::ProcessObjectMessage(NetworkMessage* msg)

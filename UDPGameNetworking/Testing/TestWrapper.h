@@ -1,8 +1,9 @@
 #pragma once
 //This is an example of a wrapper, not linked to any engine, just for testing
 //This can also function as an example for writing engine specific wrappers
-#include "IWrapper.h"
-#include "Callback.h"
+#include "../Wrapper/IWrapper.h"
+#include "../Wrapper/Callback.h"
+#include "TestEngineObject.h"
 class TestWrapper : public IWrapper {
 private:
 protected:
@@ -18,7 +19,7 @@ public:
 	virtual void ApplySettings() override;
 	// --- To be called by library ---
 	virtual void InvokeRegisteredCallback(int callbackID) override;
-	virtual void NewNetworkedObject(int objectType) override;
+	virtual IEngineObject* NewNetworkedObject(int objectType) override;
 };
 class TestCallback : public Callback {
 private:

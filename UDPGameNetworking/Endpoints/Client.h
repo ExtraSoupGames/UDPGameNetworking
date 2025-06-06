@@ -2,12 +2,14 @@
 #include "../Senders/ClientMessageSender.h"
 #include "../NetworkObjects/OwnedNo.h"
 #include "../NetworkObjects/UnownedNO.h"
+#include "../Wrapper/IEngineObject.h"
 class IWrapper; // Forward declaration as Wrapper needs client implementation
 class Client {
 private:
 	IWrapper* wrapper;
-	SDLNet_Address* serverAddress;
+	EndpointInfo* serverInfo;
 	int port;
+
 	ClientMessageSender* sender;
 	SDLNet_DatagramSocket* socket;
 
@@ -34,7 +36,5 @@ public:
 	bool IsConnected();
 	void SendServerMessage(NetworkMessageTypes type, std::string msg, std::string stateCode);
 
-	//TODO add creating owned objects
-	//something like this: void RegisterObject(); <- except it needs a way of linking the registered
-	// object to the wrapper's map once the ID has been confirmed, perhaps another ID in another map?
+	void RegisterObject(IEngineObject* obj);
 };

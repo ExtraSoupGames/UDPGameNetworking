@@ -3,9 +3,7 @@
 #include <vector>
 #include "../Endpoints/Client.h"
 #include "../Endpoints/Server.h"
-//This class should be inherited with a reference to an engine specific object
-// for registering
-class IEngineObject {};
+#include "IEngineObject.h"
 //This class should be inherited by wrapper to provide service specific
 // functionality relating to registering values for consistent broadcasting
 class IWrapper {
@@ -36,5 +34,6 @@ public:
 	//This should define how the engine should respond when another client, or the server,
 	// sends information about a new object (typically should instantiate a new object of 
 	// the specified type ready for streaming)
-	virtual void NewNetworkedObject(int objectType) = 0;
+	//returns the engine object to continue data streaming with for this new object
+	virtual IEngineObject* NewNetworkedObject(int objectType) = 0;
 };

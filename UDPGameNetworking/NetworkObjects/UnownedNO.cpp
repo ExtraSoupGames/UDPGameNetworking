@@ -1,7 +1,8 @@
 #include "UnownedNO.h"
 
-UnownedNetworkObject::UnownedNetworkObject()
+UnownedNetworkObject::UnownedNetworkObject(IEngineObject* engineObj)
 {
+	engineObject = engineObj;
 	networkedValues = new std::vector<NetworkedValue*>();
 }
 
@@ -11,6 +12,7 @@ UnownedNetworkObject::~UnownedNetworkObject()
 		delete v;
 	}
 	delete networkedValues;
+	//TODO destroy the engine object
 }
 
 bool UnownedNetworkObject::StreamDataReceived(NetworkMessage* msg)
@@ -21,5 +23,6 @@ bool UnownedNetworkObject::StreamDataReceived(NetworkMessage* msg)
 		return false;
 	}
 	ObjectDataProcessor::UpdateValues(networkedValues, msg);
+	engineObject->UpdateEngineValues(networkedValues);
 	return true;
 }

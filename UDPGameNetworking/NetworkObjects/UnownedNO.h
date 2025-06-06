@@ -12,9 +12,10 @@ class UnownedNetworkObject : public NetworkObject {
 //TODO wrapper render instructions
 private:
 	std::vector<NetworkedValue*>* networkedValues;
+	IEngineObject* engineObject;
 protected:
 public:
-	UnownedNetworkObject();
+	UnownedNetworkObject(IEngineObject* engineObj);
 	~UnownedNetworkObject();
 	bool StreamDataReceived(NetworkMessage* msg);
 };

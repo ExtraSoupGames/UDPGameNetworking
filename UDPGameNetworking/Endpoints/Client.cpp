@@ -55,10 +55,18 @@ void Client::ProcessUserMessage(NetworkMessage* msg)
 
 void Client::ProcessObjectMessage(NetworkMessage* msg)
 {
+	bool relevantObjectExists = false; //does the object described in the message exist in this client's view already
+	// if not we need to create it
 	for (UnownedNetworkObject* uno : *nonOwnedObjects) {
 		if (uno->StreamDataReceived(msg)) {
+			relevantObjectExists = true;
 			return;
 		}
+	}
+	if (!relevantObjectExists) {
+		IEngineObject* engineObj = wrapper->NewNetworkedObject(0);
+		UnownedNetworkObject* uno = new UnownedNetworkObject(engineObj);
+		nonOwnedObjects->push_back(uno);
 	}
 }
 
@@ -69,7 +77,7 @@ Client::Client(int portToUse, IWrapper* libWrapper)
 	port = portToUse;
 	sender = nullptr;
 	socket = nullptr;
-	serverAddress = nullptr;
+	serverInfo = nullptr;
 
 	ownedObjects = new std::vector<OwnedNetworkObject*>();
 	nonOwnedObjects = new std::vector<UnownedNetworkObject*>();
@@ -88,32 +96,30 @@ Client::~Client()
 	delete nonOwnedObjects;
 
 	delete sender;
-	SDLNet_UnrefAddress(serverAddress);
+	delete serverInfo;
 	SDLNet_DestroyDatagramSocket(socket);
 }
 
 void Client::ConnectToServer(std::string address)
 {
-	if (serverAddress != nullptr) {
+	if (serverInfo != nullptr) {
 		std::cout << "Already connected to a server!" << std::endl;
 	}
-	serverAddress = SDLNet_ResolveHostname(address.c_str());
-	SDLNet_WaitUntilResolved(serverAddress, 1000);
-	socket = SDLNet_CreateDatagramSocket(serverAddress, port);
+	serverInfo = new EndpointInfo(address, 66661);
+	socket = SDLNet_CreateDatagramSocket(serverInfo->address, port);
 
 	if (!socket) {
 		std::cout << "Invalid socket" << SDL_GetError() << std::endl;
 	}
 
-	sender = new ClientMessageSender(socket, serverAddress, 66661);
+	sender = new ClientMessageSender(socket, serverInfo);
 }
 
 void Client::Disconnect()
 {
 	delete sender;
 	sender = nullptr;
-	SDLNet_UnrefAddress(serverAddress);
-	serverAddress = nullptr;
+	delete serverInfo;
 	SDLNet_DestroyDatagramSocket(socket);
 	socket = nullptr;
 }
@@ -130,7 +136,7 @@ void Client::Update(float deltaTime)
 
 bool Client::IsConnected()
 {
-	if (serverAddress == nullptr) return false;
+	if (serverInfo == nullptr) return false;
 	if (socket == nullptr) return false;
 	if (sender == nullptr) return false;
 	return true;
@@ -139,5 +145,11 @@ bool Client::IsConnected()
 void Client::SendServerMessage(NetworkMessageTypes type, std::string msg, std::string stateCode)
 {
 	if (!IsConnected()) return;
-	NetworkUtilities::SendMessageTo(type, msg, socket, serverAddress, 66661, sender);
+	NetworkUtilities::SendMessageTo(type, msg, socket, serverInfo->address, serverInfo->port, sender);
+}
+
+void Client::RegisterObject(IEngineObject* obj)
+{
+	OwnedNetworkObject* ono = new OwnedNetworkObject(serverInfo, socket, obj);
+	ownedObjects->push_back(ono);
 }

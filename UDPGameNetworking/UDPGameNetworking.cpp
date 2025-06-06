@@ -5,9 +5,9 @@
 #include <iostream>
 #include "Endpoints/Client.h"
 #include "Endpoints/Server.h"
-#include "Wrapper/TestWrapper.h"
+#include "Testing/TestWrapper.h"
 
-#include "TestingFunctions.h"
+#include "Testing/TestingFunctions.h"
 
 int main()
 {
@@ -16,7 +16,7 @@ int main()
 	}
 	std::cout << "Hello CMake." << std::endl;
 	IWrapper* wrapper = new TestWrapper();
-	Server* s = new Server("127.0.0.1", 66661);
+	Server* s = new Server("127.0.0.1", 66661, wrapper);
 	Client* c = new Client(55555, wrapper);
 	c->ConnectToServer("127.0.0.1");
 	bool done = false;

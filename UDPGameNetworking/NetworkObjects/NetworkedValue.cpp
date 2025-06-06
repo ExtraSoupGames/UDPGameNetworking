@@ -1,5 +1,4 @@
 #include "NetworkedValue.h"
-
 LerpedValue::LerpedValue(int ID) : NetworkedValue(ID)
 {
 }
@@ -37,6 +36,17 @@ std::string PositionLerp2D::GetStreamData()
 	streamData.append(NetworkUtilities::AsBinaryString(x, 7));
 	streamData.append(NetworkUtilities::AsBinaryString(y, 7));
 	return streamData;
+}
+
+void PositionLerp2D::UpdateValue(int xVal, int yVal)
+{
+	x = xVal;
+	y = yVal;
+}
+
+std::string PositionLerp2D::Debug()
+{
+	return "position lerp with x: " + std::to_string(x) + " and y: " + std::to_string(y);
 }
 
 NetworkedValue::~NetworkedValue()

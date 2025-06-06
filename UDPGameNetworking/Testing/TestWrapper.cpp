@@ -10,6 +10,7 @@ void TestWrapper::Initialize()
 
 void TestWrapper::RegisterObject(IEngineObject*)
 {
+	
 }
 
 void TestWrapper::UnregisterObject(int ID)
@@ -36,8 +37,9 @@ void TestWrapper::InvokeRegisteredCallback(int callbackID)
 {
 }
 
-void TestWrapper::NewNetworkedObject(int objectType)
+IEngineObject* TestWrapper::NewNetworkedObject(int objectType)
 {
+	return new TestEngineObject(5, 5);
 }
 
 TestCallback::TestCallback(int callbackID) : Callback(callbackID)

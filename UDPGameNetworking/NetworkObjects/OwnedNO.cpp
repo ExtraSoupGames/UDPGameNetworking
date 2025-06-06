@@ -2,6 +2,7 @@
 
 void OwnedNetworkObject::StreamSend(EndpointInfo* server, SDLNet_DatagramSocket* socket)
 {
+	engineObject->UpdateLibraryValues(networkedValues);
 	NetworkUtilities::SendMessageTo(NetworkedObjectMsg, ObjectDataProcessor::ConstructDataStream(networkedValues), socket, server->address, server->port);
 }
 
@@ -10,13 +11,14 @@ void OwnedNetworkObject::SendIDRequest(EndpointInfo* server, SDLNet_DatagramSock
 	NetworkUtilities::SendMessageTo(IDRequest, "", socket, server->address, server->port);
 }
 
-OwnedNetworkObject::OwnedNetworkObject(EndpointInfo* server, SDLNet_DatagramSocket* socket)
+OwnedNetworkObject::OwnedNetworkObject(EndpointInfo* server, SDLNet_DatagramSocket* socket, IEngineObject* engineObj)
 {
 	//Until the server confirms the ID, the ID will be 0 and object will remain uninitialized
 	initialized = false;
 	ID = 0;
 	streamTimer = 0;
 	SendIDRequest(server, socket);
+	engineObject = engineObj;
 }
 
 OwnedNetworkObject::~OwnedNetworkObject()

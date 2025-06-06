@@ -1,9 +1,10 @@
 #include "ClientMessageSender.h"
 
-ClientMessageSender::ClientMessageSender(SDLNet_DatagramSocket* socket, SDLNet_Address* serverAddress, int portForServer) : MessageSender(socket)
+
+ClientMessageSender::ClientMessageSender(SDLNet_DatagramSocket* socket, EndpointInfo* serverInfo) : MessageSender(socket)
 {
-	server = serverAddress;
-	serverPort = portForServer;
+	server = serverInfo->address;
+	serverPort = serverInfo->port;
 }
 
 void ClientMessageSender::SendImportantMessage(NetworkMessageTypes type, std::string message)

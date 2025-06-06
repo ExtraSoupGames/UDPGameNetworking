@@ -17,6 +17,7 @@ public:
 	//Returns the relevant data about this value ready for streaming as 64 bits formatted as
 	// a string of 64 characters containing only 1s and 0s
 	virtual std::string GetStreamData() = 0;
+	virtual std::string Debug() = 0;
 };
 class LerpedValue : public NetworkedValue {
 private:
@@ -37,4 +38,8 @@ public:
 	void LerpMessageReceived(int xVal, int yVal);
 	virtual bool StreamReceived(std::string streamData) override;
 	virtual std::string GetStreamData() override;
+
+	void UpdateValue(int xVal, int yVal);
+
+	virtual std::string Debug() override;
 };

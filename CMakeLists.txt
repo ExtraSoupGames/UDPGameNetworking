@@ -30,9 +30,9 @@ set(SOURCES
     UDPGameNetworking/NetworkUtilities.cpp
     UDPGameNetworking/ImportantMessage.cpp
     UDPGameNetworking/NetworkMessage.cpp
-    UDPGameNetworking/TestingFunctions.cpp
-    "UDPGameNetworking/Endpoints/Server.cpp"
-    "UDPGameNetworking/Endpoints/Client.cpp"
+    UDPGameNetworking/Testing/TestingFunctions.cpp
+    UDPGameNetworking/Endpoints/Server.cpp
+    UDPGameNetworking/Endpoints/Client.cpp
     UDPGameNetworking/NetworkObjects/NetworkObject.cpp
     UDPGameNetworking/NetworkObjects/OwnedNO.cpp
     UDPGameNetworking/NetworkObjects/UnownedNO.cpp
@@ -41,8 +41,9 @@ set(SOURCES
     UDPGameNetworking/Senders/MessageSender.cpp
     UDPGameNetworking/Senders/ServerMessageSender.cpp
     UDPGameNetworking/Senders/ClientMessageSender.cpp
-    UDPGameNetworking/Wrapper/TestWrapper.cpp
+    UDPGameNetworking/Testing/TestWrapper.cpp
     UDPGameNetworking/Wrapper/Callback.cpp
+    UDPGameNetworking/Testing/TestEngineObject.cpp
 )
 add_executable(UDPGameNetworking ${SOURCES})
 

@@ -5,6 +5,7 @@
 #include "SDL3_net/SDL_net.h"
 #include "NetworkedValue.h"
 #include "ObjectDataProcessor.h"
+#include "../Wrapper/IEngineObject.h"
 //Note that object IDs are sent in BCD format so ID digits is this / 4
 static int objectIDBits = 8; // number of digits in an object ID
 static int objectIDDigits = objectIDBits / 4;
@@ -20,8 +21,11 @@ private:
 	bool initialized;
 	//tracks time since last stream message sent
 	float streamTimer;
-	//contains all values that will be streamed to the server, should be updated by wrapper in Update method
+	//contains all values that will be streamed to the server, updated by updatevalues method in engine object
 	std::vector<NetworkedValue*>* networkedValues;
+
+	//used for managing data interfacing with the engine
+	IEngineObject* engineObject;
 
 	//Sends a data stream message
 	void StreamSend(EndpointInfo* server, SDLNet_DatagramSocket* socket);
@@ -30,7 +34,7 @@ private:
 protected:
 public:
 	//Create the object in an uninitialized state and request an ID from the server
-	OwnedNetworkObject(EndpointInfo* server, SDLNet_DatagramSocket* socket);
+	OwnedNetworkObject(EndpointInfo* server, SDLNet_DatagramSocket* socket, IEngineObject* engineObject);
 	~OwnedNetworkObject();
 	//Initialize the object with an ID provided by the server
 	//Returns true if object was initialized

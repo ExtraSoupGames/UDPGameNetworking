@@ -1,10 +1,17 @@
 #pragma once
 #include <SDL3_net/SDL_net.h>
+#include <string>
+//manages an endpoint
 struct EndpointInfo {
 	SDLNet_Address* address;
 	int port;
-	EndpointInfo(SDLNet_Address* pAddress, int pPort) {
-		address = SDLNet_RefAddress(pAddress);
+	EndpointInfo(std::string addressString, int pPort) {
+		address = SDLNet_ResolveHostname(addressString.c_str());
+		SDLNet_WaitUntilResolved(address, -1); //TODO fix timeout
+		port = pPort;
+	}
+	EndpointInfo(SDLNet_Address* addressRef, int pPort) {
+		address = SDLNet_RefAddress(addressRef);
 		port = pPort;
 	}
 	~EndpointInfo() {

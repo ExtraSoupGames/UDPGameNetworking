@@ -11,11 +11,10 @@ void ObjectDataProcessor::UpdateValues(std::vector<NetworkedValue*>* values, Net
 		int valueID = NetworkUtilities::IntFromBinaryString(streamData.substr(0,8), 2);
 		for (NetworkedValue* val : *values) {
 			if (val->GetID() == valueID) {
-				//TODO Update value with streamData.substr(8,56)
+				val->StreamReceived(streamData.substr(8, 56));
 			}
 		}
 	}
-	throw new std::exception; // Not yet implemented
 }
 
 std::string ObjectDataProcessor::ConstructDataStream(std::vector<NetworkedValue*>* values)
