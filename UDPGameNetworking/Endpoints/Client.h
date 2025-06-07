@@ -34,7 +34,7 @@ public:
 	void ConnectToServer(std::string serverAddress);
 	//disconnects from a server (with no warning to the server) and cleares network pointers
 	void Disconnect();
-	//process incoming packets and trigger relevant callbacks
+	//process incoming packets, stream owned object data, and trigger relevant callbacks
 	void Update(float deltaTime);
 	bool IsConnected();
 	void SendServerMessage(NetworkMessageTypes type, std::string msg, std::string stateCode);
