@@ -3,23 +3,18 @@
 #include "../NetworkObjects/OwnedNo.h"
 #include "../NetworkObjects/UnownedNO.h"
 #include "../Wrapper/IEngineObject.h"
-class IWrapper; // Forward declaration as Wrapper needs client implementation
-class Client {
+#include "SocketHolder.h"
+class Client  : public SocketHolder{
 private:
-	IWrapper* wrapper;
 	EndpointInfo* serverInfo;
 	int port;
 	bool isConnected;
 
 	ClientMessageSender* sender;
-	SDLNet_DatagramSocket* socket;
-
-	std::vector<OwnedNetworkObject*>* ownedObjects; //TODO try changing to a queue as newly created objects are those more frequently searched for?
+	std::vector<OwnedNetworkObject*>* ownedObjects;
 	std::vector<UnownedNetworkObject*>* nonOwnedObjects;
 
-	//TODO extract to socket holder - too much in common with server
-	void PollSocket();
-	void ProcessMessage(NetworkMessage* msg);
+	virtual void ProcessMessage(NetworkMessage* msg) override;
 
 	void ProcessIncomingIDRequest(NetworkMessage* msg);
 	void ProcessUserMessage(NetworkMessage* msg);
@@ -31,6 +26,7 @@ private:
 
 	void SendConnectRequest();
 protected:
+	virtual MessageSender* GetSender() override { return sender; }
 public:
 	Client(int portToUse, IWrapper* libWrapper);
 	~Client();	

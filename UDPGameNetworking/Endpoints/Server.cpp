@@ -55,14 +55,6 @@ bool Server::IsAlreadyConnected(EndpointInfo* client)
     return false;
 }
 
-void Server::PollSocket()
-{
-    NetworkMessage* nextMessage = nullptr;
-    while (NetworkUtilities::GetNextIncoming(socket, nextMessage, sender)) {
-        ProcessMessage(nextMessage);
-        delete nextMessage;
-    }
-}
 
 void Server::ProcessMessage(NetworkMessage* msg)
 {
@@ -83,7 +75,7 @@ void Server::ProcessMessage(NetworkMessage* msg)
         TryConnectClient(msg);
         break;
     case ConnectConfirm:
-        ConfirmClientConnection(msg); // TODO fix client connection and registration
+        ConfirmClientConnection(msg);
         break;
     }
 }
@@ -107,7 +99,7 @@ void Server::ProcessObjectMessage(NetworkMessage* msg)
     for (UnownedNetworkObject* uno : *nonOwnedObjects) {
         if (uno->StreamDataReceived(msg)) {
             //if the object exists we can return
-            Broadcast(msg->GetMessageType(), msg->GetExtraData());
+            Broadcast(msg->GetMessageType(), msg->GetExtraData()); //TODO maybe skip broadcasting to client that sent the packet to save unnecessary packets
             std::cout << "broadcasting object data to ALL CLIENTS" << std::endl;
             return;
         }
@@ -171,7 +163,7 @@ void Server::ImportantBroadcast(NetworkMessageTypes type, std::string message)
         std::cout << "Sender is null, not sending important broadcast" << std::endl;
         return;
     }
-    sender->BroadcastImportantMessage(type, message);
+    ((ServerMessageSender*)sender)->BroadcastImportantMessage(type, message);
 }
 
 int Server::GetConnectedClientCount()

@@ -33,6 +33,7 @@ set(SOURCES
     UDPGameNetworking/Testing/TestingFunctions.cpp
     UDPGameNetworking/Endpoints/Server.cpp
     UDPGameNetworking/Endpoints/Client.cpp
+    UDPGameNetworking/Endpoints/SocketHolder.cpp
     UDPGameNetworking/NetworkObjects/NetworkObject.cpp
     UDPGameNetworking/NetworkObjects/OwnedNO.cpp
     UDPGameNetworking/NetworkObjects/UnownedNO.cpp

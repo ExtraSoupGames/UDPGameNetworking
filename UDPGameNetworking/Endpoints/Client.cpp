@@ -1,13 +1,5 @@
 #include "Client.h"
 #include "../Wrapper/IWrapper.h"
-void Client::PollSocket()
-{
-	NetworkMessage* nextMessage = nullptr;
-	while (NetworkUtilities::GetNextIncoming(socket, nextMessage, sender)) {
-		ProcessMessage(nextMessage);
-		delete nextMessage;
-	}
-}
 
 void Client::ProcessMessage(NetworkMessage* msg)
 {

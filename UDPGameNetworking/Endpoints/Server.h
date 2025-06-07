@@ -4,15 +4,13 @@
 #include <queue>
 #include "../NetworkObjects/OwnedNO.h"
 #include "../NetworkObjects/UnownedNO.h"
-class IWrapper; // // Forward declaration as Wrapper needs server implementation
-class Server {
+#include "SocketHolder.h"
+class Server : public SocketHolder{
 private:
-	IWrapper* wrapper;
 	SDLNet_Address* address;
 	int port;
-	ServerMessageSender* sender;
-	SDLNet_DatagramSocket* socket;
 
+	ServerMessageSender* sender;
 	std::vector<EndpointInfo*>* connectedClients;
 
 	EndpointInfo* connectorInfo;
@@ -28,14 +26,13 @@ private:
 	void TryConnectClient(NetworkMessage* msg);
 	bool IsAlreadyConnected(EndpointInfo* client);
 
-	//TODO extract to socket holder - too much in common with ckient
-	void PollSocket();
-	void ProcessMessage(NetworkMessage* msg);
+	virtual void ProcessMessage(NetworkMessage* msg) override;
 
 	void ProcessIncomingIDRequest(NetworkMessage* msg);
 	void ProcessUserMessage(NetworkMessage* msg);
 	void ProcessObjectMessage(NetworkMessage* msg);
 protected:
+	virtual MessageSender* GetSender() override { return sender; }
 public:
 	Server(std::string ipAddress, int port, IWrapper* libWrapper);
 	void Update(float deltaTime);
