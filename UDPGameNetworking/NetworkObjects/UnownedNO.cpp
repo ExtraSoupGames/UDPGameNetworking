@@ -1,7 +1,8 @@
 #include "UnownedNO.h"
 
-UnownedNetworkObject::UnownedNetworkObject(IEngineObject* engineObj)
+UnownedNetworkObject::UnownedNetworkObject(IEngineObject* engineObj, NetworkMessage* msg)
 {
+	ID = NetworkUtilities::GetObjectIDFromMsg(msg);
 	engineObject = engineObj;
 	networkedValues = new std::vector<NetworkedValue*>();
 }
@@ -17,8 +18,7 @@ UnownedNetworkObject::~UnownedNetworkObject()
 
 bool UnownedNetworkObject::StreamDataReceived(NetworkMessage* msg)
 {
-	std::string IDData = msg->GetExtraData().substr(0,8);
-	int streamObjectID = NetworkUtilities::IntFromBinaryString(IDData, 2);
+	int streamObjectID = NetworkUtilities::GetObjectIDFromMsg(msg);
 	if (streamObjectID != ID) {
 		return false;
 	}

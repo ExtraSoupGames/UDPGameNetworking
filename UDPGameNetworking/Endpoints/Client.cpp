@@ -29,6 +29,10 @@ void Client::ProcessMessage(NetworkMessage* msg)
 	case ImportantMessageConfirmation:
 		sender->ConfirmationRecieved(msg);
 		break;
+	case Connect:
+		NetworkUtilities::SendMessageTo(ConnectConfirm, "", socket, serverInfo->address, serverInfo->port, sender);
+		std::cout << "Connect confirmation sent!" << std::endl;
+		break;
 	}
 }
 
@@ -58,27 +62,45 @@ void Client::ProcessUserMessage(NetworkMessage* msg)
 
 void Client::ProcessObjectMessage(NetworkMessage* msg)
 {
-	bool relevantObjectExists = false; //does the object described in the message exist in this client's view already
-	// if not we need to create it
+	//first we should check if the object is owned by this client and if so, ignore the message
+	int streamObjectID = NetworkUtilities::GetObjectIDFromMsg(msg);
+	if (AmIThisObjectsOwner(streamObjectID)) {
+		std::cout << "Client received object data but it was ignored as the clients was the objects owner" << std::endl;
+		return;
+	}
 	for (UnownedNetworkObject* uno : *nonOwnedObjects) {
 		if (uno->StreamDataReceived(msg)) {
-			relevantObjectExists = true;
+			//if the object exists we can return
 			return;
 		}
 	}
-	if (!relevantObjectExists) {
-		IEngineObject* engineObj = wrapper->NewNetworkedObject(0);
-		UnownedNetworkObject* uno = new UnownedNetworkObject(engineObj);
-		nonOwnedObjects->push_back(uno);
-	}
+	//if the object was not found then it is new
+	//we must create a new unowned object to represent it
+	IEngineObject* engineObj = wrapper->NewNetworkedObject(0);
+	UnownedNetworkObject* uno = new UnownedNetworkObject(engineObj, msg);
+	nonOwnedObjects->push_back(uno);
 }
 
 void Client::UpdateObjects(float deltaTime)
 {
 	for (OwnedNetworkObject* ono : *ownedObjects) {
 		ono->Update(deltaTime, serverInfo, socket);
-
 	}
+}
+
+bool Client::AmIThisObjectsOwner(int objectID)
+{
+	for (OwnedNetworkObject* ono : *ownedObjects) {
+		if (ono->GetID() == objectID) {
+			return true;
+		}
+	}
+	return false;
+}
+
+void Client::SendConnectRequest()
+{
+	NetworkUtilities::SendMessageTo(Connect, "", socket, serverInfo->address, serverInfo->port, sender);
 }
 
 Client::Client(int portToUse, IWrapper* libWrapper)
@@ -89,6 +111,7 @@ Client::Client(int portToUse, IWrapper* libWrapper)
 	sender = nullptr;
 	socket = nullptr;
 	serverInfo = nullptr;
+	isConnected = false;
 
 	ownedObjects = new std::vector<OwnedNetworkObject*>();
 	nonOwnedObjects = new std::vector<UnownedNetworkObject*>();
@@ -124,6 +147,7 @@ void Client::ConnectToServer(std::string address)
 	}
 
 	sender = new ClientMessageSender(socket, serverInfo);
+	SendConnectRequest();
 }
 
 void Client::Disconnect()

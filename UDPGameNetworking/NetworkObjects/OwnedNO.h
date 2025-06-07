@@ -43,4 +43,6 @@ public:
 	//Updates the object, sending a message if required
 	// @param deltaTime - the time in seconds since last update was called on this object
 	void Update(float deltaTime, EndpointInfo* server, SDLNet_DatagramSocket* socket); //TODO expand to include value updating
+
+	int GetID() { return ID; }
 };

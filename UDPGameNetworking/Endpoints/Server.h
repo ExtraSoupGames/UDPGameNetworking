@@ -16,17 +16,16 @@ private:
 	std::vector<EndpointInfo*>* connectedClients;
 
 	EndpointInfo* connectorInfo;
-	int nextClientID;
 	bool connectingAClient;
 
 	std::vector<OwnedNetworkObject*>* ownedObjects;
 	std::vector<UnownedNetworkObject*>* nonOwnedObjects;
 	std::queue<int>* availableIDs;
 
-	int GetNextFreeID();
+	int GetNextFreeID(); // for objects
 
-	void ConfirmClientConnection(EndpointInfo* client);
-	void TryConnectClient(std::string inData, EndpointInfo* client);
+	void ConfirmClientConnection(NetworkMessage* msg);
+	void TryConnectClient(NetworkMessage* msg);
 	bool IsAlreadyConnected(EndpointInfo* client);
 
 	//TODO extract to socket holder - too much in common with ckient
@@ -40,7 +39,7 @@ protected:
 public:
 	Server(std::string ipAddress, int port, IWrapper* libWrapper);
 	void Update(float deltaTime);
-	void Broadcast(std::string message);
+	void Broadcast(NetworkMessageTypes type, std::string message);
 	void ImportantBroadcast(NetworkMessageTypes type, std::string message);
 
 	int GetConnectedClientCount();

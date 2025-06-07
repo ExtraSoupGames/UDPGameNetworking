@@ -10,32 +10,39 @@ int Server::GetNextFreeID()
     std::cout << "Next free id was: " << out << std::endl;
     return out;
 }
-void Server::ConfirmClientConnection(EndpointInfo* client)
+void Server::ConfirmClientConnection(NetworkMessage* msg)
 {
+    EndpointInfo* client = msg->GetSender();
     if (!connectingAClient) {
+        delete client;
         return;
     }
-    if (SDLNet_GetAddressString(client->address) == SDLNet_GetAddressString(connectorInfo->address)) {
-        connectingAClient = false;
-        nextClientID++;
-        connectedClients->push_back(new EndpointInfo(client->address, client->port));
-        sender->NewClientConnected(connectedClients->at(connectedClients->size() - 1));
-        sender->SendImportantMessage(Error, "1111", new EndpointInfo(client->address, client->port));
-        connectorInfo = nullptr;
-        std::cout << "Successfully connected client with ID: " << (nextClientID - 1) << std::endl;
+    if (*client != *connectorInfo) {
+        delete client;
+        return;
     }
+    connectingAClient = false;
+    connectedClients->push_back(client);
+    sender->NewClientConnected(client);
+    connectorInfo = nullptr;
+    std::cout << "Successfully connected client from address: " << SDLNet_GetAddressString(client->address) << std::endl;
 }
 
-void Server::TryConnectClient(std::string inData, EndpointInfo* client)
+void Server::TryConnectClient(NetworkMessage* msg)
 {
+    std::cout << "trying to connect client!" << std::endl;
+    EndpointInfo* client = msg->GetSender();
     if (IsAlreadyConnected(client)) {
+        delete client;
         return;
     }
     if (connectingAClient) {
-        if (*client == *connectorInfo) {
-
-        }
+        delete client;
+        return;
     }
+    connectingAClient = true;
+    connectorInfo = client;
+    NetworkUtilities::SendMessageTo(Connect, "", socket, connectorInfo->address, connectorInfo->port, sender);
 }
 
 bool Server::IsAlreadyConnected(EndpointInfo* client)
@@ -72,6 +79,12 @@ void Server::ProcessMessage(NetworkMessage* msg)
     case NetworkedObjectMsg:
         ProcessObjectMessage(msg);
         break;
+    case Connect:
+        TryConnectClient(msg);
+        break;
+    case ConnectConfirm:
+        ConfirmClientConnection(msg); // TODO fix client connection and registration
+        break;
     }
 }
 
@@ -89,18 +102,22 @@ void Server::ProcessUserMessage(NetworkMessage* msg)
 
 void Server::ProcessObjectMessage(NetworkMessage* msg)
 {
-    //TODO implement
-    //TODO remove this - just for testing
-    int objectID = NetworkUtilities::IntFromBinaryString(msg->GetExtraData().substr(0, 8), objectIDDigits);
-    int objectX = NetworkUtilities::IntFromBinaryString(msg->GetExtraData().substr(16,28), 7);
-    int objectY = NetworkUtilities::IntFromBinaryString(msg->GetExtraData().substr(44, 28), 7);
-    if (objectX == objectY && objectY == objectID) {
-        std::cout << "YAY";
+    //TODO does the server even need to keep track of objects if all it does is pass the info on? it doesnt need to lerp values like clients do
+
+    for (UnownedNetworkObject* uno : *nonOwnedObjects) {
+        if (uno->StreamDataReceived(msg)) {
+            //if the object exists we can return
+            Broadcast(msg->GetMessageType(), msg->GetExtraData());
+            std::cout << "broadcasting object data to ALL CLIENTS" << std::endl;
+            return;
+        }
     }
-    else {
-        std::cout << "UH OH!!!!!" << std::endl;
-    }
-    
+    //if the object was not found then it is new
+    //we must create a new unowned object to represent it
+    IEngineObject* engineObj = wrapper->NewNetworkedObject(0);
+    UnownedNetworkObject* uno = new UnownedNetworkObject(engineObj, msg);
+    nonOwnedObjects->push_back(uno);
+    Broadcast(msg->GetMessageType(), msg->GetExtraData());
 }
 
 
@@ -109,7 +126,6 @@ Server::Server(std::string ip, int serverPort, IWrapper* libWrapper)
     wrapper = libWrapper;
     connectingAClient = false;
     connectorInfo = nullptr;
-    nextClientID = 0;
     port = serverPort;
 
     ownedObjects = new std::vector<OwnedNetworkObject*>();
@@ -137,13 +153,15 @@ Server::Server(std::string ip, int serverPort, IWrapper* libWrapper)
 void Server::Update(float deltaTime)
 {
     PollSocket();
+    sender->SendUnsentMessages(false);
 }
 
-void Server::Broadcast(std::string message)
+void Server::Broadcast(NetworkMessageTypes type, std::string message)
 {
+    std::cout << "Broadcasting to " << connectedClients->size() << " clients!" << std::endl;
     for (int i = 0; i < connectedClients->size(); i++) {
         EndpointInfo* c = connectedClients->at(i);
-        NetworkUtilities::SendMessageTo(Error, message, socket, c->address, c->port);
+        NetworkUtilities::SendMessageTo(type, message, socket, c->address, c->port);
     }
 }
 

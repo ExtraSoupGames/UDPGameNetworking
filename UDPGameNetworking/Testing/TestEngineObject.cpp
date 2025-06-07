@@ -26,7 +26,7 @@ void TestEngineObject::UpdateLibraryValues(std::vector<NetworkedValue*>* values)
 void TestEngineObject::UpdateEngineValues(std::vector<NetworkedValue*>* values) {
 	//prints the incoming values
 	//TODO expand on this functionality
-	std::cout << "incoming values: " << values->at(0)->Debug() << std::endl;
+	std::cout << "incoming values: " << values->size() << std::endl;
 }
 
 void TestEngineObject::SetValue(int setX, int setY)

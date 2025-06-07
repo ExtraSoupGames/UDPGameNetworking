@@ -1,5 +1,6 @@
 #include "NetworkUtilities.h"
 #include "Senders/MessageSender.h"
+#include "NetworkObjects/OwnedNO.h"
 std::vector<Uint8>* NetworkUtilities::PackMessage(std::string inData)
 {
 	//ensure message is only 1s and 0s
@@ -89,21 +90,25 @@ NetworkMessageTypes NetworkUtilities::UnpackHeader(std::string inData)
 	}
 	int header = stoi(inData.substr(0, 4), nullptr, 2);
 	switch (header) {
-	case 1: return NetworkedObjectMsg;
-	case 2: return UserImportant; // Important
-	case 3: return UserUnImportant;
-	case 4: return ImportantMessageConfirmation;
-	case 5: return IDRequest;
+	case 1: return Connect;
+	case 2: return ConnectConfirm;
+	case 3: return NetworkedObjectMsg;
+	case 4: return UserImportant; // Important
+	case 5: return UserUnImportant;
+	case 6: return ImportantMessageConfirmation;
+	case 7: return IDRequest;
 	default: return Error;
 	}
 }
 std::string NetworkUtilities::PackHeader(NetworkMessageTypes type) {
 	switch (type) {
-	case NetworkedObjectMsg: return "0001";
-	case UserImportant: return "0010";
-	case UserUnImportant: return "0011";
-	case ImportantMessageConfirmation: return "0100";
-	case IDRequest: return "0101";
+	case Connect: return "0001";
+	case ConnectConfirm: return "0010";
+	case NetworkedObjectMsg: return "0011";
+	case UserImportant: return "0100";
+	case UserUnImportant: return "0101";
+	case ImportantMessageConfirmation: return "0110";
+	case IDRequest: return "0111";
 	default: return "0000";
 	}
 }
@@ -171,6 +176,12 @@ bool NetworkUtilities::VeryifyMessageState(NetworkMessage* msg, std::string stat
 	std::string messageState = msg->RemoveStateVerification();
 	if (messageState == stateCode) return true;
 	return false;
+}
+int NetworkUtilities::GetObjectIDFromMsg(NetworkMessage* msg)
+{
+	std::string IDData = msg->GetExtraData().substr(0, objectIDBits);
+	int ID = IntFromBinaryString(IDData, objectIDDigits);
+	return ID;
 }
 bool NetworkUtilities::IsBinaryOnly(std::string message) {
 	for (int i = 0; i < message.size(); i++) {

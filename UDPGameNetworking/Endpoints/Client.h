@@ -9,6 +9,7 @@ private:
 	IWrapper* wrapper;
 	EndpointInfo* serverInfo;
 	int port;
+	bool isConnected;
 
 	ClientMessageSender* sender;
 	SDLNet_DatagramSocket* socket;
@@ -25,6 +26,10 @@ private:
 	void ProcessObjectMessage(NetworkMessage* msg);
 
 	void UpdateObjects(float deltaTime);
+
+	bool AmIThisObjectsOwner(int objectID);
+
+	void SendConnectRequest();
 protected:
 public:
 	Client(int portToUse, IWrapper* libWrapper);

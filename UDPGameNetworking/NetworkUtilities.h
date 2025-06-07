@@ -10,6 +10,8 @@ class MessageSender;
 //Different types of message that can be sent
 //Note message importance is defined in NetworkUtilities::IsImportantType();
 enum NetworkMessageTypes {
+	Connect,
+	ConnectConfirm,
 	NetworkedObjectMsg,
 	UserImportant,
 	UserUnImportant,
@@ -64,6 +66,8 @@ public:
 	static NetworkMessageTypes UnpackHeader(std::string message);
 
 	static bool VeryifyMessageState(NetworkMessage* msg, std::string stateCode);
+
+	static int GetObjectIDFromMsg(NetworkMessage* msg);
 
 
 	//converts a decimal integer into a binary coded decimal string

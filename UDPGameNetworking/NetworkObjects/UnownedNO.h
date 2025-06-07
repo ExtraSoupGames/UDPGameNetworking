@@ -7,7 +7,6 @@
 //A network object owned by another client, it's incoming data is provided by the owning client, 
 // and it streams data to the wrapper for rendering
 class UnownedNetworkObject : public NetworkObject {
-	//TODO basic stream processing
 //TODO lerping
 //TODO wrapper render instructions
 private:
@@ -15,7 +14,7 @@ private:
 	IEngineObject* engineObject;
 protected:
 public:
-	UnownedNetworkObject(IEngineObject* engineObj);
+	UnownedNetworkObject(IEngineObject* engineObj, NetworkMessage* msg);
 	~UnownedNetworkObject();
 	bool StreamDataReceived(NetworkMessage* msg);
 };

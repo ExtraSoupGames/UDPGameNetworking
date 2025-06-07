@@ -23,4 +23,7 @@ struct EndpointInfo {
 			&& SDLNet_GetAddressString(other.address)
 			== SDLNet_GetAddressString(address);
 	}
+	bool operator!=(const EndpointInfo& other) {
+		return !(*this == other);
+	}
 };
