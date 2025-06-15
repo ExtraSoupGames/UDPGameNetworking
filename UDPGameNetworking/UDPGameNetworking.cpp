@@ -9,6 +9,8 @@
 
 #include "Testing/TestingFunctions.h"
 
+//Big TODO
+// - Threading for server polling
 int main()
 {
 	if (!SDLNet_Init()) {

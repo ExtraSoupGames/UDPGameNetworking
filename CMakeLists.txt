@@ -45,6 +45,7 @@ set(SOURCES
     UDPGameNetworking/Testing/TestWrapper.cpp
     UDPGameNetworking/Wrapper/Callback.cpp
     UDPGameNetworking/Testing/TestEngineObject.cpp
+    UDPGameNetworking/Demo/Demo.cpp
 )
 add_executable(UDPGameNetworking ${SOURCES})
 
