@@ -9,7 +9,7 @@ protected:
 public:
 	DemoPlayer();
 	~DemoPlayer();
-	void HandleInput();
+	void HandleInput(SDL_Event& e);
 	void Update(float deltaTime);
 
 	SDL_FRect* GetRect();
@@ -32,6 +32,8 @@ public:
 	void Start();
 	void Update();
 	void Close();
+
+	void HandleInput(SDL_Event& e);
 };
 class Demo {
 private:

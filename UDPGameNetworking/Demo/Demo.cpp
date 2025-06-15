@@ -40,13 +40,17 @@ void DemoClient::Update()
 	SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
 	SDL_RenderRect(renderer, clientPlayer->GetRect());
 	SDL_RenderPresent(renderer);
-	if (/*SDL_GetMouseFocus() == window*/ true) {
-		clientPlayer->HandleInput();
-	}
 	wrapper->Update(1);
 }
 void DemoClient::Close()
 {
+}
+
+void DemoClient::HandleInput(SDL_Event& e)
+{
+	if (SDL_GetMouseFocus() == window) {
+		clientPlayer->HandleInput(e);
+	}
 }
 
 Demo::Demo()
@@ -71,6 +75,12 @@ void Demo::Update()
 {
 	client1->Update();
 	client2->Update();
+
+	SDL_Event e;
+	while (SDL_PollEvent(&e)) {
+		client1->HandleInput(e);
+		client2->HandleInput(e);
+	}
 }
 
 void Demo::Close()
@@ -94,15 +104,12 @@ DemoPlayer::~DemoPlayer()
 {
 }
 
-void DemoPlayer::HandleInput()
+void DemoPlayer::HandleInput(SDL_Event& e)
 {
-	SDL_Event event;
-	while (SDL_PollEvent(&event)) {
-		switch (event.type) {
-		case SDL_EVENT_KEY_DOWN:
-			if (event.key.key == SDLK_A) {
-				x -= 5;
-			}
+	switch (e.type) {
+	case SDL_EVENT_KEY_DOWN:
+		if (e.key.key == SDLK_A) {
+			x -= 5;
 		}
 	}
 }
