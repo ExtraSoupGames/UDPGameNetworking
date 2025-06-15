@@ -8,6 +8,7 @@
 #include "Testing/TestWrapper.h"
 
 #include "Testing/TestingFunctions.h"
+#include "Demo/Demo.h"
 
 //Big TODO
 // - Threading for server polling
@@ -16,6 +17,17 @@ int main()
 	if (!SDLNet_Init()) {
 		return 0;
 	}
+	Demo* demo = new Demo();
+	demo->Start();
+	while (!demo->Done()) {
+		demo->Update();
+	}
+	demo->Close();
+
+
+
+
+	/*Default Test
 	std::cout << "Hello CMake." << std::endl;
 	IWrapper* wrapper = new TestWrapper();
 	Server* s = new Server("127.0.0.1", 66661, wrapper);
@@ -51,6 +63,7 @@ int main()
 
 	}
 	std::cout << "Done" << std::endl;
+	*/
 	return 0;
 }
 

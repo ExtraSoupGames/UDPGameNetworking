@@ -4,19 +4,18 @@
 class DemoPlayer : public IEngineObject {
 private:
 protected:
+	int x;
+	int y;
 public:
 	DemoPlayer();
 	~DemoPlayer();
 	void HandleInput();
 	void Update(float deltaTime);
 
+	SDL_FRect* GetRect();
+
 	virtual void UpdateLibraryValues(std::vector<NetworkedValue*>* values) override;
 	virtual void UpdateEngineValues(std::vector<NetworkedValue*>* values) override;
-};
-class DemoEnemy : public IEngineObject {
-private:
-protected:
-public:
 };
 class DemoClient {
 private:
@@ -24,6 +23,8 @@ private:
 	bool isServer;
 	DemoPlayer* clientPlayer;
 	DemoWrapper* wrapper;
+	SDL_Window* window;
+	SDL_Renderer* renderer;
 protected:
 public:
 	DemoClient(bool isServer);
@@ -43,4 +44,6 @@ public:
 	void Start();
 	void Update();
 	void Close();
+
+	bool Done();
 };
