@@ -20,11 +20,13 @@ public:
 };
 class DemoClient {
 private:
+	bool started;
+	bool isServer;
 	DemoPlayer* clientPlayer;
 	DemoWrapper* wrapper;
 protected:
 public:
-	DemoClient();
+	DemoClient(bool isServer);
 	~DemoClient();
 	void Start();
 	void Update();
