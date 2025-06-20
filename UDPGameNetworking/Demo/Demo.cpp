@@ -1,13 +1,13 @@
 #include "Demo.h"
 
-DemoClient::DemoClient(bool server)
+DemoClient::DemoClient(bool server, int port)
 {
 	isServer = server;
 	//TODO server management
 	//TODO create a window and manage it
 	//TODO player rendering
 	//TODO get networking working
-	wrapper = new DemoWrapper();
+	wrapper = new DemoWrapper(port);
 	clientPlayer = new DemoPlayer();
 	started = false;
 	window = nullptr;
@@ -23,10 +23,11 @@ DemoClient::~DemoClient()
 
 void DemoClient::Start()
 {
-	wrapper->StartClient();
+	wrapper->Initialize();
 	if (isServer) {
 		wrapper->StartServer();
 	}
+	wrapper->StartClient();
 	wrapper->RegisterObject(clientPlayer);
 	started = true;
 	window = SDL_CreateWindow("UDP Game Networking Demo client", 500, 500, 0);
@@ -38,7 +39,9 @@ void DemoClient::Update()
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderFillRect(renderer, NULL);
 	SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
-	SDL_RenderRect(renderer, clientPlayer->GetRect());
+	const SDL_FRect rect = clientPlayer->GetRect();;
+	SDL_RenderRect(renderer, &rect);
+	wrapper->DrawOtherPlayers(renderer);
 	SDL_RenderPresent(renderer);
 	wrapper->Update(1);
 }
@@ -55,8 +58,9 @@ void DemoClient::HandleInput(SDL_Event& e)
 
 Demo::Demo()
 {
-	client1 = new DemoClient(true);
-	client2 = new DemoClient(false);
+	client1 = new DemoClient(true, 55511);
+	client2 = new DemoClient(false, 55522);
+	client2Delay = 500;
 }
 
 Demo::~Demo()
@@ -68,18 +72,33 @@ Demo::~Demo()
 void Demo::Start()
 {
 	client1->Start();
-	client2->Start();
 }
 
 void Demo::Update()
 {
+	//TODO rewrite this function, its a mess
 	client1->Update();
-	client2->Update();
+
+	bool client2Connected = false;
+	if (client2Delay > 0) {
+		client2Delay--;
+		if (client2Delay <= 0) {
+			client2->Start();
+		}
+	}
+	else {
+		client2Connected = true;
+	}
+	if (client2Connected) {
+		client2->Update();
+	}
 
 	SDL_Event e;
 	while (SDL_PollEvent(&e)) {
 		client1->HandleInput(e);
-		client2->HandleInput(e);
+		if (client2Connected) {
+			client2->HandleInput(e);
+		}
 	}
 }
 
@@ -111,22 +130,25 @@ void DemoPlayer::HandleInput(SDL_Event& e)
 		if (e.key.key == SDLK_A) {
 			x -= 5;
 		}
+		if (e.key.key == SDLK_D) {
+			x += 5;
+		}
 	}
 }
 
 void DemoPlayer::Update(float deltaTime)
 {
+
 }
 
-SDL_FRect* DemoPlayer::GetRect()
+SDL_FRect DemoPlayer::GetRect()
 {
-	SDL_FRect pos = SDL_FRect{ (float)x, (float)y, 20, 20 };
-	return &pos;
+	return SDL_FRect{ (float)x, (float)y, 20, 20 };
 }
 
 void DemoPlayer::UpdateLibraryValues(std::vector<NetworkedValue*>* values)
 {
-	((PositionLerp2D*)values->at(0))->UpdateValue(x, 0);
+	((PositionLerp2D*)values->at(0))->UpdateValue(x, y);
 }
 
 void DemoPlayer::UpdateEngineValues(std::vector<NetworkedValue*>* values)

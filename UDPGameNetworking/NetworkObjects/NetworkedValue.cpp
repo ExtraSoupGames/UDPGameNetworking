@@ -16,15 +16,20 @@ void PositionLerp2D::LerpMessageReceived(int xVal, int yVal)
 	//TODO lerp incoming Values
 	x = xVal;
 	y = yVal;
+	if (x != 0) {
+		return;
+	}
+	if (y != 0) {
+		return;
+	}
 }
 
 bool PositionLerp2D::StreamReceived(std::string streamData)
 {
 	//28 bits for x, 28 for y
-	if (streamData.size() != 64) return false; 
-	if(NetworkUtilities::IntFromBinaryString(streamData.substr(0,8), 2) != ID) return false;
-	int xIn = NetworkUtilities::IntFromBinaryString(streamData.substr(8, 28), 7);
-	int yIn = NetworkUtilities::IntFromBinaryString(streamData.substr(36, 28), 7);
+	if (streamData.size() != 56) return false; 
+	int xIn = NetworkUtilities::IntFromBinaryString(streamData.substr(0, 28), 7);
+	int yIn = NetworkUtilities::IntFromBinaryString(streamData.substr(28, 28), 7);
 	LerpMessageReceived(xIn, yIn);
 	return true;
 }

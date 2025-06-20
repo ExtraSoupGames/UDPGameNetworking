@@ -131,7 +131,7 @@ void Client::ConnectToServer(std::string address)
 	if (serverInfo != nullptr) {
 		std::cout << "Already connected to a server!" << std::endl;
 	}
-	serverInfo = new EndpointInfo(address, 66661);
+	serverInfo = new EndpointInfo(address, 55533);
 	socket = SDLNet_CreateDatagramSocket(serverInfo->address, port);
 
 	if (!socket) {

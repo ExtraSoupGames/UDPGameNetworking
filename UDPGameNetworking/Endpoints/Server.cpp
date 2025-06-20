@@ -100,7 +100,6 @@ void Server::ProcessObjectMessage(NetworkMessage* msg)
         if (uno->StreamDataReceived(msg)) {
             //if the object exists we can return
             Broadcast(msg->GetMessageType(), msg->GetExtraData()); //TODO maybe skip broadcasting to client that sent the packet to save unnecessary packets
-            std::cout << "broadcasting object data to ALL CLIENTS" << std::endl;
             return;
         }
     }

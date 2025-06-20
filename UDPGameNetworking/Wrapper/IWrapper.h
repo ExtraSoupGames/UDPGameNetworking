@@ -18,7 +18,7 @@ protected:
 	//Manages networking and server connection
 	Client* client;
 	//Not necessary for every client, manages multiple client connections
-	//Server* server;
+	Server* server;
 public:
 	// --- To be called by engine plugin/engine ---
 	virtual void Update(float deltaTime) = 0;

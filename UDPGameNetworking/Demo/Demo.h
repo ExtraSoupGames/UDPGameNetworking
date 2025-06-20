@@ -12,7 +12,7 @@ public:
 	void HandleInput(SDL_Event& e);
 	void Update(float deltaTime);
 
-	SDL_FRect* GetRect();
+	SDL_FRect GetRect();
 
 	virtual void UpdateLibraryValues(std::vector<NetworkedValue*>* values) override;
 	virtual void UpdateEngineValues(std::vector<NetworkedValue*>* values) override;
@@ -27,7 +27,7 @@ private:
 	SDL_Renderer* renderer;
 protected:
 public:
-	DemoClient(bool isServer);
+	DemoClient(bool isServer, int port);
 	~DemoClient();
 	void Start();
 	void Update();
@@ -37,6 +37,8 @@ public:
 };
 class Demo {
 private:
+	int client2Delay; //Delay client 2s connection to prevent simultaneous connections
+	//TODO allow simultaneous connecting
 	DemoClient* client1;
 	DemoClient* client2;
 protected:

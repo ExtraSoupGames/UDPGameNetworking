@@ -9,7 +9,7 @@
 //Note that object IDs are sent in BCD format so ID digits is this / 4
 static int objectIDBits = 8; // number of digits in an object ID
 static int objectIDDigits = objectIDBits / 4;
-static float objectStreamRate = 5; // one data stream message per X ms
+static float objectStreamRate = 100; // one data stream message per X ms
 //A network object owned by this client, it's incoming data is provided by the wrapper and it streams data
 // to other clients
 static int streamedValueSize = 64; //number of bits per streamed value (8 for value ID, 56 for actual data)

@@ -17,7 +17,7 @@ std::vector<Uint8>* NetworkUtilities::PackMessage(std::string inData)
 	//iterates through the message, 1 byte at a time
 	for (int i = 0; i < inData.size() / 8; i++) {
 		//processes the byte into its compressed form
-		char newBits = stoi(inData.substr(i * 8, 8), nullptr, 2);
+		Uint8 newBits = stoi(inData.substr(i * 8, 8), nullptr, 2);
 		//append the new byte to the compressed message
 		compressedMessage->push_back(newBits);
 	}
@@ -48,29 +48,32 @@ void NetworkUtilities::SendMessageDirect(NetworkMessageTypes messageType, std::s
 bool NetworkUtilities::GetNextIncoming(SDLNet_DatagramSocket* socket, NetworkMessage*& message, MessageSender* sender)
 {
 	SDLNet_Datagram* incoming = nullptr;
-	if (SDLNet_ReceiveDatagram(socket, &incoming)) {
-		if (!incoming) {
+	int bytesReceived = SDLNet_ReceiveDatagram(socket, &incoming);
+	if (bytesReceived <= 0) {
+		std::cout << SDL_GetError() << std::endl;
+		std::cout << "If previous error says connection is closed what it really means is that a message was sent to an invalid socket, and that socket returned an error" << std::endl;
+		std::cout << "Ensure that all targeted sockets are listening" << std::endl;
+		return false;
+	}
+	if (!incoming) {
+		return false;
+	}
+	NetworkMessage* tempMessage = (new NetworkMessage(incoming));
+	SDLNet_DestroyDatagram(incoming);
+	if (IsImportantType(tempMessage)) {
+		if (sender != nullptr) {
+			ImportantMessage* returnMsg = sender->ProcessImportantMessage(tempMessage); // this deletes tempMessage
+			message = returnMsg;
+			return message != nullptr;
+		}
+		else {
+			std::cout << "Important message received but no sender provided to respond with! important message will get stuck!" << std::endl;
+			delete tempMessage;
 			return false;
 		}
-		NetworkMessage* tempMessage = (new NetworkMessage(incoming));
-		SDLNet_DestroyDatagram(incoming);
-		if (IsImportantType(tempMessage)) {
-			if (sender != nullptr) {
-				ImportantMessage* returnMsg = sender->ProcessImportantMessage(tempMessage); // this deletes tempMessage
-				message = returnMsg;
-				return message != nullptr;
-			}
-			else {
-				std::cout << "Important message received but no sender provided to respond with! important message will get stuck!" << std::endl;
-				delete tempMessage;
-				return false;
-			}
-		}
-		message = tempMessage;
-		return message != nullptr;
 	}
-	std::cout << SDL_GetError() << std::endl;
-	return false;
+	message = tempMessage;
+	return message != nullptr;
 }
 
 void NetworkUtilities::SendMessageTo(NetworkMessageTypes messageType, std::string message, SDLNet_DatagramSocket* socket, SDLNet_Address* address, int port, MessageSender* sender)
@@ -168,7 +171,7 @@ std::string NetworkUtilities::AsBinaryString(int outBits, std::string value) {
 }
 std::string NetworkUtilities::StringFromBinaryString(std::string binaryString, int length)
 {
-	throw new std::exception;
+	throw std::runtime_error("Not implemented");
 }
 bool NetworkUtilities::VeryifyMessageState(NetworkMessage* msg, std::string stateCode)
 {

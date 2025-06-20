@@ -8,12 +8,21 @@ void ObjectDataProcessor::UpdateValues(std::vector<NetworkedValue*>* values, Net
 	int describedValueCount = msgLength / streamedValueSize;
 	if (describedValueCount < 1) return;
 	for (int i = 0; i < describedValueCount; i++) {
-		std::string streamData = msg->GetExtraData().substr(i * streamedValueSize, streamedValueSize);
+		std::string streamData = objectData.substr(i * streamedValueSize, streamedValueSize);
 		int valueID = NetworkUtilities::IntFromBinaryString(streamData.substr(0,8), 2);
+		//TODO improve readability of this
+		//TODO consider if this should be reworked to not initialize new values, maybe values should be concrete at declaration
+		bool valueIsInitialized = false;
 		for (NetworkedValue* val : *values) {
 			if (val->GetID() == valueID) {
-				val->StreamReceived(streamData.substr(8, 56));
+				if (val->StreamReceived(streamData.substr(8, 56))) {
+					//value already exists, doesnt need initializing
+					valueIsInitialized = true;
+				}
 			}
+		}
+		if (!valueIsInitialized) {
+			values->push_back(new PositionLerp2D(valueID, 0, 0));
 		}
 	}
 }
