@@ -41,13 +41,13 @@ void PositionLerp2D::LerpMessageReceived(int xVal, int yVal, int time)
 	dataBuffer->push_back(new PositionDataPoint(xVal, yVal, time));
 }
 
-bool PositionLerp2D::StreamReceived(std::string streamData)
+bool PositionLerp2D::StreamReceived(std::string streamData, int time)
 {
 	//28 bits for x, 28 for y
 	if (streamData.size() != 56) return false;
 	int xIn = NetworkUtilities::IntFromBinaryString(streamData.substr(0, 28), 7);
 	int yIn = NetworkUtilities::IntFromBinaryString(streamData.substr(28, 28), 7);
-	LerpMessageReceived(xIn, yIn, 0); // TODO add timestamps to object messages for lerping
+	LerpMessageReceived(xIn, yIn, time);
 	return true;
 }
 

@@ -4,7 +4,7 @@ void OwnedNetworkObject::StreamSend(EndpointInfo* server, SDLNet_DatagramSocket*
 {
 	engineObject->UpdateLibraryValues(networkedValues);
 	std::string messageData = NetworkUtilities::AsBinaryString(ID, objectIDDigits);
-	messageData.append(ObjectDataProcessor::ConstructDataStream(networkedValues));
+	messageData.append(ObjectDataProcessor::ConstructDataStream(networkedValues, 1)); //TODO timestamp needed here
 	//std::cout << "message data: " << messageData << std::endl;
 	NetworkUtilities::SendMessageTo(NetworkedObjectMsg, messageData, socket, server->address, server->port);
 }

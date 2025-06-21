@@ -28,11 +28,11 @@ protected:
 public:
 	PositionLerp2D(int ID, int initX = 0, int initY = 0);
 	Position GetLerpedPosition(int currentTime);
-	inline int GetX() { return x; }
-	inline int GetY() { return y; }
+	const inline int GetX() { return x; }
+	const inline int GetY() { return y; }
 
 	void LerpMessageReceived(int xVal, int yVal, int time);
-	virtual bool StreamReceived(std::string streamData) override;
+	virtual bool StreamReceived(std::string streamData, int time) override;
 	virtual std::string GetStreamData() override;
 
 	void UpdateValue(int xVal, int yVal);

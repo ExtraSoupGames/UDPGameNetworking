@@ -4,6 +4,7 @@
 #include "../NetworkMessage.h"
 #include "OwnedNO.h"
 #include "PositionLerp2D.h"
+static const int timestampByteCount = 4;
 class ObjectDataProcessor {
 private:
 protected:
@@ -14,5 +15,5 @@ public:
 	static void UpdateValues(std::vector<NetworkedValue*>* values, NetworkMessage* msg);
 	//constructs a string of 1s and 0s for a data stream detailing current value of all provided networked values
 	// @param values - the values whose data will be contained in the stream
-	static std::string ConstructDataStream(std::vector<NetworkedValue*>* values);
+	static std::string ConstructDataStream(std::vector<NetworkedValue*>* values, int time);
 };
