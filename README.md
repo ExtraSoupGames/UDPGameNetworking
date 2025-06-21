@@ -7,3 +7,7 @@ that can be wrapped or extended for use in game engines.
 - Networked value lerping (WIP)
 - Important message confirmation
 - Engine agnostic design
+
+### Demo
+- Shows 2 Clients each with a player controlled cube
+- Cube's location is streamed via library
