@@ -1,6 +1,7 @@
 #include "ObjectDataProcessor.h"
 //Object data stream message format:
 //first object data ID
+//then 64 bit chunks of values
 void ObjectDataProcessor::UpdateValues(std::vector<NetworkedValue*>* values, NetworkMessage* msg)
 {
 	std::string objectData = msg->GetExtraData().substr(objectIDBits);
@@ -30,7 +31,6 @@ void ObjectDataProcessor::UpdateValues(std::vector<NetworkedValue*>* values, Net
 std::string ObjectDataProcessor::ConstructDataStream(std::vector<NetworkedValue*>* values)
 {
 	std::string msgData = "";
-	//TODO construct a data stream containing all data needed to update all values
 	for (NetworkedValue* val : *values) {
 		msgData.append(val->GetStreamData());
 	}

@@ -5,7 +5,6 @@
 #include <iostream>
 #include "Endpoints/Client.h"
 #include "Endpoints/Server.h"
-#include "Testing/TestWrapper.h"
 
 #include "Testing/TestingFunctions.h"
 #include "Demo/Demo.h"
