@@ -3,10 +3,6 @@
 DemoClient::DemoClient(bool server, int port)
 {
 	isServer = server;
-	//TODO server management
-	//TODO create a window and manage it
-	//TODO player rendering
-	//TODO get networking working
 	wrapper = new DemoWrapper(port);
 	clientPlayer = new DemoPlayer();
 	started = false;

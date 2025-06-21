@@ -42,9 +42,7 @@ set(SOURCES
     UDPGameNetworking/Senders/MessageSender.cpp
     UDPGameNetworking/Senders/ServerMessageSender.cpp
     UDPGameNetworking/Senders/ClientMessageSender.cpp
-    UDPGameNetworking/Testing/TestWrapper.cpp
     UDPGameNetworking/Wrapper/Callback.cpp
-    UDPGameNetworking/Testing/TestEngineObject.cpp
     UDPGameNetworking/Demo/Demo.cpp
     UDPGameNetworking/Demo/DemoWrapper.cpp
 )
