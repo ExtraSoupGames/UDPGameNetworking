@@ -51,7 +51,7 @@ void DemoClient::Close()
 
 void DemoClient::HandleInput(SDL_Event& e)
 {
-	if (SDL_GetMouseFocus() == window) {
+	if (SDL_GetKeyboardFocus() == window) {
 		clientPlayer->HandleInput(e);
 	}
 }
@@ -81,7 +81,7 @@ void Demo::Update()
 
 	bool client2Connected = false;
 	if (client2Delay > 0) {
-		//client2Delay--;
+		client2Delay--;
 		if (client2Delay <= 0) {
 			client2->Start();
 		}
@@ -132,6 +132,12 @@ void DemoPlayer::HandleInput(SDL_Event& e)
 		}
 		if (e.key.key == SDLK_D) {
 			x += 5;
+		}
+		if (e.key.key == SDLK_W) {
+			y -= 5;
+		}
+		if (e.key.key == SDLK_S) {
+			y += 5;
 		}
 	}
 }

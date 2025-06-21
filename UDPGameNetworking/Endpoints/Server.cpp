@@ -7,7 +7,6 @@ int Server::GetNextFreeID()
     if (availableIDs->size() == 0) {
         availableIDs->push(out + 1);
     }
-    std::cout << "Next free id was: " << out << std::endl;
     return out;
 }
 void Server::ConfirmClientConnection(NetworkMessage* msg)
@@ -30,7 +29,6 @@ void Server::ConfirmClientConnection(NetworkMessage* msg)
 
 void Server::TryConnectClient(NetworkMessage* msg)
 {
-    std::cout << "trying to connect client!" << std::endl;
     EndpointInfo* client = msg->GetSender();
     if (IsAlreadyConnected(client)) {
         delete client;
@@ -108,7 +106,6 @@ void Server::ProcessObjectMessage(NetworkMessage* msg)
     IEngineObject* engineObj = wrapper->NewNetworkedObject(0, false);
     UnownedNetworkObject* uno = new UnownedNetworkObject(engineObj, msg);
     nonOwnedObjects->push_back(uno);
-    std::cout << "noo count for server: " << nonOwnedObjects->size() << std::endl;
     Broadcast(msg->GetMessageType(), msg->GetExtraData());
 }
 

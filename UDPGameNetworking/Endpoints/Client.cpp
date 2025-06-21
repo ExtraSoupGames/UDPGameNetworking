@@ -32,8 +32,6 @@ void Client::ProcessMessage(NetworkMessage* msg)
 void Client::ProcessIncomingIDRequest(NetworkMessage* msg)
 {
 	int ID = NetworkUtilities::IntFromBinaryString(msg->GetExtraData().substr(0, objectIDBits), objectIDDigits);
-	std::cout << "Object ID confirmation received, ID is: " << ID << std::endl;
-	std::cout << "size of onos is: " << ownedObjects->size() << std::endl;
 	for (OwnedNetworkObject* ono : *ownedObjects) {
 		if (ono->IDRequestReceived(ID)) {
 			std::cout << "Object with ID " << ID << " registered successfully!" << std::endl;
