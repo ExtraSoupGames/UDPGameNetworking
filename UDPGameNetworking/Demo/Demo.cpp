@@ -38,8 +38,8 @@ void DemoClient::Update()
 {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderFillRect(renderer, NULL);
-	SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
-	const SDL_FRect rect = clientPlayer->GetRect();;
+	SDL_SetRenderDrawColor(renderer, 255, 255, 0, 0);
+	const SDL_FRect rect = clientPlayer->GetRect();
 	SDL_RenderRect(renderer, &rect);
 	wrapper->DrawOtherPlayers(renderer);
 	SDL_RenderPresent(renderer);
@@ -81,7 +81,7 @@ void Demo::Update()
 
 	bool client2Connected = false;
 	if (client2Delay > 0) {
-		client2Delay--;
+		//client2Delay--;
 		if (client2Delay <= 0) {
 			client2->Start();
 		}

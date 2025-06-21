@@ -35,5 +35,5 @@ public:
 	// sends information about a new object (typically should instantiate a new object of 
 	// the specified type ready for streaming)
 	//returns the engine object to continue data streaming with for this new object
-	virtual IEngineObject* NewNetworkedObject(int objectType) = 0;
+	virtual IEngineObject* NewNetworkedObject(int objectType, bool belongsToClient) = 0;
 };

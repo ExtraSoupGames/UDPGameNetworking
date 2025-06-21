@@ -19,7 +19,7 @@ public:
 	virtual void ApplySettings() override;
 	// --- To be called by library ---
 	virtual void InvokeRegisteredCallback(int callbackID) override;
-	virtual IEngineObject* NewNetworkedObject(int objectType) override;
+	virtual IEngineObject* NewNetworkedObject(int objectType, bool belongsToClient) override;
 };
 class TestCallback : public Callback {
 private:

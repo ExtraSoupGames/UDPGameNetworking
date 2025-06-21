@@ -19,7 +19,7 @@ public:
 	virtual void StartServer() override;
 	virtual void ApplySettings() override;
 	virtual void InvokeRegisteredCallback(int callbackID) override;
-	virtual IEngineObject* NewNetworkedObject(int objectType) override;
+	virtual IEngineObject* NewNetworkedObject(int objectType, bool belongsToClient) override;
 
 
 	void DrawOtherPlayers(SDL_Renderer* renderer);

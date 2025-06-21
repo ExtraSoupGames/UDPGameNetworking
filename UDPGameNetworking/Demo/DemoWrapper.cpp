@@ -53,10 +53,12 @@ void DemoWrapper::InvokeRegisteredCallback(int callbackID)
 {
 }
 
-IEngineObject* DemoWrapper::NewNetworkedObject(int objectType)
+IEngineObject* DemoWrapper::NewNetworkedObject(int objectType, bool belongsToClient)
 {
 	DemoPlayer* dp = new DemoPlayer();
-	otherPlayers->push_back(dp);
+	if (belongsToClient) {
+		otherPlayers->push_back(dp);
+	}
 	return dp;
 }
 
@@ -66,6 +68,5 @@ void DemoWrapper::DrawOtherPlayers(SDL_Renderer* renderer)
 	for (DemoPlayer* dp : *otherPlayers) {
 		const SDL_FRect rect = dp->GetRect();
 		SDL_RenderRect(renderer, &rect);
-		std::cout << "other player location: x:" << rect.x << " y: " << rect.y << std::endl;
 	}
 }

@@ -42,6 +42,7 @@ bool OwnedNetworkObject::IDRequestReceived(int newID)
 		return false;
 	}
 	ID = newID;
+	std::cout << "Owned networked object initialization complete, ID assigned: " << ID << std::endl;
 	initialized = true;
 	return true;
 }

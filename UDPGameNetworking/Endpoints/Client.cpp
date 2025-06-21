@@ -32,7 +32,7 @@ void Client::ProcessMessage(NetworkMessage* msg)
 void Client::ProcessIncomingIDRequest(NetworkMessage* msg)
 {
 	int ID = NetworkUtilities::IntFromBinaryString(msg->GetExtraData().substr(0, objectIDBits), objectIDDigits);
-	std::cout << "ID confirmation received, ID is: " << ID << std::endl;
+	std::cout << "Object ID confirmation received, ID is: " << ID << std::endl;
 	std::cout << "size of onos is: " << ownedObjects->size() << std::endl;
 	for (OwnedNetworkObject* ono : *ownedObjects) {
 		if (ono->IDRequestReceived(ID)) {
@@ -57,7 +57,7 @@ void Client::ProcessObjectMessage(NetworkMessage* msg)
 	//first we should check if the object is owned by this client and if so, ignore the message
 	int streamObjectID = NetworkUtilities::GetObjectIDFromMsg(msg);
 	if (AmIThisObjectsOwner(streamObjectID)) {
-		std::cout << "Client received object data but it was ignored as the clients was the objects owner" << std::endl;
+		//std::cout << "Client received object data but it was ignored as the clients was the objects owner" << std::endl;
 		return;
 	}
 	for (UnownedNetworkObject* uno : *nonOwnedObjects) {
@@ -68,7 +68,7 @@ void Client::ProcessObjectMessage(NetworkMessage* msg)
 	}
 	//if the object was not found then it is new
 	//we must create a new unowned object to represent it
-	IEngineObject* engineObj = wrapper->NewNetworkedObject(0);
+	IEngineObject* engineObj = wrapper->NewNetworkedObject(0, true);
 	UnownedNetworkObject* uno = new UnownedNetworkObject(engineObj, msg);
 	nonOwnedObjects->push_back(uno);
 }

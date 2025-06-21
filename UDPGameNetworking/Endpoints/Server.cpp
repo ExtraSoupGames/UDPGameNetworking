@@ -105,9 +105,10 @@ void Server::ProcessObjectMessage(NetworkMessage* msg)
     }
     //if the object was not found then it is new
     //we must create a new unowned object to represent it
-    IEngineObject* engineObj = wrapper->NewNetworkedObject(0);
+    IEngineObject* engineObj = wrapper->NewNetworkedObject(0, false);
     UnownedNetworkObject* uno = new UnownedNetworkObject(engineObj, msg);
     nonOwnedObjects->push_back(uno);
+    std::cout << "noo count for server: " << nonOwnedObjects->size() << std::endl;
     Broadcast(msg->GetMessageType(), msg->GetExtraData());
 }
 
@@ -149,7 +150,6 @@ void Server::Update(float deltaTime)
 
 void Server::Broadcast(NetworkMessageTypes type, std::string message)
 {
-    std::cout << "Broadcasting to " << connectedClients->size() << " clients!" << std::endl;
     for (int i = 0; i < connectedClients->size(); i++) {
         EndpointInfo* c = connectedClients->at(i);
         NetworkUtilities::SendMessageTo(type, message, socket, c->address, c->port);

@@ -37,7 +37,7 @@ void TestWrapper::InvokeRegisteredCallback(int callbackID)
 {
 }
 
-IEngineObject* TestWrapper::NewNetworkedObject(int objectType)
+IEngineObject* TestWrapper::NewNetworkedObject(int objectType, bool belongsToClient)
 {
 	return new TestEngineObject(5, 5);
 }
