@@ -136,7 +136,7 @@ Server::Server(std::string ip, int serverPort, IWrapper* libWrapper)
 
 
     sender = new ServerMessageSender(socket, connectedClients);
-
+    StartTimer(0);
 }
 
 void Server::Update(float deltaTime)

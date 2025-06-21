@@ -1,10 +1,10 @@
 #include "OwnedNO.h"
 
-void OwnedNetworkObject::StreamSend(EndpointInfo* server, SDLNet_DatagramSocket* socket)
+void OwnedNetworkObject::StreamSend(EndpointInfo* server, SDLNet_DatagramSocket* socket, int clientTime)
 {
 	engineObject->UpdateLibraryValues(networkedValues);
 	std::string messageData = NetworkUtilities::AsBinaryString(ID, objectIDDigits);
-	messageData.append(ObjectDataProcessor::ConstructDataStream(networkedValues, 1)); //TODO timestamp needed here
+	messageData.append(ObjectDataProcessor::ConstructDataStream(networkedValues, clientTime)); //TODO timestamp needed here
 	//std::cout << "message data: " << messageData << std::endl;
 	NetworkUtilities::SendMessageTo(NetworkedObjectMsg, messageData, socket, server->address, server->port);
 }
@@ -47,7 +47,7 @@ bool OwnedNetworkObject::IDRequestReceived(int newID)
 	return true;
 }
 
-void OwnedNetworkObject::Update(float deltaTime, EndpointInfo* server, SDLNet_DatagramSocket* socket)
+void OwnedNetworkObject::Update(float deltaTime, EndpointInfo* server, SDLNet_DatagramSocket* socket, int clientTime)
 {
 	if (!initialized) {
 		//sometimes messages are lost and server doesnt send an ID confirmation, if so,
@@ -58,7 +58,7 @@ void OwnedNetworkObject::Update(float deltaTime, EndpointInfo* server, SDLNet_Da
 	streamTimer += deltaTime;
 	if (streamTimer > objectStreamRate) {
 		streamTimer -= objectStreamRate;
-		StreamSend(server, socket);
+		StreamSend(server, socket, clientTime);
 	}
 }
 

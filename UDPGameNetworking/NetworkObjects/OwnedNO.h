@@ -28,7 +28,7 @@ private:
 	IEngineObject* engineObject;
 
 	//Sends a data stream message
-	void StreamSend(EndpointInfo* server, SDLNet_DatagramSocket* socket);
+	void StreamSend(EndpointInfo* server, SDLNet_DatagramSocket* socket, int clientTime);
 	//Sends the server a request for an ID
 	void SendIDRequest(EndpointInfo* server, SDLNet_DatagramSocket* socket);
 protected:
@@ -42,7 +42,7 @@ public:
 
 	//Updates the object, sending a message if required
 	// @param deltaTime - the time in seconds since last update was called on this object
-	void Update(float deltaTime, EndpointInfo* server, SDLNet_DatagramSocket* socket); //TODO expand to include value updating
+	void Update(float deltaTime, EndpointInfo* server, SDLNet_DatagramSocket* socket, int clientTime); //TODO expand to include value updating
 
 	int GetID() { return ID; }
 };

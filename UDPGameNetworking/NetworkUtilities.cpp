@@ -182,6 +182,7 @@ bool NetworkUtilities::VeryifyMessageState(NetworkMessage* msg, std::string stat
 }
 int NetworkUtilities::GetObjectIDFromMsg(NetworkMessage* msg)
 {
+	//TODO maybe move this to static function in object class, it doesnt really belong here
 	std::string IDData = msg->GetExtraData().substr(0, objectIDBits);
 	int ID = IntFromBinaryString(IDData, objectIDDigits);
 	return ID;

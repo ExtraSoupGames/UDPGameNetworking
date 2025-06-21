@@ -52,6 +52,11 @@ void Client::ProcessUserMessage(NetworkMessage* msg)
 
 void Client::ProcessObjectMessage(NetworkMessage* msg)
 {
+	//TODO move this to a better location so server/client sync isnt dependent on networked objects being initialized (library should be able to work with no networked object and only user messages if desired)
+	if (!TimerStarted()) {
+		int messageTimestamp = NetworkUtilities::IntFromBinaryString(msg->GetExtraData().substr(8, timestampByteCount * 8), timestampByteCount * 2);
+		StartTimer(messageTimestamp);
+	}
 	//first we should check if the object is owned by this client and if so, ignore the message
 	int streamObjectID = NetworkUtilities::GetObjectIDFromMsg(msg);
 	if (AmIThisObjectsOwner(streamObjectID)) {
@@ -74,7 +79,7 @@ void Client::ProcessObjectMessage(NetworkMessage* msg)
 void Client::UpdateObjects(float deltaTime)
 {
 	for (OwnedNetworkObject* ono : *ownedObjects) {
-		ono->Update(deltaTime, serverInfo, socket);
+		ono->Update(deltaTime, serverInfo, socket, GetTime());
 	}
 }
 
