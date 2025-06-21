@@ -39,6 +39,7 @@ set(SOURCES
     UDPGameNetworking/NetworkObjects/UnownedNO.cpp
     UDPGameNetworking/NetworkObjects/ObjectDataProcessor.cpp
     UDPGameNetworking/NetworkObjects/NetworkedValue.cpp
+    UDPGameNetworking/NetworkObjects/PositionLerp2D.cpp
     UDPGameNetworking/Senders/MessageSender.cpp
     UDPGameNetworking/Senders/ServerMessageSender.cpp
     UDPGameNetworking/Senders/ClientMessageSender.cpp

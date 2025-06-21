@@ -3,6 +3,7 @@
 #include "NetworkedValue.h"
 #include "../NetworkMessage.h"
 #include "OwnedNO.h"
+#include "PositionLerp2D.h"
 class ObjectDataProcessor {
 private:
 protected:

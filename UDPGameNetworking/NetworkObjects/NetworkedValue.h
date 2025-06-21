@@ -25,21 +25,3 @@ protected:
 public:
 	LerpedValue(int ID);
 };
-class PositionLerp2D : public LerpedValue {
-private:
-	int x;
-	int y;
-protected:
-public:
-	PositionLerp2D(int ID, int initX = 0, int initY = 0);
-	inline int GetX() { return x; };
-	inline int GetY() { return y; };
-
-	void LerpMessageReceived(int xVal, int yVal);
-	virtual bool StreamReceived(std::string streamData) override;
-	virtual std::string GetStreamData() override;
-
-	void UpdateValue(int xVal, int yVal);
-
-	virtual std::string Debug() override;
-};
