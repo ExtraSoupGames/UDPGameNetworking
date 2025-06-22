@@ -12,8 +12,7 @@ protected:
 	virtual void ProcessMessage(NetworkMessage* msg) = 0;
 	virtual MessageSender* GetSender() = 0;
 	void StartTimer(int serverTime);
-	int GetTime();
 	bool TimerStarted();
 public:
-
+	int GetTime();
 };

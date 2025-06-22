@@ -4,10 +4,11 @@
 class DemoPlayer : public IEngineObject {
 private:
 protected:
+	DemoWrapper* wrapper;
 	int x;
 	int y;
 public:
-	DemoPlayer();
+	DemoPlayer(DemoWrapper* wrapper);
 	~DemoPlayer();
 	void HandleInput(SDL_Event& e);
 	void Update(float deltaTime);

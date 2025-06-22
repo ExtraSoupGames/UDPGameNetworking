@@ -8,7 +8,7 @@ void ObjectDataProcessor::UpdateValues(std::vector<NetworkedValue*>* values, Net
 	//TODO organise this function to handle errors better, as well as neatly extracting both ID and timestamp from message before iterating through values
 	std::string objectData = msg->GetExtraData().substr(objectIDBits);
 	int msgLength = (int)objectData.size();
-	msgLength -= timestampByteCount;
+	msgLength -= timestampByteCount * 8;
 	int messageTimestamp = NetworkUtilities::IntFromBinaryString(objectData.substr(0, timestampByteCount * 8), timestampByteCount * 2);
 	int describedValueCount = msgLength / streamedValueSize;
 	if (describedValueCount < 1) return;
@@ -27,7 +27,7 @@ void ObjectDataProcessor::UpdateValues(std::vector<NetworkedValue*>* values, Net
 			}
 		}
 		if (!valueIsInitialized) {
-			values->push_back(new PositionLerp2D(valueID, 0, 0));
+			values->push_back(new PositionLerp2D(valueID, 0, 0)); //TODO initialize with non 0 values
 		}
 	}
 }

@@ -4,7 +4,7 @@ DemoClient::DemoClient(bool server, int port)
 {
 	isServer = server;
 	wrapper = new DemoWrapper(port);
-	clientPlayer = new DemoPlayer();
+	clientPlayer = new DemoPlayer(wrapper);
 	started = false;
 	window = nullptr;
 	renderer = nullptr;
@@ -109,10 +109,11 @@ bool Demo::Done()
 	return false;
 }
 
-DemoPlayer::DemoPlayer()
+DemoPlayer::DemoPlayer(DemoWrapper* libWrapper)
 {
 	x = 5;
 	y = 5;
+	wrapper = libWrapper;
 }
 
 DemoPlayer::~DemoPlayer()
@@ -155,6 +156,7 @@ void DemoPlayer::UpdateLibraryValues(std::vector<NetworkedValue*>* values)
 
 void DemoPlayer::UpdateEngineValues(std::vector<NetworkedValue*>* values)
 {
-	x = ((PositionLerp2D*)values->at(0))->GetX();
-	y = ((PositionLerp2D*)values->at(0))->GetY();
+	Position p = ((PositionLerp2D*)values->at(0))->GetLerpedPosition(wrapper->GetClientTime());
+	x = p.x;
+	y = p.y;
 }

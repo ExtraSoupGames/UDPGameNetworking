@@ -55,7 +55,7 @@ void DemoWrapper::InvokeRegisteredCallback(int callbackID)
 
 IEngineObject* DemoWrapper::NewNetworkedObject(int objectType, bool belongsToClient)
 {
-	DemoPlayer* dp = new DemoPlayer();
+	DemoPlayer* dp = new DemoPlayer(this);
 	if (belongsToClient) {
 		otherPlayers->push_back(dp);
 	}
@@ -69,4 +69,9 @@ void DemoWrapper::DrawOtherPlayers(SDL_Renderer* renderer)
 		const SDL_FRect rect = dp->GetRect();
 		SDL_RenderRect(renderer, &rect);
 	}
+}
+
+int DemoWrapper::GetClientTime()
+{
+	return client->GetTime();;
 }

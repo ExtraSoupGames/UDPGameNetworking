@@ -23,4 +23,5 @@ public:
 
 
 	void DrawOtherPlayers(SDL_Renderer* renderer);
+	int GetClientTime();
 };
