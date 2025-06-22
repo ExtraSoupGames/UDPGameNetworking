@@ -28,6 +28,7 @@ void ObjectDataProcessor::UpdateValues(std::vector<NetworkedValue*>* values, Net
 		}
 		if (!valueIsInitialized) {
 			values->push_back(new PositionLerp2D(valueID, 0, 0)); //TODO initialize with non 0 values
+			//TODO custom serialised data support would go here
 		}
 	}
 }

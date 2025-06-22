@@ -17,7 +17,8 @@ enum NetworkMessageTypes {
 	UserUnImportant,
 	ImportantMessageConfirmation,
 	IDRequest,
-	Error // used for testing
+	InvokeCallback,
+	Error
 };
 
 class NetworkUtilities {
