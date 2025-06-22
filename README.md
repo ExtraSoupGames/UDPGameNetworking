@@ -7,15 +7,16 @@ that can be wrapped or extended for use in game engines.
 - Networked value lerping (WIP)
 - Important message confirmation
 - Engine agnostic design
-- Simple demo
+- Simple demo to showcase engine functionality
 
 ### Demo
-- Shows 2 Clients each with a player controlled cube
-- Cube's location is streamed via library
+- Shows 2 Clients each controlling a cube whose location is streamed with the library
 - WASD movement controls
-- Hover with mouse over which window you would like to control
+- Hover with mouse over which client window to control that client
 
 ### Installation
 - Download the repo and build with CMake
 - Run UDPGameNetworking.cpp to see the demo
-- Builds for use in other projects are not yet ready
+
+### Status
+This project is in early development and builds for external project usage are not ready
