@@ -24,6 +24,7 @@ void Client::ProcessMessage(NetworkMessage* msg)
 	case Connect:
 		NetworkUtilities::SendMessageTo(ConnectConfirm, "", socket, serverInfo->address, serverInfo->port, sender);
 		std::cout << "Connect confirmation sent!" << std::endl;
+		isConnected = true;
 		break;
 	}
 }
@@ -107,6 +108,8 @@ Client::Client(int portToUse, IWrapper* libWrapper)
 	socket = nullptr;
 	serverInfo = nullptr;
 	isConnected = false;
+	fallbackConnectionRequestDelay = 0;
+	connecting = false;
 
 	ownedObjects = new std::vector<OwnedNetworkObject*>();
 	nonOwnedObjects = new std::vector<UnownedNetworkObject*>();
@@ -131,6 +134,7 @@ Client::~Client()
 
 void Client::ConnectToServer(std::string address)
 {
+	connecting = true;
 	if (serverInfo != nullptr) {
 		std::cout << "Already connected to a server!" << std::endl;
 	}
@@ -156,13 +160,19 @@ void Client::Disconnect()
 
 void Client::Update(float deltaTime)
 {
+	if (connecting && !isConnected) {
+		if (fallbackConnectionRequestDelay < 0) {
+			SendConnectRequest();
+			std::cout << "sending fallback connect request" << std::endl;
+			fallbackConnectionRequestDelay = 5000;
+		}
+		fallbackConnectionRequestDelay--;
+	}
 	if (IsConnected()) {
-
 		sender->SendUnsentMessages(false);
 		PollSocket();
 		UpdateObjects(deltaTime);
 	}
-
 }
 
 bool Client::IsConnected()

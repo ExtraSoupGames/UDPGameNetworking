@@ -9,6 +9,8 @@ private:
 	EndpointInfo* serverInfo;
 	int port;
 	bool isConnected;
+	bool connecting;
+	int fallbackConnectionRequestDelay;
 
 	ClientMessageSender* sender;
 	std::vector<OwnedNetworkObject*>* ownedObjects;

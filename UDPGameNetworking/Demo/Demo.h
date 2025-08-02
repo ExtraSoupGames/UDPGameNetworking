@@ -38,8 +38,6 @@ public:
 };
 class Demo {
 private:
-	int client2Delay; //Delay client 2s connection to prevent simultaneous connections
-	//TODO allow simultaneous connecting
 	DemoClient* client1;
 	DemoClient* client2;
 protected:

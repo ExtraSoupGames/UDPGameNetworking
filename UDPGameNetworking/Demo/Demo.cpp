@@ -56,7 +56,6 @@ Demo::Demo()
 {
 	client1 = new DemoClient(true, 55511);
 	client2 = new DemoClient(false, 55522);
-	client2Delay = 500;
 }
 
 Demo::~Demo()
@@ -68,33 +67,18 @@ Demo::~Demo()
 void Demo::Start()
 {
 	client1->Start();
+	client2->Start();
 }
 
 void Demo::Update()
 {
-	//TODO rewrite this function, its a mess
 	client1->Update();
-
-	bool client2Connected = false;
-	if (client2Delay > 0) {
-		client2Delay--;
-		if (client2Delay <= 0) {
-			client2->Start();
-		}
-	}
-	else {
-		client2Connected = true;
-	}
-	if (client2Connected) {
-		client2->Update();
-	}
+	client2->Update();
 
 	SDL_Event e;
 	while (SDL_PollEvent(&e)) {
 		client1->HandleInput(e);
-		if (client2Connected) {
-			client2->HandleInput(e);
-		}
+		client2->HandleInput(e);
 	}
 }
 
