@@ -52,7 +52,7 @@ ImportantMessage* ServerMessageSender::ProcessImportantMessage(NetworkMessage* i
 	//send the confirmation regardless of wether or not the message is new
 	SDLNet_Address* address = importantMessage->GetAddress();
 	int port = importantMessage->GetPort();
-	NetworkUtilities::SendMessageTo(ImportantMessageConfirmation, importantMessage->GetExtraData(), socket, address, port);
+	NetworkUtilities::SendMessageTo(ImportantMessageConfirmation, importantMessage->GetDataToForwardMessage(), socket, address, port);
 	//find the relevant message checker
 
 	for (ClientMessageChecker* c : messageCheckers) {

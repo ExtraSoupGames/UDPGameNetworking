@@ -9,7 +9,7 @@ protected:
 	IWrapper* wrapper;
 	SDLNet_DatagramSocket* socket;
 	void PollSocket();
-	virtual NetworkMessage* ProcessMessage(NetworkMessage* msg) = 0;
+	virtual void ProcessMessage(NetworkMessage* msg) = 0;
 	virtual MessageSender* GetSender() = 0;
 	void StartTimer(int serverTime);
 	bool TimerStarted();

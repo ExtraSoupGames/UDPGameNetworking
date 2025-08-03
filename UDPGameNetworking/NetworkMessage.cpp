@@ -14,9 +14,18 @@ NetworkMessage::NetworkMessage(SDLNet_Datagram* datagramToProcess)
 	fromPort = datagramToProcess->port;
 }
 
+NetworkMessage::~NetworkMessage()
+{
+}
+
 std::string NetworkMessage::Debug()
 {
 	return "The type of this message is: " + std::to_string(messageType) + " And the contents are: " + extraData;
+}
+std::string NetworkMessage::GetDataToForwardMessage()
+{
+	//for the base class this function is the same as getExtraData() as no trimming or changing is done to the extra data
+	return GetExtraData();
 }
 NetworkMessageTypes NetworkMessage::GetMessageType() {
 	return messageType;

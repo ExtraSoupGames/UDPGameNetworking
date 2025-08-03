@@ -5,9 +5,9 @@ private:
 protected:
 	int messageID;
 public:
-	//Note that this deletes the parameter message
 	ImportantMessage(NetworkMessage* msg);
-	~ImportantMessage();
+	virtual ~ImportantMessage() override;
 	int GetMessageID();
 	virtual std::string Debug() override;
+	virtual std::string GetDataToForwardMessage() override;
 };

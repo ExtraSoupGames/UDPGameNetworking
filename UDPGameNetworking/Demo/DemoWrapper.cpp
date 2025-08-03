@@ -54,12 +54,12 @@ void DemoWrapper::ApplySettings()
 
 void DemoWrapper::InvokeRegisteredCallback(int callbackID)
 {
+	std::cout << "callback being called with ID: " << callbackID << std::endl;
 	for (Callback* cb : *registeredCallbacks) {
 		if (cb->matchesID(callbackID)) {
 			cb->Invoke();
 		}
 	}
-	client->SendServerMessage(UserImportant, NetworkUtilities::AsBinaryString(callbackID, 3) + "1010");
 }
 
 IEngineObject* DemoWrapper::NewNetworkedObject(int objectType, bool belongsToClient)
@@ -78,6 +78,11 @@ void DemoWrapper::DrawOtherPlayers(SDL_Renderer* renderer)
 		const SDL_FRect rect = dp->GetRect();
 		SDL_RenderRect(renderer, &rect);
 	}
+}
+
+void DemoWrapper::CallbackTest()
+{
+	client->SendServerMessage(UserImportant, NetworkUtilities::AsBinaryString(500, 3) + "1010");
 }
 
 int DemoWrapper::GetClientTime()

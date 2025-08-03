@@ -16,7 +16,7 @@ private:
 	std::vector<OwnedNetworkObject*>* ownedObjects;
 	std::vector<UnownedNetworkObject*>* nonOwnedObjects;
 
-	virtual NetworkMessage* ProcessMessage(NetworkMessage* msg) override;
+	virtual void ProcessMessage(NetworkMessage* msg) override;
 
 	void ProcessIncomingIDRequest(NetworkMessage* msg);
 	void ProcessUserMessage(NetworkMessage* msg);

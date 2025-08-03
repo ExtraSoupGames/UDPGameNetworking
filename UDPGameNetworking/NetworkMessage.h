@@ -13,7 +13,10 @@ protected:
 public:
 	NetworkMessage();
 	NetworkMessage(SDLNet_Datagram* datagramToProcess);
+	virtual ~NetworkMessage();
 	virtual std::string Debug();
+	//Gets the extra data, but also includes data that may be trimmed off so that the message can be forwarded unwarped
+	virtual std::string GetDataToForwardMessage();
 	NetworkMessageTypes GetMessageType();
 	std::string GetExtraData();
 	SDLNet_Address* GetAddress();

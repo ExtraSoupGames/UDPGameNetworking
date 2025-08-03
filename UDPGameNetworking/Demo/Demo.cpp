@@ -122,7 +122,7 @@ void DemoPlayer::HandleInput(SDL_Event& e)
 			y += 5;
 		}
 		if (e.key.key == SDLK_M) {
-			wrapper->InvokeRegisteredCallback(0);
+			wrapper->CallbackTest();
 		}
 	}
 }

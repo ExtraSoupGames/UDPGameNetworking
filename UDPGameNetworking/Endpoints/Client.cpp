@@ -1,31 +1,29 @@
 #include "Client.h"
 #include "../Wrapper/IWrapper.h"
 
-NetworkMessage* Client::ProcessMessage(NetworkMessage* msg)
+void Client::ProcessMessage(NetworkMessage* msg)
 {
 	switch (msg->GetMessageType()) {
 	case UserImportant:
-		msg = sender->ProcessImportantMessage(msg);
-		//this will return if the message has already been received
-		if (msg == nullptr) {return msg;}
-		//no break here as the message should still be processed as a user message as well
+		ProcessUserMessage(msg);
+		return;
 	case UserUnImportant:
 		ProcessUserMessage(msg);
-		return msg;
+		return;
 	case IDRequest:
 		ProcessIncomingIDRequest(msg);
-		return msg;
+		return;
 	case NetworkedObjectMsg:
 		ProcessObjectMessage(msg);
-		return msg;
+		return;
 	case ImportantMessageConfirmation:
 		sender->ConfirmationRecieved(msg);
-		return msg;
+		return;
 	case Connect:
 		NetworkUtilities::SendMessageTo(ConnectConfirm, "", socket, serverInfo->address, serverInfo->port, sender);
 		std::cout << "Connect confirmation sent!" << std::endl;
 		isConnected = true;
-		return msg;
+		return;
 	}
 }
 
@@ -44,10 +42,11 @@ void Client::ProcessIncomingIDRequest(NetworkMessage* msg)
 void Client::ProcessUserMessage(NetworkMessage* msg)
 {
 	//TODO include optional extra data parsing
-	//I.E any data included after the initial 8 bits will be passed to the callback to allow
+	//I.E any data included after the initial 12 bits will be passed to the callback to allow
 	// more custom functionality and fewer unique callback registers
 	std::string msgData = msg->GetExtraData();
-	int callbackID = NetworkUtilities::IntFromBinaryString(msgData.substr(0, 8), 4);
+	int callbackID = NetworkUtilities::IntFromBinaryString(msgData.substr(0, 12), 3);
+	std::cout << "CALLBACK TIME FROM FOREIGN CLIENT" << std::endl;
 	wrapper->InvokeRegisteredCallback(callbackID);
 }
 

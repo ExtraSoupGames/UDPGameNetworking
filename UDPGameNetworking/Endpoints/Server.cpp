@@ -54,29 +54,27 @@ bool Server::IsAlreadyConnected(EndpointInfo* client)
 }
 
 
-NetworkMessage* Server::ProcessMessage(NetworkMessage* msg)
+void Server::ProcessMessage(NetworkMessage* msg)
 {
     switch (msg->GetMessageType()) {
     case UserImportant:
-        msg = sender->ProcessImportantMessage(msg);
-        //this will return if the message has already been received
-        if (msg == nullptr) { return msg; }
-        //no break here as the message should still be processed as a user message as well
+        ProcessUserMessage(msg);
+        return;
     case UserUnImportant:
         ProcessUserMessage(msg);
-        return msg;
+        return;
     case IDRequest:
         ProcessIncomingIDRequest(msg);
-        return msg;
+        return;
     case NetworkedObjectMsg:
         ProcessObjectMessage(msg);
-        return msg;
+        return;
     case Connect:
         TryConnectClient(msg);
-        return msg;
+        return;
     case ConnectConfirm:
         ConfirmClientConnection(msg);
-        return msg;
+        return;
     }
 }
 
@@ -88,7 +86,7 @@ void Server::ProcessIncomingIDRequest(NetworkMessage* msg)
 
 void Server::ProcessUserMessage(NetworkMessage* msg)
 {
-    //TODO implement, this should forward the message to all clients
+    Broadcast(msg->GetMessageType(), msg->GetExtraData());
 }
 
 void Server::ProcessObjectMessage(NetworkMessage* msg)
@@ -150,7 +148,7 @@ void Server::Broadcast(NetworkMessageTypes type, std::string message)
 {
     for (int i = 0; i < connectedClients->size(); i++) {
         EndpointInfo* c = connectedClients->at(i);
-        NetworkUtilities::SendMessageTo(type, message, socket, c->address, c->port);
+        NetworkUtilities::SendMessageTo(type, message, socket, c->address, c->port, sender);
     }
 }
 

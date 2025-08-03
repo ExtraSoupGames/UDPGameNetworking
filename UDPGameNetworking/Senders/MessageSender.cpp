@@ -71,10 +71,11 @@ ImportantMessage* MessageSender::ProcessImportantMessage(NetworkMessage* importa
 	int port = importantMessage->GetPort();
 	NetworkUtilities::SendMessageTo(ImportantMessageConfirmation, importantMessage->GetExtraData(), socket, address, port);
 	//check if the message is new, and if so, register it and return true
-	int messageID = NetworkUtilities::IntFromBinaryString(importantMessage->GetExtraData().substr(0, 12), 3);
+	ImportantMessage* message = new ImportantMessage(importantMessage);
+	int messageID = message->GetMessageID();
 	if (find(receivedMessages.begin(), receivedMessages.end(), messageID) == receivedMessages.end()) {
 		receivedMessages.push_back(messageID);
-		return new ImportantMessage(importantMessage);
+		return message;
 	}
 	return nullptr;
 }

@@ -3,7 +3,7 @@ void SocketHolder::PollSocket()
 {
 	NetworkMessage* nextMessage = nullptr;
 	while (NetworkUtilities::GetNextIncoming(socket, nextMessage, GetSender())) {
-		nextMessage = ProcessMessage(nextMessage);
+		ProcessMessage(nextMessage);
 		delete nextMessage;
 	}
 }
