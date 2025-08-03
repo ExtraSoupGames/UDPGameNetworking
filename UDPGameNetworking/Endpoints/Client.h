@@ -4,6 +4,7 @@
 #include "../NetworkObjects/UnownedNO.h"
 #include "../Wrapper/IEngineObject.h"
 #include "SocketHolder.h"
+#include "../Wrapper/LibSettings.h"
 class Client  : public SocketHolder{
 private:
 	EndpointInfo* serverInfo;
@@ -11,6 +12,7 @@ private:
 	bool isConnected;
 	bool connecting;
 	int fallbackConnectionRequestDelay;
+	LibSettings* settings;
 
 	ClientMessageSender* sender;
 	std::vector<OwnedNetworkObject*>* ownedObjects;
@@ -30,7 +32,7 @@ private:
 protected:
 	virtual MessageSender* GetSender() override { return sender; }
 public:
-	Client(int portToUse, IWrapper* libWrapper);
+	Client(int portToUse, IWrapper* libWrapper, LibSettings* settings);
 	~Client();	
 	
 	void ConnectToServer(std::string serverAddress);

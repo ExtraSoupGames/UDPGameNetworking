@@ -1,8 +1,8 @@
 #pragma once
-//TODO figure out how this should be managed, singleton? or client specific?
-class LibSettings{
+struct LibSettings {
 private:
-	int lerpDelay;
 protected:
 public:
-}
+	int lerpDelay;
+	bool lerpEnabled;
+};

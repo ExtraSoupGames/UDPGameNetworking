@@ -94,7 +94,7 @@ void Server::ProcessObjectMessage(NetworkMessage* msg)
     //TODO does the server even need to keep track of objects if all it does is pass the info on? it doesnt need to lerp values like clients do
 
     for (UnownedNetworkObject* uno : *nonOwnedObjects) {
-        if (uno->StreamDataReceived(msg)) {
+        if (uno->StreamDataReceived(msg, 100)) {
             //if the object exists we can return
             Broadcast(msg->GetMessageType(), msg->GetExtraData()); //TODO maybe skip broadcasting to client that sent the packet to save unnecessary packets
             return;

@@ -16,13 +16,13 @@ UnownedNetworkObject::~UnownedNetworkObject()
 	//TODO destroy the engine object
 }
 
-bool UnownedNetworkObject::StreamDataReceived(NetworkMessage* msg)
+bool UnownedNetworkObject::StreamDataReceived(NetworkMessage* msg, int lerpDelay)
 {
 	int streamObjectID = NetworkUtilities::GetObjectIDFromMsg(msg);
 	if (streamObjectID != ID) {
 		return false;
 	}
 	ObjectDataProcessor::UpdateValues(networkedValues, msg);
-	engineObject->UpdateEngineValues(networkedValues);
+	engineObject->UpdateEngineValues(networkedValues, lerpDelay);
 	return true;
 }

@@ -4,6 +4,7 @@
 #include "../Endpoints/Client.h"
 #include "../Endpoints/Server.h"
 #include "IEngineObject.h"
+#include "LibSettings.h"
 //This class should be inherited by wrapper to provide service specific
 // functionality relating to registering values for consistent broadcasting
 class IWrapper {
@@ -19,6 +20,9 @@ protected:
 	Client* client;
 	//Not necessary for every client, manages multiple client connections
 	Server* server;
+
+	//This class manages and controls the settings
+	LibSettings* settings;
 public:
 	// --- To be called by engine plugin/engine ---
 	virtual void Update(float deltaTime) = 0;

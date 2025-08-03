@@ -1,12 +1,15 @@
 #include "DemoWrapper.h"
 #include "Demo.h"
 #include "DemoCallback.h"
-DemoWrapper::DemoWrapper(int port)
+DemoWrapper::DemoWrapper(int port, int lerpDelay)
 {
 	plannedPort = port;
 	server = nullptr;
 	otherPlayers = new std::vector<DemoPlayer*>();
 	registeredCallbacks = new std::vector<Callback*>();
+	settings = new LibSettings();
+	settings->lerpDelay = lerpDelay;
+	settings->lerpEnabled = true;
 }
 
 void DemoWrapper::Update(float deltaTime)
@@ -19,7 +22,7 @@ void DemoWrapper::Update(float deltaTime)
 
 void DemoWrapper::Initialize()
 {
-	client = new Client(plannedPort, this);
+	client = new Client(plannedPort, this, settings);
 }
 
 void DemoWrapper::RegisterObject(IEngineObject* object)

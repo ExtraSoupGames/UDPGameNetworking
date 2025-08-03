@@ -18,5 +18,5 @@ public:
 	//should this be 2 classes
 	//make a test one
 	virtual void UpdateLibraryValues(std::vector<NetworkedValue*>* values) = 0;
-	virtual void UpdateEngineValues(std::vector<NetworkedValue*>* values) = 0;
+	virtual void UpdateEngineValues(std::vector<NetworkedValue*>* values, int lerpDelay) = 0;
 };

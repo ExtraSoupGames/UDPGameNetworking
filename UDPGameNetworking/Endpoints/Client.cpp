@@ -64,7 +64,7 @@ void Client::ProcessObjectMessage(NetworkMessage* msg)
 		return;
 	}
 	for (UnownedNetworkObject* uno : *nonOwnedObjects) {
-		if (uno->StreamDataReceived(msg)) {
+		if (uno->StreamDataReceived(msg, settings->lerpDelay)) {
 			//if the object exists we can return
 			return;
 		}
@@ -98,9 +98,10 @@ void Client::SendConnectRequest()
 	NetworkUtilities::SendMessageTo(Connect, "", socket, serverInfo->address, serverInfo->port, sender);
 }
 
-Client::Client(int portToUse, IWrapper* libWrapper)
+Client::Client(int portToUse, IWrapper* libWrapper, LibSettings* libSettings)
 {
 	wrapper = libWrapper;
+	settings = libSettings;
 
 	port = portToUse;
 	sender = nullptr;
