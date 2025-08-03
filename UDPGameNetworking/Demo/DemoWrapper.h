@@ -20,7 +20,7 @@ public:
 	virtual void StartClient() override;
 	virtual void StartServer() override;
 	virtual void ApplySettings() override;
-	virtual void InvokeRegisteredCallback(int callbackID) override;
+	virtual void InvokeRegisteredCallback(int callbackID, std::string optionalExtraData) override;
 	virtual IEngineObject* NewNetworkedObject(int objectType, bool belongsToClient) override;
 
 

@@ -5,5 +5,5 @@ private:
 protected:
 public:
 	DemoCallback(int ID);
-	virtual void Invoke() override;
+	virtual void Invoke(std::string optionalExtraData) override;
 };

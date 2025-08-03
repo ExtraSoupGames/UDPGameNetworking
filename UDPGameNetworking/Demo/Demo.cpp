@@ -25,7 +25,7 @@ void DemoClient::Start()
 	}
 	wrapper->StartClient();
 	wrapper->RegisterObject(clientPlayer);
-	wrapper->RegisterCallback(0);
+	wrapper->RegisterCallback(500);
 	started = true;
 	window = SDL_CreateWindow("UDP Game Networking Demo client", 500, 500, 0);
 	renderer = SDL_CreateRenderer(window, NULL);

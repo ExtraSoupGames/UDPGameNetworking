@@ -30,7 +30,7 @@ public:
 	virtual void StartServer() = 0;
 	virtual void ApplySettings() = 0;
 	// --- To be called by library ---
-	virtual void InvokeRegisteredCallback(int callbackID) = 0;
+	virtual void InvokeRegisteredCallback(int callbackID, std::string optionalExtraData) = 0;
 	//This should define how the engine should respond when another client, or the server,
 	// sends information about a new object (typically should instantiate a new object of 
 	// the specified type ready for streaming)

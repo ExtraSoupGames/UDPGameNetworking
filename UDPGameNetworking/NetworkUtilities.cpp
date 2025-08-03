@@ -154,6 +154,7 @@ std::string NetworkUtilities::AsBinaryString(int value, int digitCount)
 	outString = outString.substr(0, digitCount * 4);
 	return outString;
 }
+//TODO make the parameter format of these consistent
 //digits is the number of nibbles to process
 int NetworkUtilities::IntFromBinaryString(std::string binaryString, int digits)
 {

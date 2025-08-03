@@ -35,7 +35,6 @@ void DemoWrapper::UnregisterObject(int ID)
 void DemoWrapper::RegisterCallback(int ID)
 {
 	registeredCallbacks->push_back(new DemoCallback(ID));
-	//TODO fix this
 }
 
 void DemoWrapper::StartClient()
@@ -52,12 +51,12 @@ void DemoWrapper::ApplySettings()
 {
 }
 
-void DemoWrapper::InvokeRegisteredCallback(int callbackID)
+void DemoWrapper::InvokeRegisteredCallback(int callbackID, std::string optionalExtraData)
 {
 	std::cout << "callback being called with ID: " << callbackID << std::endl;
 	for (Callback* cb : *registeredCallbacks) {
 		if (cb->matchesID(callbackID)) {
-			cb->Invoke();
+			cb->Invoke(optionalExtraData);
 		}
 	}
 }

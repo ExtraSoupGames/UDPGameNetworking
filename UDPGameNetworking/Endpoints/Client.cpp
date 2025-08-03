@@ -46,8 +46,8 @@ void Client::ProcessUserMessage(NetworkMessage* msg)
 	// more custom functionality and fewer unique callback registers
 	std::string msgData = msg->GetExtraData();
 	int callbackID = NetworkUtilities::IntFromBinaryString(msgData.substr(0, 12), 3);
-	std::cout << "CALLBACK TIME FROM FOREIGN CLIENT" << std::endl;
-	wrapper->InvokeRegisteredCallback(callbackID);
+	std::string optionalExtraData = msgData.substr(12);
+	wrapper->InvokeRegisteredCallback(callbackID, optionalExtraData);
 }
 
 void Client::ProcessObjectMessage(NetworkMessage* msg)
