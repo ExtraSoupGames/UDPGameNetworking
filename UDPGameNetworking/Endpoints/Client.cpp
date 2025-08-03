@@ -1,31 +1,31 @@
 #include "Client.h"
 #include "../Wrapper/IWrapper.h"
 
-void Client::ProcessMessage(NetworkMessage* msg)
+NetworkMessage* Client::ProcessMessage(NetworkMessage* msg)
 {
 	switch (msg->GetMessageType()) {
 	case UserImportant:
 		msg = sender->ProcessImportantMessage(msg);
 		//this will return if the message has already been received
-		if (msg == nullptr) {return;}
+		if (msg == nullptr) {return msg;}
 		//no break here as the message should still be processed as a user message as well
 	case UserUnImportant:
 		ProcessUserMessage(msg);
-		break;
+		return msg;
 	case IDRequest:
 		ProcessIncomingIDRequest(msg);
-		break;
+		return msg;
 	case NetworkedObjectMsg:
 		ProcessObjectMessage(msg);
-		break;
+		return msg;
 	case ImportantMessageConfirmation:
 		sender->ConfirmationRecieved(msg);
-		break;
+		return msg;
 	case Connect:
 		NetworkUtilities::SendMessageTo(ConnectConfirm, "", socket, serverInfo->address, serverInfo->port, sender);
 		std::cout << "Connect confirmation sent!" << std::endl;
 		isConnected = true;
-		break;
+		return msg;
 	}
 }
 
@@ -183,7 +183,7 @@ bool Client::IsConnected()
 	return true;
 }
 
-void Client::SendServerMessage(NetworkMessageTypes type, std::string msg, std::string stateCode)
+void Client::SendServerMessage(NetworkMessageTypes type, std::string msg)
 {
 	if (!IsConnected()) return;
 	NetworkUtilities::SendMessageTo(type, msg, socket, serverInfo->address, serverInfo->port, sender);

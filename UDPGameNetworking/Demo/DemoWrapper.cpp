@@ -1,10 +1,12 @@
 #include "DemoWrapper.h"
 #include "Demo.h"
+#include "DemoCallback.h"
 DemoWrapper::DemoWrapper(int port)
 {
 	plannedPort = port;
 	server = nullptr;
 	otherPlayers = new std::vector<DemoPlayer*>();
+	registeredCallbacks = new std::vector<Callback*>();
 }
 
 void DemoWrapper::Update(float deltaTime)
@@ -30,9 +32,10 @@ void DemoWrapper::UnregisterObject(int ID)
 	//TODO implement
 }
 
-void DemoWrapper::RegisterCallback()
+void DemoWrapper::RegisterCallback(int ID)
 {
-	//TODO implement
+	registeredCallbacks->push_back(new DemoCallback(ID));
+	//TODO fix this
 }
 
 void DemoWrapper::StartClient()
@@ -51,6 +54,12 @@ void DemoWrapper::ApplySettings()
 
 void DemoWrapper::InvokeRegisteredCallback(int callbackID)
 {
+	for (Callback* cb : *registeredCallbacks) {
+		if (cb->matchesID(callbackID)) {
+			cb->Invoke();
+		}
+	}
+	client->SendServerMessage(UserImportant, NetworkUtilities::AsBinaryString(callbackID, 3) + "1010");
 }
 
 IEngineObject* DemoWrapper::NewNetworkedObject(int objectType, bool belongsToClient)

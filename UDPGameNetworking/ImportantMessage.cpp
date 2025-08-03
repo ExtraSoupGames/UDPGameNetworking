@@ -7,6 +7,7 @@ ImportantMessage::ImportantMessage(NetworkMessage* msg)
 	fromPort = msg->GetPort();
 	//trim off the first 12 bits as they are the important message ID
 	extraData = msg->GetExtraData().substr(12);
+	//TODO better error handling here
 	messageID = NetworkUtilities::IntFromBinaryString(msg->GetExtraData().substr(0, 12), 3);
 	delete msg;
 }

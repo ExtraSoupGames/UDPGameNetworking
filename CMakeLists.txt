@@ -46,6 +46,7 @@ set(SOURCES
     UDPGameNetworking/Wrapper/Callback.cpp
     UDPGameNetworking/Demo/Demo.cpp
     UDPGameNetworking/Demo/DemoWrapper.cpp
+    UDPGameNetworking/Demo/DemoCallback.cpp
 )
 add_executable(UDPGameNetworking ${SOURCES})
 

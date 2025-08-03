@@ -25,7 +25,7 @@ public:
 	virtual void Initialize() = 0;
 	virtual void RegisterObject(IEngineObject*) = 0;
 	virtual void UnregisterObject(int ID) = 0;
-	virtual void RegisterCallback() = 0;
+	virtual void RegisterCallback(int ID) = 0;
 	virtual void StartClient() = 0;
 	virtual void StartServer() = 0;
 	virtual void ApplySettings() = 0;

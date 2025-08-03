@@ -25,6 +25,7 @@ void DemoClient::Start()
 	}
 	wrapper->StartClient();
 	wrapper->RegisterObject(clientPlayer);
+	wrapper->RegisterCallback(0);
 	started = true;
 	window = SDL_CreateWindow("UDP Game Networking Demo client", 500, 500, 0);
 	renderer = SDL_CreateRenderer(window, NULL);
@@ -119,6 +120,9 @@ void DemoPlayer::HandleInput(SDL_Event& e)
 		}
 		if (e.key.key == SDLK_S) {
 			y += 5;
+		}
+		if (e.key.key == SDLK_M) {
+			wrapper->InvokeRegisteredCallback(0);
 		}
 	}
 }

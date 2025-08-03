@@ -13,7 +13,8 @@ struct UnsentMessage {
 	NetworkMessageTypes type;
 	std::string message;
 	UnsentMessage(std::string msg, EndpointInfo* msgTarget, int id, NetworkMessageTypes t) {
-		message = NetworkUtilities::AsBinaryString(3, id) + msg;
+		message = NetworkUtilities::AsBinaryString(id, 3) + msg;
+		std::cout << "message constructed with data: " << msg << " resulting in final contents of: " << message << std::endl;
 		ID = id;
 		target = msgTarget;
 		type = t;

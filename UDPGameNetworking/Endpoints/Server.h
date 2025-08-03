@@ -26,7 +26,7 @@ private:
 	void TryConnectClient(NetworkMessage* msg);
 	bool IsAlreadyConnected(EndpointInfo* client);
 
-	virtual void ProcessMessage(NetworkMessage* msg) override;
+	virtual NetworkMessage* ProcessMessage(NetworkMessage* msg) override;
 
 	void ProcessIncomingIDRequest(NetworkMessage* msg);
 	void ProcessUserMessage(NetworkMessage* msg);

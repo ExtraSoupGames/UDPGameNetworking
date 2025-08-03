@@ -1,5 +1,6 @@
 #pragma once
 #include "../Wrapper/IWrapper.h"
+#include "../Wrapper/Callback.h"
 #include <vector>
 class DemoPlayer; //forward declaration
 class DemoWrapper : public IWrapper {
@@ -7,6 +8,7 @@ private:
 	int plannedPort;
 
 	std::vector<DemoPlayer*>* otherPlayers;
+	std::vector<Callback*>* registeredCallbacks;
 protected:
 public:
 	DemoWrapper(int port);
@@ -14,7 +16,7 @@ public:
 	virtual void Initialize() override;
 	virtual void RegisterObject(IEngineObject* obj) override;
 	virtual void UnregisterObject(int ID) override;
-	virtual void RegisterCallback() override;
+	virtual void RegisterCallback(int ID) override;
 	virtual void StartClient() override;
 	virtual void StartServer() override;
 	virtual void ApplySettings() override;

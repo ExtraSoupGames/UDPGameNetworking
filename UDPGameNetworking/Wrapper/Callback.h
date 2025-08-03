@@ -8,4 +8,5 @@ protected:
 public:
 	Callback(int callbackID);
 	virtual void Invoke() = 0;
+	bool matchesID(int IDToMatch);
 };

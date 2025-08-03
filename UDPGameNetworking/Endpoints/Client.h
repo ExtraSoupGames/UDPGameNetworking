@@ -16,7 +16,7 @@ private:
 	std::vector<OwnedNetworkObject*>* ownedObjects;
 	std::vector<UnownedNetworkObject*>* nonOwnedObjects;
 
-	virtual void ProcessMessage(NetworkMessage* msg) override;
+	virtual NetworkMessage* ProcessMessage(NetworkMessage* msg) override;
 
 	void ProcessIncomingIDRequest(NetworkMessage* msg);
 	void ProcessUserMessage(NetworkMessage* msg);
@@ -39,7 +39,7 @@ public:
 	//process incoming packets, stream owned object data, and trigger relevant callbacks
 	void Update(float deltaTime);
 	bool IsConnected();
-	void SendServerMessage(NetworkMessageTypes type, std::string msg, std::string stateCode);
+	void SendServerMessage(NetworkMessageTypes type, std::string msg);
 
 	void RegisterObject(IEngineObject* obj);
 };
