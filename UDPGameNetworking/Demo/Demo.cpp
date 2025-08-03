@@ -1,9 +1,9 @@
 #include "Demo.h"
 
-DemoClient::DemoClient(bool server, int port, int lerpDelay)
+DemoClient::DemoClient(bool server, int port, int lerpDelay, bool lerpEnabled)
 {
 	isServer = server;
-	wrapper = new DemoWrapper(port, lerpDelay);
+	wrapper = new DemoWrapper(port, lerpDelay, lerpEnabled);
 	clientPlayer = new DemoPlayer(wrapper);
 	started = false;
 	window = nullptr;
@@ -55,8 +55,8 @@ void DemoClient::HandleInput(SDL_Event& e)
 
 Demo::Demo()
 {
-	client1 = new DemoClient(true, 55511, 100);
-	client2 = new DemoClient(false, 55522, 500);
+	client1 = new DemoClient(true, 55511, 999, true);
+	client2 = new DemoClient(false, 55522, 5000, true);
 }
 
 Demo::~Demo()
@@ -142,9 +142,9 @@ void DemoPlayer::UpdateLibraryValues(std::vector<NetworkedValue*>* values)
 	((PositionLerp2D*)values->at(0))->UpdateValue(x, y);
 }
 
-void DemoPlayer::UpdateEngineValues(std::vector<NetworkedValue*>* values, int lerpDelay)
+void DemoPlayer::UpdateEngineValues(std::vector<NetworkedValue*>* values, LibSettings* settings)
 {
-	Position p = ((PositionLerp2D*)values->at(0))->GetLerpedPosition(wrapper->GetClientTime(), lerpDelay);
+	Position p = ((PositionLerp2D*)values->at(0))->GetLerpedPosition(wrapper->GetClientTime(), settings);
 	x = p.x;
 	y = p.y;
 }

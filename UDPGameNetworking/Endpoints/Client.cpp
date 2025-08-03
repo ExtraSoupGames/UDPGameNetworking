@@ -64,7 +64,7 @@ void Client::ProcessObjectMessage(NetworkMessage* msg)
 		return;
 	}
 	for (UnownedNetworkObject* uno : *nonOwnedObjects) {
-		if (uno->StreamDataReceived(msg, settings->lerpDelay)) {
+		if (uno->StreamDataReceived(msg, settings)) {
 			//if the object exists we can return
 			return;
 		}

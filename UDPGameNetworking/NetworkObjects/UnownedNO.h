@@ -16,5 +16,5 @@ protected:
 public:
 	UnownedNetworkObject(IEngineObject* engineObj, NetworkMessage* msg);
 	~UnownedNetworkObject();
-	bool StreamDataReceived(NetworkMessage* msg, int lerpDelay);
+	bool StreamDataReceived(NetworkMessage* msg, LibSettings* settings);
 };

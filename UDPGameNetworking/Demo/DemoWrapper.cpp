@@ -1,7 +1,7 @@
 #include "DemoWrapper.h"
 #include "Demo.h"
 #include "DemoCallback.h"
-DemoWrapper::DemoWrapper(int port, int lerpDelay)
+DemoWrapper::DemoWrapper(int port, int lerpDelay, bool lerpEnabled)
 {
 	plannedPort = port;
 	server = nullptr;
@@ -9,7 +9,7 @@ DemoWrapper::DemoWrapper(int port, int lerpDelay)
 	registeredCallbacks = new std::vector<Callback*>();
 	settings = new LibSettings();
 	settings->lerpDelay = lerpDelay;
-	settings->lerpEnabled = true;
+	settings->lerpEnabled = lerpEnabled;
 }
 
 void DemoWrapper::Update(float deltaTime)
@@ -47,7 +47,7 @@ void DemoWrapper::StartClient()
 
 void DemoWrapper::StartServer()
 {
-	server = new Server("127.0.0.1", 55533, this);
+	server = new Server("127.0.0.1", 55533, this, settings);
 }
 
 void DemoWrapper::ApplySettings()

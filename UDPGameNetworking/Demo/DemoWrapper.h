@@ -11,7 +11,7 @@ private:
 	std::vector<Callback*>* registeredCallbacks;
 protected:
 public:
-	DemoWrapper(int port, int lerpDelay);
+	DemoWrapper(int port, int lerpDelay, bool lerpEnabled);
 	virtual void Update(float deltaTime) override;
 	virtual void Initialize() override;
 	virtual void RegisterObject(IEngineObject* obj) override;

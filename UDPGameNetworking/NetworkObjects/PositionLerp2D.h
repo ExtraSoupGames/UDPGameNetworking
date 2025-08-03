@@ -1,5 +1,6 @@
 #pragma once
 #include "NetworkedValue.h"
+#include "../Wrapper/LibSettings.h"
 struct Position {
 private:
 protected:
@@ -27,7 +28,7 @@ private:
 protected:
 public:
 	PositionLerp2D(int ID, int initX = 0, int initY = 0);
-	Position GetLerpedPosition(int currentTime, int delay);
+	Position GetLerpedPosition(int currentTime, LibSettings* settings);
 	const inline int GetX() { return x; }
 	const inline int GetY() { return y; }
 

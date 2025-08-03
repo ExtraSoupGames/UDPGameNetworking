@@ -1,9 +1,19 @@
 #include "PositionLerp2D.h"
 
 
-Position PositionLerp2D::GetLerpedPosition(int currentTime, int delay)
+Position PositionLerp2D::GetLerpedPosition(int currentTime, LibSettings* settings)
 {
-    currentTime -= delay;
+    if (!settings->lerpEnabled) {
+        while (dataBuffer->size() > 1) {
+            dataBuffer->erase(dataBuffer->begin());
+        }
+        if (dataBuffer->size() > 0) {
+            x = dataBuffer->at(0)->x;
+            y = dataBuffer->at(0)->y;
+        }
+        return Position(x, y);
+    }
+    currentTime -= settings->lerpDelay;
     //only interpolate if there are more than 2 elements in the buffer
     if (dataBuffer->size() >= 2) {
         if (dataBuffer->at(1)->time < currentTime) {

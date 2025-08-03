@@ -9,6 +9,7 @@ class Server : public SocketHolder{
 private:
 	SDLNet_Address* address;
 	int port;
+	LibSettings* settings;
 
 	ServerMessageSender* sender;
 	std::vector<EndpointInfo*>* connectedClients;
@@ -34,7 +35,7 @@ private:
 protected:
 	virtual MessageSender* GetSender() override { return sender; }
 public:
-	Server(std::string ipAddress, int port, IWrapper* libWrapper);
+	Server(std::string ipAddress, int port, IWrapper* libWrapper, LibSettings* settings);
 	void Update(float deltaTime);
 	void Broadcast(NetworkMessageTypes type, std::string message);
 	void ImportantBroadcast(NetworkMessageTypes type, std::string message);

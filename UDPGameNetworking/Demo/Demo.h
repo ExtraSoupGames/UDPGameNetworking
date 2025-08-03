@@ -16,7 +16,7 @@ public:
 	SDL_FRect GetRect();
 
 	virtual void UpdateLibraryValues(std::vector<NetworkedValue*>* values) override;
-	virtual void UpdateEngineValues(std::vector<NetworkedValue*>* values, int lerpDelay) override;
+	virtual void UpdateEngineValues(std::vector<NetworkedValue*>* values, LibSettings* settings) override;
 };
 class DemoClient {
 private:
@@ -28,7 +28,7 @@ private:
 	SDL_Renderer* renderer;
 protected:
 public:
-	DemoClient(bool isServer, int port, int lerpDelay);
+	DemoClient(bool isServer, int port, int lerpDelay, bool lerpEnabled);
 	~DemoClient();
 	void Start();
 	void Update();
