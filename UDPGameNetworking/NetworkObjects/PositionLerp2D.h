@@ -29,8 +29,8 @@ protected:
 public:
 	PositionLerp2D(int ID, int initX = 0, int initY = 0);
 	Position GetLerpedPosition(int currentTime, LibSettings* settings);
-	const inline int GetX() { return x; }
-	const inline int GetY() { return y; }
+	const inline int GetX() { return clampToScreenSize(x); }
+	const inline int GetY() { return clampToScreenSize(y); }
 
 	void LerpMessageReceived(int xVal, int yVal, int time);
 	virtual bool StreamReceived(std::string streamData, int time) override;
@@ -39,4 +39,6 @@ public:
 	void UpdateValue(int xVal, int yVal);
 
 	virtual std::string Debug() override;
+
+	static int clampToScreenSize(int clampVal);
 };

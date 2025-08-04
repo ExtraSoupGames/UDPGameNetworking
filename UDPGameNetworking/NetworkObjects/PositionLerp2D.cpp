@@ -29,16 +29,21 @@ Position PositionLerp2D::GetLerpedPosition(int currentTime, LibSettings* setting
             //calculate progress through this snapshot
             double snapshotProgress = snapshotSinceStart / snapshotDuration;
             if (snapshotProgress > 1) { //a new packet has taken too long to arrive, no data is available for where the object should currently be so just stay still
-                x = dataBuffer->at(1)->x;
-                y = dataBuffer->at(1)->y;
+                x = clampToScreenSize(dataBuffer->at(1)->x);
+                y = clampToScreenSize(dataBuffer->at(1)->y);
             }
             else { //in the range of being able to interpolate
-                x = dataBuffer->at(0)->x + ((dataBuffer->at(1)->x - dataBuffer->at(0)->x) * snapshotProgress);
-                y = dataBuffer->at(0)->y + ((dataBuffer->at(1)->y - dataBuffer->at(0)->y) * snapshotProgress);
+                x = clampToScreenSize(dataBuffer->at(0)->x) + ((clampToScreenSize(dataBuffer->at(1)->x) - clampToScreenSize(dataBuffer->at(0)->x)) * snapshotProgress);
+                y = clampToScreenSize(dataBuffer->at(0)->y) + ((clampToScreenSize(dataBuffer->at(1)->y) - clampToScreenSize(dataBuffer->at(0)->y)) * snapshotProgress);
             }
         }
     }
     return Position(x, y);
+}
+int PositionLerp2D::clampToScreenSize(int clampVal)
+{
+    int screenSize = 256;
+    return ((clampVal % screenSize) + screenSize) % screenSize;
 }
 PositionLerp2D::PositionLerp2D(int ID, int initX, int initY) : LerpedValue(ID)
 {
@@ -66,8 +71,8 @@ std::string PositionLerp2D::GetStreamData()
 {
 	std::string streamData = "";
 	streamData.append(NetworkUtilities::AsBinaryString(ID, 2));
-	streamData.append(NetworkUtilities::AsBinaryString(x, 7));
-	streamData.append(NetworkUtilities::AsBinaryString(y, 7));
+	streamData.append(NetworkUtilities::AsBinaryString(GetX(), 7));
+	streamData.append(NetworkUtilities::AsBinaryString(GetY(), 7));
 	return streamData;
 }
 
