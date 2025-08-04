@@ -55,8 +55,9 @@ void DemoClient::HandleInput(SDL_Event& e)
 
 Demo::Demo()
 {
-	client1 = new DemoClient(true, 55511, 999, true);
-	client2 = new DemoClient(false, 55522, 5000, true);
+	//2 clients each with a different port, 100ms lerp delay, and lerping enabled
+	client1 = new DemoClient(true, 55511, 100, true);
+	client2 = new DemoClient(false, 55522, 100, true);
 }
 
 Demo::~Demo()

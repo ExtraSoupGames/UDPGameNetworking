@@ -1,34 +1,48 @@
 #include "ObjectDataProcessor.h"
+void ObjectDataProcessor::ExtractDataFromMessage(std::string* objectData, int* msgLength, int* timestamp, int* describedValueCount)
+{
+	*msgLength = (int)objectData->size();
+	*msgLength -= timestampByteCount * 8;
+	*timestamp = NetworkUtilities::IntFromBinaryString(objectData->substr(0, timestampByteCount * 8), timestampByteCount * 2);
+	*describedValueCount = *msgLength / streamedValueSize;
+}
+
+NetworkedValue* ObjectDataProcessor::FindValueByID(const std::vector<NetworkedValue*>* values, int id) {
+	for (NetworkedValue* val : *values) {
+		if (val->GetID() == id) return val;
+	}
+	return nullptr;
+}
 //Object data stream message format:
 //first object data ID
 //then 64 bit chunks of values
-//TODO somewhere here probably, server/client time synchronisation and offseting
 void ObjectDataProcessor::UpdateValues(std::vector<NetworkedValue*>* values, NetworkMessage* msg)
 {
-	//TODO organise this function to handle errors better, as well as neatly extracting both ID and timestamp from message before iterating through values
 	std::string objectData = msg->GetExtraData().substr(objectIDBits);
-	int msgLength = (int)objectData.size();
-	msgLength -= timestampByteCount * 8;
-	int messageTimestamp = NetworkUtilities::IntFromBinaryString(objectData.substr(0, timestampByteCount * 8), timestampByteCount * 2);
-	int describedValueCount = msgLength / streamedValueSize;
+	int msgLength = 0;
+	int msgTimestamp = 0;
+	int describedValueCount = 0;
+	ExtractDataFromMessage(&objectData, &msgLength, &msgTimestamp, &describedValueCount);
+
+	if (!msgLength || !msgTimestamp || !describedValueCount) return;
 	if (describedValueCount < 1) return;
+
 	for (int i = 0; i < describedValueCount; i++) {
 		std::string streamData = objectData.substr((timestampByteCount * 8)+ i * streamedValueSize, streamedValueSize);
 		int valueID = NetworkUtilities::IntFromBinaryString(streamData.substr(0,8), 2);
 		//TODO improve readability of this
 		//TODO consider if this should be reworked to not initialize new values, maybe values should be concrete at declaration
 		bool valueIsInitialized = false;
-		for (NetworkedValue* val : *values) {
-			if (val->GetID() == valueID) {
-				if (val->StreamReceived(streamData.substr(8, 56), messageTimestamp)) {
-					//value already exists, doesnt need initializing
-					valueIsInitialized = true;
-				}
-			}
+		NetworkedValue* val = FindValueByID(values, valueID);
+		if (val) {
+			val->StreamReceived(streamData.substr(8, 56), msgTimestamp);
 		}
-		if (!valueIsInitialized) {
-			values->push_back(new PositionLerp2D(valueID, 0, 0)); //TODO initialize with non 0 values
-			//TODO custom serialised data support would go here
+		else {
+			// Fallback to default PositionLerp2D for now
+			auto* newVal = new PositionLerp2D(valueID, 0, 0);
+			values->push_back(newVal);
+			// Optional: call StreamReceived if you want initial payload processed
+			// newVal->StreamReceived(payload, *msgTimestamp);
 		}
 	}
 }
