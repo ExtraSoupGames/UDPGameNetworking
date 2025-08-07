@@ -18,7 +18,7 @@ public:
 	int y;
 	int time;
 };
-class PositionLerp2D : public LerpedValue {
+class PositionLerp2D : public NetworkedValue {
 private:
 	//for use when streaming out (I.E owned object)
 	int x;

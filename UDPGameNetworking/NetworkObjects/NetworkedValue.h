@@ -19,9 +19,3 @@ public:
 	virtual std::string GetStreamData() = 0;
 	virtual std::string Debug() = 0;
 };
-class LerpedValue : public NetworkedValue {
-private:
-protected:
-public:
-	LerpedValue(int ID);
-};

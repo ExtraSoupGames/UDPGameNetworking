@@ -10,11 +10,11 @@
 static int objectIDBits = 8; // number of digits in an object ID
 static int objectIDDigits = objectIDBits / 4;
 static float objectStreamRate = 100; // one data stream message per X ms
+static int streamedValueSize = 64; //number of bits per streamed value (8 for value ID, 56 for actual data)
+
 //A network object owned by this client, it's incoming data is provided by the wrapper and it streams data
 // to other clients
-static int streamedValueSize = 64; //number of bits per streamed value (8 for value ID, 56 for actual data)
 class OwnedNetworkObject : public NetworkObject {
-	//TODO Stream data
 private:
 	//Owned network objects are created in an unitialized state, they request an ID from the server upon
 	// creation and remain in this uninitialized state until the ID is provided by the server
@@ -42,7 +42,7 @@ public:
 
 	//Updates the object, sending a message if required
 	// @param deltaTime - the time in seconds since last update was called on this object
-	void Update(float deltaTime, EndpointInfo* server, SDLNet_DatagramSocket* socket, int clientTime); //TODO expand to include value updating
+	void Update(float deltaTime, EndpointInfo* server, SDLNet_DatagramSocket* socket, int clientTime);
 
 	int GetID() { return ID; }
 };

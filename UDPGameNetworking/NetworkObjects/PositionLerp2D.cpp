@@ -45,7 +45,7 @@ int PositionLerp2D::clampToScreenSize(int clampVal)
     int screenSize = 256;
     return ((clampVal % screenSize) + screenSize) % screenSize;
 }
-PositionLerp2D::PositionLerp2D(int ID, int initX, int initY) : LerpedValue(ID)
+PositionLerp2D::PositionLerp2D(int ID, int initX, int initY) : NetworkedValue(ID)
 {
 	x = initX;
 	y = initY;
