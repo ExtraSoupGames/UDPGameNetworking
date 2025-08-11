@@ -47,7 +47,7 @@ public:
 
 	virtual Position* Deserialize(std::string) override;
 
-	virtual std::string GetStreamData(int currentTime, LibSettings* settings) override;
-
 	virtual std::string Serialize(Position*);
+
+	virtual Position* GetCurrentValue(int currentTime, LibSettings* settings) override;
 };

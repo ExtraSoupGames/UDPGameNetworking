@@ -52,17 +52,16 @@ Position* PositionLerp2D::Deserialize(std::string data)
     int yIn = NetworkUtilities::IntFromBinaryString(data.substr(28, 28), 7);
     return new Position(xIn, yIn);
 }
-std::string PositionLerp2D::GetStreamData(int currentTime, LibSettings* settings)
-{
-    return Serialize(new Position(1, 1));
-}
 std::string PositionLerp2D::Serialize(Position*)
 {
     std::string streamData = "";
-    streamData.append(NetworkUtilities::AsBinaryString(ID, 2));
     streamData.append(NetworkUtilities::AsBinaryString(GetX(), 7));
     streamData.append(NetworkUtilities::AsBinaryString(GetY(), 7));
     return streamData;
+}
+Position* PositionLerp2D::GetCurrentValue(int currentTime, LibSettings* settings)
+{
+    return new Position(GetLerpedPosition(currentTime, settings));
 }
 PositionLerp2D::PositionLerp2D(int ID, int initX, int initY) : NetworkedValue(ID)
 {
