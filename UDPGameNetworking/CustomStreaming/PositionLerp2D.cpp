@@ -45,6 +45,25 @@ int PositionLerp2D::clampToScreenSize(int clampVal)
     int screenSize = 256;
     return ((clampVal % screenSize) + screenSize) % screenSize;
 }
+Position* PositionLerp2D::Deserialize(std::string data)
+{
+    if (data.size() != 56) return nullptr;
+    int xIn = NetworkUtilities::IntFromBinaryString(data.substr(0, 28), 7);
+    int yIn = NetworkUtilities::IntFromBinaryString(data.substr(28, 28), 7);
+    return new Position(xIn, yIn);
+}
+std::string PositionLerp2D::GetStreamData(int currentTime, LibSettings* settings)
+{
+    return Serialize(new Position(1, 1));
+}
+std::string PositionLerp2D::Serialize(Position*)
+{
+    std::string streamData = "";
+    streamData.append(NetworkUtilities::AsBinaryString(ID, 2));
+    streamData.append(NetworkUtilities::AsBinaryString(GetX(), 7));
+    streamData.append(NetworkUtilities::AsBinaryString(GetY(), 7));
+    return streamData;
+}
 PositionLerp2D::PositionLerp2D(int ID, int initX, int initY) : NetworkedValue(ID)
 {
 	x = initX;
@@ -52,28 +71,29 @@ PositionLerp2D::PositionLerp2D(int ID, int initX, int initY) : NetworkedValue(ID
 	dataBuffer = new std::vector<PositionDataPoint*>();
 }
 
-void PositionLerp2D::LerpMessageReceived(int xVal, int yVal, int time)
+void PositionLerp2D::LerpMessageReceived(Position* pos, int time)
 {
-	dataBuffer->push_back(new PositionDataPoint(xVal, yVal, time));
+	dataBuffer->push_back(new PositionDataPoint(pos->x, pos->y, time));
 }
 
 bool PositionLerp2D::StreamReceived(std::string streamData, int time)
 {
-	//28 bits for x, 28 for y
-	if (streamData.size() != 56) return false;
-	int xIn = NetworkUtilities::IntFromBinaryString(streamData.substr(0, 28), 7);
-	int yIn = NetworkUtilities::IntFromBinaryString(streamData.substr(28, 28), 7);
-	LerpMessageReceived(xIn, yIn, time);
+    Position* newPos = Deserialize(streamData);
+    if (!newPos) {
+        delete newPos;
+        newPos = nullptr;
+        return false;
+    }
+	LerpMessageReceived(newPos, time);
+    delete newPos;
+    newPos = nullptr;
 	return true;
 }
 
-std::string PositionLerp2D::GetStreamData()
+
+int PositionLerp2D::GetPacketPayloadLength()
 {
-	std::string streamData = "";
-	streamData.append(NetworkUtilities::AsBinaryString(ID, 2));
-	streamData.append(NetworkUtilities::AsBinaryString(GetX(), 7));
-	streamData.append(NetworkUtilities::AsBinaryString(GetY(), 7));
-	return streamData;
+    return 56;
 }
 
 void PositionLerp2D::UpdateValue(int xVal, int yVal)

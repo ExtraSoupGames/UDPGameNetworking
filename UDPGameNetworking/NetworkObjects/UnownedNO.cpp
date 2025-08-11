@@ -4,12 +4,12 @@ UnownedNetworkObject::UnownedNetworkObject(IEngineObject* engineObj, NetworkMess
 {
 	ID = NetworkUtilities::GetObjectIDFromMsg(msg);
 	engineObject = engineObj;
-	networkedValues = new std::vector<NetworkedValue*>();
+	networkedValues = new std::vector<INetworkedValue*>();
 }
 
 UnownedNetworkObject::~UnownedNetworkObject()
 {
-	for (NetworkedValue* v : *networkedValues) {
+	for (INetworkedValue* v : *networkedValues) {
 		delete v;
 	}
 	delete networkedValues;

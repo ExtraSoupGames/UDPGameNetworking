@@ -3,7 +3,7 @@
 #include "../Endpoints/EndpointInfo.h"
 #include "../NetworkUtilities.h"
 #include "SDL3_net/SDL_net.h"
-#include "NetworkedValue.h"
+#include "../CustomStreaming/NetworkedValue.h"
 #include "ObjectDataProcessor.h"
 #include "../Wrapper/IEngineObject.h"
 //Note that object IDs are sent in BCD format so ID digits is this / 4
@@ -22,13 +22,13 @@ private:
 	//tracks time since last stream message sent
 	float streamTimer;
 	//contains all values that will be streamed to the server, updated by updatevalues method in engine object
-	std::vector<NetworkedValue*>* networkedValues;
+	std::vector<INetworkedValue*>* networkedValues;
 
 	//used for managing data interfacing with the engine
 	IEngineObject* engineObject;
 
 	//Sends a data stream message
-	void StreamSend(EndpointInfo* server, SDLNet_DatagramSocket* socket, int clientTime);
+	void StreamSend(EndpointInfo* server, SDLNet_DatagramSocket* socket, int clientTime, LibSettings* settings);
 	//Sends the server a request for an ID
 	void SendIDRequest(EndpointInfo* server, SDLNet_DatagramSocket* socket);
 protected:
@@ -42,7 +42,7 @@ public:
 
 	//Updates the object, sending a message if required
 	// @param deltaTime - the time in seconds since last update was called on this object
-	void Update(float deltaTime, EndpointInfo* server, SDLNet_DatagramSocket* socket, int clientTime);
+	void Update(float deltaTime, EndpointInfo* server, SDLNet_DatagramSocket* socket, int clientTime, LibSettings* settings);
 
 	int GetID() { return ID; }
 };

@@ -1,4 +1,5 @@
 #include "ObjectDataProcessor.h"
+//TODO convert to use new NetworkedValue class
 void ObjectDataProcessor::ExtractDataFromMessage(std::string* objectData, int* msgLength, int* timestamp, int* describedValueCount)
 {
 	*msgLength = (int)objectData->size();
@@ -7,8 +8,8 @@ void ObjectDataProcessor::ExtractDataFromMessage(std::string* objectData, int* m
 	*describedValueCount = *msgLength / streamedValueSize;
 }
 
-NetworkedValue* ObjectDataProcessor::FindValueByID(const std::vector<NetworkedValue*>* values, int id) {
-	for (NetworkedValue* val : *values) {
+INetworkedValue* ObjectDataProcessor::FindValueByID(const std::vector<INetworkedValue*>* values, int id) {
+	for (INetworkedValue* val : *values) {
 		if (val->GetID() == id) return val;
 	}
 	return nullptr;
@@ -16,7 +17,7 @@ NetworkedValue* ObjectDataProcessor::FindValueByID(const std::vector<NetworkedVa
 //Object data stream message format:
 //first object data ID
 //then 64 bit chunks of values
-void ObjectDataProcessor::UpdateValues(std::vector<NetworkedValue*>* values, NetworkMessage* msg)
+void ObjectDataProcessor::UpdateValues(std::vector<INetworkedValue*>* values, NetworkMessage* msg)
 {
 	std::string objectData = msg->GetExtraData().substr(objectIDBits);
 	int msgLength = 0;
@@ -33,7 +34,7 @@ void ObjectDataProcessor::UpdateValues(std::vector<NetworkedValue*>* values, Net
 		//TODO improve readability of this
 		//TODO consider if this should be reworked to not initialize new values, maybe values should be concrete at declaration
 		bool valueIsInitialized = false;
-		NetworkedValue* val = FindValueByID(values, valueID);
+		INetworkedValue* val = FindValueByID(values, valueID);
 		if (val) {
 			val->StreamReceived(streamData.substr(8, 56), msgTimestamp);
 		}
@@ -47,12 +48,12 @@ void ObjectDataProcessor::UpdateValues(std::vector<NetworkedValue*>* values, Net
 	}
 }
 
-std::string ObjectDataProcessor::ConstructDataStream(std::vector<NetworkedValue*>* values, int time)
+std::string ObjectDataProcessor::ConstructDataStream(std::vector<INetworkedValue*>* values, int time, LibSettings* settings)
 {
 	std::string msgData = "";
 	msgData += NetworkUtilities::AsBinaryString(time, timestampByteCount * 2);
-	for (NetworkedValue* val : *values) {
-		msgData.append(val->GetStreamData());
+	for (INetworkedValue* val : *values) {
+		msgData.append(val->GetStreamData(time, settings));
 	}
 	return msgData;
 }

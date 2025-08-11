@@ -79,7 +79,7 @@ void Client::ProcessObjectMessage(NetworkMessage* msg)
 void Client::UpdateObjects(float deltaTime)
 {
 	for (OwnedNetworkObject* ono : *ownedObjects) {
-		ono->Update(deltaTime, serverInfo, socket, GetTime());
+		ono->Update(deltaTime, serverInfo, socket, GetTime(), settings);
 	}
 }
 

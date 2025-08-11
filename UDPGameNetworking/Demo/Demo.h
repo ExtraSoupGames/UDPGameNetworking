@@ -15,8 +15,8 @@ public:
 
 	SDL_FRect GetRect();
 
-	virtual void UpdateLibraryValues(std::vector<NetworkedValue*>* values) override;
-	virtual void UpdateEngineValues(std::vector<NetworkedValue*>* values, LibSettings* settings) override;
+	virtual void UpdateLibraryValues(std::vector<INetworkedValue*>* values) override;
+	virtual void UpdateEngineValues(std::vector<INetworkedValue*>* values, LibSettings* settings) override;
 };
 class DemoClient {
 private:

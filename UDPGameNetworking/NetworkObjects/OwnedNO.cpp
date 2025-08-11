@@ -1,10 +1,10 @@
 #include "OwnedNO.h"
 
-void OwnedNetworkObject::StreamSend(EndpointInfo* server, SDLNet_DatagramSocket* socket, int clientTime)
+void OwnedNetworkObject::StreamSend(EndpointInfo* server, SDLNet_DatagramSocket* socket, int clientTime, LibSettings* settings)
 {
 	engineObject->UpdateLibraryValues(networkedValues);
 	std::string messageData = NetworkUtilities::AsBinaryString(ID, objectIDDigits);
-	messageData.append(ObjectDataProcessor::ConstructDataStream(networkedValues, clientTime));
+	messageData.append(ObjectDataProcessor::ConstructDataStream(networkedValues, clientTime, settings));
 	//std::cout << "message data: " << messageData << std::endl;
 	NetworkUtilities::SendMessageTo(NetworkedObjectMsg, messageData, socket, server->address, server->port);
 }
@@ -22,7 +22,7 @@ OwnedNetworkObject::OwnedNetworkObject(EndpointInfo* server, SDLNet_DatagramSock
 	streamTimer = 0;
 	SendIDRequest(server, socket);
 	engineObject = engineObj;
-	networkedValues = new std::vector<NetworkedValue*>();
+	networkedValues = new std::vector<INetworkedValue*>();
 	//TODO remove next line - just for testing
 	networkedValues->push_back(new PositionLerp2D(18, 9));
 }
@@ -47,7 +47,7 @@ bool OwnedNetworkObject::IDRequestReceived(int newID)
 	return true;
 }
 
-void OwnedNetworkObject::Update(float deltaTime, EndpointInfo* server, SDLNet_DatagramSocket* socket, int clientTime)
+void OwnedNetworkObject::Update(float deltaTime, EndpointInfo* server, SDLNet_DatagramSocket* socket, int clientTime, LibSettings* settings)
 {
 	if (!initialized) {
 		//sometimes messages are lost and server doesnt send an ID confirmation, if so,
@@ -58,7 +58,7 @@ void OwnedNetworkObject::Update(float deltaTime, EndpointInfo* server, SDLNet_Da
 	streamTimer += deltaTime;
 	if (streamTimer > objectStreamRate) {
 		streamTimer -= objectStreamRate;
-		StreamSend(server, socket, clientTime);
+		StreamSend(server, socket, clientTime, settings);
 	}
 }
 

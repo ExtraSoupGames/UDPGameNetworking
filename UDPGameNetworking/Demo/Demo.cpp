@@ -138,12 +138,12 @@ SDL_FRect DemoPlayer::GetRect()
 	return SDL_FRect{ (float)x, (float)y, 20, 20 };
 }
 
-void DemoPlayer::UpdateLibraryValues(std::vector<NetworkedValue*>* values)
+void DemoPlayer::UpdateLibraryValues(std::vector<INetworkedValue*>* values)
 {
 	((PositionLerp2D*)values->at(0))->UpdateValue(x, y);
 }
 
-void DemoPlayer::UpdateEngineValues(std::vector<NetworkedValue*>* values, LibSettings* settings)
+void DemoPlayer::UpdateEngineValues(std::vector<INetworkedValue*>* values, LibSettings* settings)
 {
 	Position p = ((PositionLerp2D*)values->at(0))->GetLerpedPosition(wrapper->GetClientTime(), settings);
 	x = p.x;

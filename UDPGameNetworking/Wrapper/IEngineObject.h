@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "../NetworkObjects/NetworkedValue.h"
+#include "../CustomStreaming/NetworkedValue.h"
 #include "../Wrapper/LibSettings.h"
 //This class should be inherited with a reference to an engine specific object
 // for registering
@@ -18,6 +18,6 @@ public:
 
 	//should this be 2 classes
 	//make a test one
-	virtual void UpdateLibraryValues(std::vector<NetworkedValue*>* values) = 0;
-	virtual void UpdateEngineValues(std::vector<NetworkedValue*>* values, LibSettings* settings) = 0;
+	virtual void UpdateLibraryValues(std::vector<INetworkedValue*>* values) = 0;
+	virtual void UpdateEngineValues(std::vector<INetworkedValue*>* values, LibSettings* settings) = 0;
 };
