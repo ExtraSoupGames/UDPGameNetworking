@@ -1,7 +1,24 @@
 #include "PositionLerp2D.h"
-
-
-Position PositionLerp2D::GetLerpedPosition(int currentTime, LibSettings* settings)
+int PositionLerp2D::clampToScreenSize(int clampVal)
+{
+    int screenSize = 256;
+    return ((clampVal % screenSize) + screenSize) % screenSize;
+}
+Position* PositionLerp2D::Deserialize(std::string data)
+{
+    if (data.size() != 56) return nullptr;
+    int xIn = NetworkUtilities::IntFromBinaryString(data.substr(0, 28), 7);
+    int yIn = NetworkUtilities::IntFromBinaryString(data.substr(28, 28), 7);
+    return new Position(xIn, yIn);
+}
+std::string PositionLerp2D::Serialize(Position*)
+{
+    std::string streamData = "";
+    streamData.append(NetworkUtilities::AsBinaryString(GetX(), 7));
+    streamData.append(NetworkUtilities::AsBinaryString(GetY(), 7));
+    return streamData;
+}
+Position* PositionLerp2D::GetCurrentValue(int currentTime, LibSettings* settings)
 {
     if (!settings->lerpEnabled) {
         while (dataBuffer->size() > 1) {
@@ -11,7 +28,7 @@ Position PositionLerp2D::GetLerpedPosition(int currentTime, LibSettings* setting
             x = dataBuffer->at(0)->x;
             y = dataBuffer->at(0)->y;
         }
-        return Position(x, y);
+        return new Position(x, y);
     }
     currentTime -= settings->lerpDelay;
     //only interpolate if there are more than 2 elements in the buffer
@@ -38,30 +55,7 @@ Position PositionLerp2D::GetLerpedPosition(int currentTime, LibSettings* setting
             }
         }
     }
-    return Position(x, y);
-}
-int PositionLerp2D::clampToScreenSize(int clampVal)
-{
-    int screenSize = 256;
-    return ((clampVal % screenSize) + screenSize) % screenSize;
-}
-Position* PositionLerp2D::Deserialize(std::string data)
-{
-    if (data.size() != 56) return nullptr;
-    int xIn = NetworkUtilities::IntFromBinaryString(data.substr(0, 28), 7);
-    int yIn = NetworkUtilities::IntFromBinaryString(data.substr(28, 28), 7);
-    return new Position(xIn, yIn);
-}
-std::string PositionLerp2D::Serialize(Position*)
-{
-    std::string streamData = "";
-    streamData.append(NetworkUtilities::AsBinaryString(GetX(), 7));
-    streamData.append(NetworkUtilities::AsBinaryString(GetY(), 7));
-    return streamData;
-}
-Position* PositionLerp2D::GetCurrentValue(int currentTime, LibSettings* settings)
-{
-    return new Position(GetLerpedPosition(currentTime, settings));
+    return new Position(x, y);
 }
 PositionLerp2D::PositionLerp2D(int ID, int initX, int initY) : NetworkedValue(ID)
 {

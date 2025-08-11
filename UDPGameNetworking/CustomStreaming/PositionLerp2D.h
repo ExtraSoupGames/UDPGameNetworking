@@ -31,7 +31,6 @@ private:
 protected:
 public:
 	PositionLerp2D(int ID, int initX = 0, int initY = 0);
-	Position GetLerpedPosition(int currentTime, LibSettings* settings);
 	const inline int GetX() { return clampToScreenSize(x); }
 	const inline int GetY() { return clampToScreenSize(y); }
 

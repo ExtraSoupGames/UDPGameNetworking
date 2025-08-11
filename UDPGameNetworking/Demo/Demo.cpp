@@ -145,7 +145,8 @@ void DemoPlayer::UpdateLibraryValues(std::vector<INetworkedValue*>* values)
 
 void DemoPlayer::UpdateEngineValues(std::vector<INetworkedValue*>* values, LibSettings* settings)
 {
-	Position p = ((PositionLerp2D*)values->at(0))->GetLerpedPosition(wrapper->GetClientTime(), settings);
-	x = p.x;
-	y = p.y;
+	Position* p = ((PositionLerp2D*)values->at(0))->GetCurrentValue(wrapper->GetClientTime(), settings);
+	x = p->x;
+	y = p->y;
+	delete p;
 }
