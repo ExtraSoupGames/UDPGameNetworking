@@ -1,13 +1,4 @@
 #include "ObjectDataProcessor.h"
-//TODO convert to use new NetworkedValue class
-void ObjectDataProcessor::ExtractDataFromMessage(std::string* objectData, int* msgLength, int* timestamp, int* describedValueCount)
-{
-	*msgLength = (int)objectData->size();
-	*msgLength -= timestampByteCount * 8;
-	*timestamp = NetworkUtilities::IntFromBinaryString(objectData->substr(0, timestampByteCount * 8), timestampByteCount * 2);
-	*describedValueCount = *msgLength / streamedValueSize;
-}
-
 INetworkedValue* ObjectDataProcessor::FindValueByID(const std::vector<INetworkedValue*>* values, int id) {
 	for (INetworkedValue* val : *values) {
 		if (val->GetID() == id) return val;
@@ -19,31 +10,32 @@ INetworkedValue* ObjectDataProcessor::FindValueByID(const std::vector<INetworked
 //then 64 bit chunks of values
 void ObjectDataProcessor::UpdateValues(std::vector<INetworkedValue*>* values, NetworkMessage* msg)
 {
+	//this is onyl called by an object who already knows it is the specified object so we can ignore first 8 bits
 	std::string objectData = msg->GetExtraData().substr(objectIDBits);
-	int msgLength = 0;
-	int msgTimestamp = 0;
-	int describedValueCount = 0;
-	ExtractDataFromMessage(&objectData, &msgLength, &msgTimestamp, &describedValueCount);
+	int timestamp = NetworkUtilities::IntFromBinaryString(objectData.substr(0, timestampByteCount * 8), timestampByteCount * 2);
+	objectData = objectData.substr(timestampByteCount * 8);
 
-	if (!msgLength || !msgTimestamp || !describedValueCount) return;
-	if (describedValueCount < 1) return;
+	//Process incoming data stream one value at a time
+	bool done = false;
+	while (!done) {
+		int valueID = NetworkUtilities::IntFromBinaryString(objectData.substr(0, 8), 2);
 
-	for (int i = 0; i < describedValueCount; i++) {
-		std::string streamData = objectData.substr((timestampByteCount * 8)+ i * streamedValueSize, streamedValueSize);
-		int valueID = NetworkUtilities::IntFromBinaryString(streamData.substr(0,8), 2);
-		//TODO improve readability of this
-		//TODO consider if this should be reworked to not initialize new values, maybe values should be concrete at declaration
-		bool valueIsInitialized = false;
+
 		INetworkedValue* val = FindValueByID(values, valueID);
 		if (val) {
-			val->StreamReceived(streamData.substr(8, 56), msgTimestamp);
+			val->StreamReceived(objectData.substr(8, val->GetPacketPayloadLength()), timestamp);
+			objectData = objectData.substr(8 + val->GetPacketPayloadLength());
 		}
 		else {
 			// Fallback to default PositionLerp2D for now
 			auto* newVal = new PositionLerp2D(valueID, 0, 0);
 			values->push_back(newVal);
-			// Optional: call StreamReceived if you want initial payload processed
-			// newVal->StreamReceived(payload, *msgTimestamp);
+			objectData = objectData.substr(8 + newVal->GetPacketPayloadLength());
+		}
+
+		//if this was the last value then loop will terminate
+		if (objectData.size() < 9) {
+			done = true;
 		}
 	}
 }

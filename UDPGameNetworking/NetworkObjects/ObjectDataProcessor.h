@@ -7,7 +7,6 @@
 static const int timestampByteCount = 4;
 class ObjectDataProcessor {
 private:
-	static void ExtractDataFromMessage(std::string* objectData, int* msgLength, int* timestamp, int* describedValueCount);
 	static INetworkedValue* FindValueByID(const std::vector<INetworkedValue*>* values, int id);
 protected:
 public:
