@@ -159,6 +159,10 @@ std::string NetworkUtilities::AsBinaryString(int value, int digitCount)
 int NetworkUtilities::IntFromBinaryString(std::string binaryString, int digits)
 {
 	int out = 0;
+	if (binaryString.size() < digits * 4) {
+		std::cout << "IntFromBinaryString conversion error, binary string too short, returning 0" << std::endl;
+		return 0;
+	}
 	for (int i = 0; i < digits; i++) {
 		int num = stoi(binaryString.substr(i * 4, 4), nullptr, 2);
 		out = (out * 10) + num;
@@ -169,6 +173,12 @@ std::string NetworkUtilities::AsBinaryString(int outBits, std::string value) {
 	std::string outString = "";
 	for (int i = 0; i < value.size(); i++) {
 		outString.push_back(std::stoi(value.substr(i, 1), nullptr, 2));
+	}
+	if (outString.size() < outBits) {
+		std::cout << "string too short to fulfill required bits for conversion, returning shorter than expected binary string" << std::endl;
+	}
+	if (outString.size() > outBits) {
+
 	}
 	return outString;
 }

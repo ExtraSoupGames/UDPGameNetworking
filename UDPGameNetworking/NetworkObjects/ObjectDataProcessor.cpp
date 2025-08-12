@@ -19,9 +19,8 @@ void ObjectDataProcessor::UpdateValues(std::vector<INetworkedValue*>* values, Ne
 	bool done = false;
 	while (!done) {
 		int valueID = NetworkUtilities::IntFromBinaryString(objectData.substr(0, 8), 2);
-
-
 		INetworkedValue* val = FindValueByID(values, valueID);
+
 		if (val) {
 			val->StreamReceived(objectData.substr(8, val->GetPacketPayloadLength()), timestamp);
 			objectData = objectData.substr(8 + val->GetPacketPayloadLength());
