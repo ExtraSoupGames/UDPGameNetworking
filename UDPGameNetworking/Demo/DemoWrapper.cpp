@@ -6,6 +6,7 @@ DemoWrapper::DemoWrapper(int port, int lerpDelay, bool lerpEnabled)
 	plannedPort = port;
 	server = nullptr;
 	otherPlayers = new std::vector<DemoPlayer*>();
+	otherSquares = new std::vector<DemoColourSquare*>();
 	registeredCallbacks = new std::vector<Callback*>();
 	settings = new LibSettings();
 	settings->lerpDelay = lerpDelay;
@@ -66,6 +67,7 @@ void DemoWrapper::InvokeRegisteredCallback(int callbackID, std::string optionalE
 
 IEngineObject* DemoWrapper::NewNetworkedObject(int objectType, bool belongsToClient)
 {
+	//TODO fix default type being player
 	DemoPlayer* dp = new DemoPlayer(this);
 	if (belongsToClient) {
 		otherPlayers->push_back(dp);
@@ -79,6 +81,9 @@ void DemoWrapper::DrawOtherPlayers(SDL_Renderer* renderer)
 	for (DemoPlayer* dp : *otherPlayers) {
 		const SDL_FRect rect = dp->GetRect();
 		SDL_RenderRect(renderer, &rect);
+	}
+	for (DemoColourSquare* dcs : *otherSquares) {
+		dcs->Render(renderer);
 	}
 }
 

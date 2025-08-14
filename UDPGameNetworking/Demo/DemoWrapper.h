@@ -1,6 +1,7 @@
 #pragma once
 #include "../Wrapper/IWrapper.h"
 #include "../Wrapper/Callback.h"
+#include "DemoColourSquare.h"
 #include <vector>
 class DemoPlayer; //forward declaration
 class DemoWrapper : public IWrapper {
@@ -8,6 +9,7 @@ private:
 	int plannedPort;
 
 	std::vector<DemoPlayer*>* otherPlayers;
+	std::vector<DemoColourSquare*>* otherSquares;
 	std::vector<Callback*>* registeredCallbacks;
 protected:
 public:

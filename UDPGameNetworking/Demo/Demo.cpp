@@ -1,4 +1,5 @@
 #include "Demo.h"
+#include "DemoColourSquare.h"
 
 DemoClient::DemoClient(bool server, int port, int lerpDelay, bool lerpEnabled)
 {
@@ -13,6 +14,7 @@ DemoClient::DemoClient(bool server, int port, int lerpDelay, bool lerpEnabled)
 DemoClient::~DemoClient()
 {
 	delete clientPlayer;
+	delete colourSquare;
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 }
@@ -25,6 +27,7 @@ void DemoClient::Start()
 	}
 	wrapper->StartClient();
 	wrapper->RegisterObject(clientPlayer);
+	wrapper->RegisterObject(colourSquare);
 	wrapper->RegisterCallback(500);
 	started = true;
 	window = SDL_CreateWindow("UDP Game Networking Demo client", 500, 500, 0);
@@ -45,6 +48,7 @@ void DemoClient::Update()
 void DemoClient::Close()
 {
 }
+
 
 void DemoClient::HandleInput(SDL_Event& e)
 {

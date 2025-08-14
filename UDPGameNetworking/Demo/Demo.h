@@ -23,6 +23,7 @@ private:
 	bool started;
 	bool isServer;
 	DemoPlayer* clientPlayer;
+	DemoColourSquare* colourSquare;
 	DemoWrapper* wrapper;
 	SDL_Window* window;
 	SDL_Renderer* renderer;
