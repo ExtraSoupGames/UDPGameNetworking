@@ -40,4 +40,7 @@ public:
 	// the specified type ready for streaming)
 	//returns the engine object to continue data streaming with for this new object
 	virtual IEngineObject* NewNetworkedObject(int objectType, bool belongsToClient) = 0;
+	//This defines how values of an object are initialized
+	//All streamed types must be constructed in here depending on IDs
+	virtual INetworkedValue* NewNetworkedValue(int valueID, int typeID) = 0;
 };

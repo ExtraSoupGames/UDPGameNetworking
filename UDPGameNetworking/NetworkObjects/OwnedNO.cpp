@@ -23,7 +23,7 @@ OwnedNetworkObject::OwnedNetworkObject(EndpointInfo* server, SDLNet_DatagramSock
 	SendIDRequest(server, socket);
 	engineObject = engineObj;
 	networkedValues = new std::vector<INetworkedValue*>();
-	//TODO remove next line - just for testing
+	//TODO remove next line - values should depend on type of ono
 	networkedValues->push_back(new PositionLerp2D(18, 9));
 }
 

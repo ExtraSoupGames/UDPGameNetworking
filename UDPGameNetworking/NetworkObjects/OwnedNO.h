@@ -12,6 +12,8 @@ static int objectIDDigits = objectIDBits / 4;
 static float objectStreamRate = 100; // one data stream message per X ms
 static int streamedValueSize = 64; //number of bits per streamed value (8 for value ID, 56 for actual data)
 
+
+//TODO IMPORTANT: ADD INITIALIZATION MESSAGE AFTER SERVER GIVES ID, MUST INCLUDE ID, TYPE, AND VALUE TYPES, 8 bits per
 //A network object owned by this client, it's incoming data is provided by the wrapper and it streams data
 // to other clients
 class OwnedNetworkObject : public NetworkObject {

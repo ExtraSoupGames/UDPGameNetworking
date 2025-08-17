@@ -30,6 +30,8 @@ bool NetworkUtilities::IsImportantType(NetworkMessage* message)
 bool NetworkUtilities::IsImportantType(NetworkMessageTypes type)
 {
 	switch (type) {
+	case NetworkedObjectInit:
+		return true;
 	case UserImportant:
 		return true;
 	default:
@@ -96,11 +98,12 @@ NetworkMessageTypes NetworkUtilities::UnpackHeader(std::string inData)
 	case 1: return Connect;
 	case 2: return ConnectConfirm;
 	case 3: return NetworkedObjectMsg;
-	case 4: return UserImportant; // Important
-	case 5: return UserUnImportant;
-	case 6: return ImportantMessageConfirmation;
-	case 7: return IDRequest;
-	case 8: return InvokeCallback;
+	case 4: return NetworkedObjectInit;
+	case 5: return UserImportant; // Important
+	case 6: return UserUnImportant;
+	case 7: return ImportantMessageConfirmation;
+	case 8: return IDRequest;
+	case 9: return InvokeCallback;
 	default: return Error;
 	}
 }
@@ -109,11 +112,12 @@ std::string NetworkUtilities::PackHeader(NetworkMessageTypes type) {
 	case Connect: return "0001";
 	case ConnectConfirm: return "0010";
 	case NetworkedObjectMsg: return "0011";
-	case UserImportant: return "0100";
-	case UserUnImportant: return "0101";
-	case ImportantMessageConfirmation: return "0110";
-	case IDRequest: return "0111";
-	case InvokeCallback: return "1000";
+	case NetworkedObjectInit: return "0100";
+	case UserImportant: return "0101";
+	case UserUnImportant: return "0110";
+	case ImportantMessageConfirmation: return "0111";
+	case IDRequest: return "1000";
+	case InvokeCallback: return "1001";
 	default: return "0000";
 	}
 }

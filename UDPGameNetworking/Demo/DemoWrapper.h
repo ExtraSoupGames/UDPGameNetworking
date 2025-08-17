@@ -2,6 +2,7 @@
 #include "../Wrapper/IWrapper.h"
 #include "../Wrapper/Callback.h"
 #include "DemoColourSquare.h"
+#include "ColourValue.h"
 #include <vector>
 class DemoPlayer; //forward declaration
 class DemoWrapper : public IWrapper {
@@ -24,6 +25,7 @@ public:
 	virtual void ApplySettings() override;
 	virtual void InvokeRegisteredCallback(int callbackID, std::string optionalExtraData) override;
 	virtual IEngineObject* NewNetworkedObject(int objectType, bool belongsToClient) override;
+	virtual INetworkedValue* NewNetworkedValue(int valueID, int valueType) override;
 
 
 	void DrawOtherPlayers(SDL_Renderer* renderer);

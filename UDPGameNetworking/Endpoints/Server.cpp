@@ -100,10 +100,15 @@ void Server::ProcessObjectMessage(NetworkMessage* msg)
             return;
         }
     }
-    //if the object was not found then it is new
-    //we must create a new unowned object to represent it
+    //if the object was not found then it should have already been created
+    std::cout << "Object not initialized properly! object not found in initialized objects, but data received" << std::endl;
+}
+
+void Server::InitializeNewObject(NetworkMessage* msg)
+{
+    //TODO fix type being 0 always
     IEngineObject* engineObj = wrapper->NewNetworkedObject(0, false);
-    UnownedNetworkObject* uno = new UnownedNetworkObject(engineObj, msg);
+    UnownedNetworkObject* uno = new UnownedNetworkObject(engineObj, msg, wrapper);
     nonOwnedObjects->push_back(uno);
     Broadcast(msg->GetMessageType(), msg->GetExtraData());
 }

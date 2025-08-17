@@ -75,6 +75,18 @@ IEngineObject* DemoWrapper::NewNetworkedObject(int objectType, bool belongsToCli
 	return dp;
 }
 
+INetworkedValue* DemoWrapper::NewNetworkedValue(int valueID, int valueType)
+{
+	switch (valueType) {
+	case 0:
+		return new PositionLerp2D(valueID, 0 ,0);
+	case 1:
+		return new ColourValue(valueID, 0);
+	default:
+		return nullptr;
+	}
+}
+
 void DemoWrapper::DrawOtherPlayers(SDL_Renderer* renderer)
 {
 	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);

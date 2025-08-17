@@ -13,6 +13,9 @@ void Client::ProcessMessage(NetworkMessage* msg)
 	case IDRequest:
 		ProcessIncomingIDRequest(msg);
 		return;
+	case NetworkedObjectInit:
+		InitializeNewObject(msg);
+		return;
 	case NetworkedObjectMsg:
 		ProcessObjectMessage(msg);
 		return;
@@ -41,9 +44,7 @@ void Client::ProcessIncomingIDRequest(NetworkMessage* msg)
 
 void Client::ProcessUserMessage(NetworkMessage* msg)
 {
-	//TODO include optional extra data parsing
-	//I.E any data included after the initial 12 bits will be passed to the callback to allow
-	// more custom functionality and fewer unique callback registers
+	//TODO test extra data parsing
 	std::string msgData = msg->GetExtraData();
 	int callbackID = NetworkUtilities::IntFromBinaryString(msgData.substr(0, 12), 3);
 	std::string optionalExtraData = msgData.substr(12);
@@ -69,10 +70,16 @@ void Client::ProcessObjectMessage(NetworkMessage* msg)
 			return;
 		}
 	}
-	//if the object was not found then it is new
-	//we must create a new unowned object to represent it
+	//if the object was not found then it was not initialized properly
+	std::cout << "Object not initialized properly! object not found in initialized objects, but data received" << std::endl;
+
+}
+
+void Client::InitializeNewObject(NetworkMessage* msg)
+{
+	//TODO fix type being 0 always
 	IEngineObject* engineObj = wrapper->NewNetworkedObject(0, true);
-	UnownedNetworkObject* uno = new UnownedNetworkObject(engineObj, msg);
+	UnownedNetworkObject* uno = new UnownedNetworkObject(engineObj, msg, wrapper);
 	nonOwnedObjects->push_back(uno);
 }
 
