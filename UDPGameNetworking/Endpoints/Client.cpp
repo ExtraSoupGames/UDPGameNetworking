@@ -35,7 +35,7 @@ void Client::ProcessIncomingIDRequest(NetworkMessage* msg)
 {
 	int ID = NetworkUtilities::IntFromBinaryString(msg->GetExtraData().substr(0, objectIDBits), objectIDDigits);
 	for (OwnedNetworkObject* ono : *ownedObjects) {
-		if (ono->IDRequestReceived(ID)) {
+		if (ono->IDRequestReceived(ID, socket, serverInfo, sender, wrapper)) {
 			std::cout << "Object with ID " << ID << " registered successfully!" << std::endl;
 			return;
 		}
@@ -78,7 +78,8 @@ void Client::ProcessObjectMessage(NetworkMessage* msg)
 void Client::InitializeNewObject(NetworkMessage* msg)
 {
 	//TODO fix type being 0 always
-	IEngineObject* engineObj = wrapper->NewNetworkedObject(0, true);
+	int objectType = NetworkUtilities::IntFromBinaryString(msg->GetExtraData().substr(objectIDBits, 8), 2);
+	IEngineObject* engineObj = wrapper->NewNetworkedObject(objectType, true);
 	UnownedNetworkObject* uno = new UnownedNetworkObject(engineObj, msg, wrapper);
 	nonOwnedObjects->push_back(uno);
 }

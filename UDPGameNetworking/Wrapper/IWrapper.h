@@ -3,8 +3,8 @@
 #include <vector>
 #include "../Endpoints/Client.h"
 #include "../Endpoints/Server.h"
-#include "IEngineObject.h"
 #include "LibSettings.h"
+class IEngineObject{};
 //This class should be inherited by wrapper to provide service specific
 // functionality relating to registering values for consistent broadcasting
 class IWrapper {
@@ -40,7 +40,11 @@ public:
 	// the specified type ready for streaming)
 	//returns the engine object to continue data streaming with for this new object
 	virtual IEngineObject* NewNetworkedObject(int objectType, bool belongsToClient) = 0;
+	//This should define how engine object IDs and types are streamed
+	virtual int EngineObjectMetadata(IEngineObject* obj) = 0;
 	//This defines how values of an object are initialized
 	//All streamed types must be constructed in here depending on IDs
 	virtual INetworkedValue* NewNetworkedValue(int valueID, int typeID) = 0;
+	//This defines how types are streamed initially, should match NewNetworkedValue method
+	virtual std::string NetworkedValueMetadata(INetworkedValue* val) = 0;
 };

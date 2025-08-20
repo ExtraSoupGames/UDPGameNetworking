@@ -6,6 +6,7 @@
 #include "../CustomStreaming/NetworkedValue.h"
 #include "ObjectDataProcessor.h"
 #include "../Wrapper/IEngineObject.h"
+#include "../Wrapper/IWrapper.h"
 //Note that object IDs are sent in BCD format so ID digits is this / 4
 static int objectIDBits = 8; // number of digits in an object ID
 static int objectIDDigits = objectIDBits / 4;
@@ -13,7 +14,6 @@ static float objectStreamRate = 100; // one data stream message per X ms
 static int streamedValueSize = 64; //number of bits per streamed value (8 for value ID, 56 for actual data)
 
 
-//TODO IMPORTANT: ADD INITIALIZATION MESSAGE AFTER SERVER GIVES ID, MUST INCLUDE ID, TYPE, AND VALUE TYPES, 8 bits per
 //A network object owned by this client, it's incoming data is provided by the wrapper and it streams data
 // to other clients
 class OwnedNetworkObject : public NetworkObject {
@@ -33,6 +33,8 @@ private:
 	void StreamSend(EndpointInfo* server, SDLNet_DatagramSocket* socket, int clientTime, LibSettings* settings);
 	//Sends the server a request for an ID
 	void SendIDRequest(EndpointInfo* server, SDLNet_DatagramSocket* socket);
+	//sends initialization message detailing contained data types to server
+	void SendInitializationMessage(EndpointInfo* server, SDLNet_DatagramSocket* socket, MessageSender* sender, IWrapper* wrapper);
 protected:
 public:
 	//Create the object in an uninitialized state and request an ID from the server
@@ -40,7 +42,7 @@ public:
 	~OwnedNetworkObject();
 	//Initialize the object with an ID provided by the server
 	//Returns true if object was initialized
-	bool IDRequestReceived(int ID);
+	bool IDRequestReceived(int ID, SDLNet_DatagramSocket* socket, EndpointInfo* server, MessageSender* sender, IWrapper* wrapper);
 
 	//Updates the object, sending a message if required
 	// @param deltaTime - the time in seconds since last update was called on this object

@@ -1,4 +1,5 @@
 #include "ObjectDataProcessor.h"
+#include "../Wrapper/IWrapper.h"
 INetworkedValue* ObjectDataProcessor::FindValueByID(const std::vector<INetworkedValue*>* values, int id) {
 	for (INetworkedValue* val : *values) {
 		if (val->GetID() == id) return val;
@@ -38,7 +39,7 @@ void ObjectDataProcessor::UpdateValues(std::vector<INetworkedValue*>* values, Ne
 }
 void ObjectDataProcessor::InitializeValues(std::vector<INetworkedValue*>* values, NetworkMessage* msg, IWrapper* wrapper)
 {
-	std::string objectData = msg->GetExtraData().substr(objectIDBits);
+	std::string objectData = msg->GetExtraData().substr(objectIDBits + 8);
 	int valueCount = NetworkUtilities::IntFromBinaryString(objectData.substr(0, 8), 2);
 	objectData = objectData.substr(8);
 

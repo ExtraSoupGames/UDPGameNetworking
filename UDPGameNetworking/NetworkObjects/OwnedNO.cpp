@@ -14,6 +14,23 @@ void OwnedNetworkObject::SendIDRequest(EndpointInfo* server, SDLNet_DatagramSock
 	NetworkUtilities::SendMessageTo(IDRequest, "", socket, server->address, server->port);
 }
 
+void OwnedNetworkObject::SendInitializationMessage(EndpointInfo* server, SDLNet_DatagramSocket* socket, MessageSender* sender, IWrapper* wrapper)
+{
+	//TODO populate initInfo
+	//object id then
+	// 8 bits object type
+	//8 bits value id
+	//8 bits value type
+	//and so on
+	std::string initInfo = "";
+	initInfo += NetworkUtilities::AsBinaryString(ID, objectIDDigits);
+	initInfo += NetworkUtilities::AsBinaryString(wrapper->EngineObjectMetadata(engineObject), 2);
+	for (int i = 0; i < networkedValues->size(); i++) {
+		initInfo += wrapper->NetworkedValueMetadata(networkedValues->at(i));
+	}
+	NetworkUtilities::SendMessageTo(NetworkedObjectInit, initInfo, socket, server->address, server->port);
+}
+
 OwnedNetworkObject::OwnedNetworkObject(EndpointInfo* server, SDLNet_DatagramSocket* socket, IEngineObject* engineObj)
 {
 	//Until the server confirms the ID, the ID will be 0 and object will remain uninitialized
@@ -36,7 +53,7 @@ OwnedNetworkObject::~OwnedNetworkObject()
 	//TODO Send a message to the server notifying of deletion
 }
 
-bool OwnedNetworkObject::IDRequestReceived(int newID)
+bool OwnedNetworkObject::IDRequestReceived(int newID, SDLNet_DatagramSocket* socket, EndpointInfo* server, MessageSender* sender, IWrapper* wrapper)
 {
 	if (initialized || ID != 0) {
 		return false;
@@ -44,6 +61,7 @@ bool OwnedNetworkObject::IDRequestReceived(int newID)
 	ID = newID;
 	std::cout << "Owned networked object initialization complete, ID assigned: " << ID << std::endl;
 	initialized = true;
+	SendInitializationMessage(server, socket, sender, wrapper);
 	return true;
 }
 
