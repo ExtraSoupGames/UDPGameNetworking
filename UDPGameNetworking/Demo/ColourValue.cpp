@@ -1,5 +1,10 @@
 #include "ColourValue.h"
+#include "ColourValue.h"
 #include <bitset>
+ColourValue::ColourValue(int ID, uint32_t startingColour) : NetworkedValue<uint32_t>(ID)
+{
+	val = startingColour;
+}
 bool ColourValue::StreamReceived(std::string streamData, int time)
 {
 	//time variable is unused as colour is not lerped

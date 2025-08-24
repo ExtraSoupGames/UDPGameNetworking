@@ -32,6 +32,7 @@ private:
 	void ProcessIncomingIDRequest(NetworkMessage* msg);
 	void ProcessUserMessage(NetworkMessage* msg);
 	void ProcessObjectMessage(NetworkMessage* msg);
+	void InitializeNewObject(NetworkMessage* msg);
 protected:
 	virtual MessageSender* GetSender() override { return sender; }
 public:

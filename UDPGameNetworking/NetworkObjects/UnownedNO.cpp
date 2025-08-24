@@ -1,10 +1,11 @@
 #include "UnownedNO.h"
 
-UnownedNetworkObject::UnownedNetworkObject(IEngineObject* engineObj, NetworkMessage* msg)
+UnownedNetworkObject::UnownedNetworkObject(IEngineObject* engineObj, NetworkMessage* msg, IWrapper* wrapper)
 {
 	ID = NetworkUtilities::GetObjectIDFromMsg(msg);
 	engineObject = engineObj;
 	networkedValues = new std::vector<INetworkedValue*>();
+	ObjectDataProcessor::InitializeValues(networkedValues, msg, wrapper);
 }
 
 UnownedNetworkObject::~UnownedNetworkObject()

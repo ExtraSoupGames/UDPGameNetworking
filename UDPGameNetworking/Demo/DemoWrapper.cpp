@@ -68,12 +68,64 @@ void DemoWrapper::InvokeRegisteredCallback(int callbackID, std::string optionalE
 
 IEngineObject* DemoWrapper::NewNetworkedObject(int objectType, bool belongsToClient)
 {
-	//TODO fix default type being player
-	DemoPlayer* dp = new DemoPlayer(this);
-	if (belongsToClient) {
-		otherPlayers->push_back(dp);
+	IEngineObject* newObj = nullptr;
+	switch (objectType) {
+	case 0:
+		DemoPlayer * dp = new DemoPlayer(this);
+		newObj = dp;
+		if (belongsToClient) {
+			otherPlayers->push_back(dp);
+		}
+		break;
+	case 1:
+		newObj = new DemoColourSquare(this, 50);
+		break;
 	}
-	return dp;
+	return newObj;
+}
+
+INetworkedValue* DemoWrapper::NewNetworkedValue(int valueID, int valueType)
+{
+	switch (valueType) {
+	case 0:
+		return new PositionLerp2D(valueID, 0 ,0);
+	case 1:
+		return new ColourValue(valueID, 0);
+	default:
+		return nullptr;
+	}
+}
+
+std::string DemoWrapper::NetworkedValueMetadata(INetworkedValue* value)
+{
+	if (!value) return "";
+
+	if (auto* position = dynamic_cast<PositionLerp2D*>(value)) {
+
+		return NetworkUtilities::AsBinaryString(value->GetID(), 2) + "00000000";
+	}
+	else if (auto* colour = dynamic_cast<ColourValue*>(value)) {
+
+		return NetworkUtilities::AsBinaryString(value->GetID(), 2) + "00000001";
+	}
+
+	return "";
+}
+
+int DemoWrapper::EngineObjectMetadata(IEngineObject* obj)
+{
+	if (!obj) return 0;
+
+	if (auto* player = dynamic_cast<DemoPlayer*>(obj)) {
+
+		return 0;
+	}
+	else if (auto* colourSquare = dynamic_cast<DemoColourSquare*>(obj)) {
+
+		return 1;
+	}
+
+	return 0;
 }
 
 void DemoWrapper::DrawOtherPlayers(SDL_Renderer* renderer)

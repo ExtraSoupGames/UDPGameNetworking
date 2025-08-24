@@ -6,6 +6,8 @@ private:
 	uint32_t val;
 protected:
 public:
+	ColourValue(int ID, uint32_t startingColour);
+
 	virtual bool StreamReceived(std::string streamData, int time) override;
 
 	virtual int GetPacketPayloadLength() override;

@@ -13,6 +13,7 @@ enum NetworkMessageTypes {
 	Connect,
 	ConnectConfirm,
 	NetworkedObjectMsg,
+	NetworkedObjectInit,
 	UserImportant,
 	UserUnImportant,
 	ImportantMessageConfirmation,

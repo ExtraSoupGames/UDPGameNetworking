@@ -1,6 +1,8 @@
 #pragma once
 #include "../Wrapper/IWrapper.h"
+#include "../Wrapper/IEngineObject.h"
 #include "../Wrapper/Callback.h"
+#include "ColourValue.h"
 #include <vector>
 class DemoColourSquare;
 class DemoPlayer; //forward declaration
@@ -24,6 +26,10 @@ public:
 	virtual void ApplySettings() override;
 	virtual void InvokeRegisteredCallback(int callbackID, std::string optionalExtraData) override;
 	virtual IEngineObject* NewNetworkedObject(int objectType, bool belongsToClient) override;
+	virtual INetworkedValue* NewNetworkedValue(int valueID, int valueType) override;
+	virtual std::string NetworkedValueMetadata(INetworkedValue* value) override;
+	virtual int EngineObjectMetadata(IEngineObject* obj) override;
+
 
 
 	void DrawOtherPlayers(SDL_Renderer* renderer);

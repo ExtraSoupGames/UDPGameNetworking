@@ -1,4 +1,5 @@
 #include "ObjectDataProcessor.h"
+#include "../Wrapper/IWrapper.h"
 INetworkedValue* ObjectDataProcessor::FindValueByID(const std::vector<INetworkedValue*>* values, int id) {
 	for (INetworkedValue* val : *values) {
 		if (val->GetID() == id) return val;
@@ -26,10 +27,8 @@ void ObjectDataProcessor::UpdateValues(std::vector<INetworkedValue*>* values, Ne
 			objectData = objectData.substr(8 + val->GetPacketPayloadLength());
 		}
 		else {
-			// Fallback to default PositionLerp2D for now
-			auto* newVal = new PositionLerp2D(valueID, 0, 0);
-			values->push_back(newVal);
-			objectData = objectData.substr(8 + newVal->GetPacketPayloadLength());
+			std::cout << "Unkown value in received message, ending loop and updating nothing" << std::endl;
+			done = true;
 		}
 
 		//if this was the last value then loop will terminate
@@ -38,7 +37,25 @@ void ObjectDataProcessor::UpdateValues(std::vector<INetworkedValue*>* values, Ne
 		}
 	}
 }
+void ObjectDataProcessor::InitializeValues(std::vector<INetworkedValue*>* values, NetworkMessage* msg, IWrapper* wrapper)
+{
+	std::string objectData = msg->GetExtraData().substr(objectIDBits + 8);
+	int valueCount = NetworkUtilities::IntFromBinaryString(objectData.substr(0, 8), 2);
+	objectData = objectData.substr(8);
 
+	for (int i = 0; i < valueCount; i++) {
+		int valueID = NetworkUtilities::IntFromBinaryString(objectData.substr(0, 8), 2);
+		int valueType = NetworkUtilities::IntFromBinaryString(objectData.substr(8, 8), 2);
+		objectData = objectData.substr(16);	
+		INetworkedValue* newVal = wrapper->NewNetworkedValue(valueID, valueType);
+		if (newVal) {
+			values->push_back(newVal);
+		}
+		else {
+			std::cout << "Value type could not be created by wrapper, type: " << valueType << std::endl;
+		}
+	}
+}
 std::string ObjectDataProcessor::ConstructDataStream(std::vector<INetworkedValue*>* values, int time, LibSettings* settings)
 {
 	std::string msgData = "";
