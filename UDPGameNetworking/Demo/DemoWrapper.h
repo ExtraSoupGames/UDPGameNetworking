@@ -1,8 +1,8 @@
 #pragma once
 #include "../Wrapper/IWrapper.h"
 #include "../Wrapper/Callback.h"
-#include "DemoColourSquare.h"
 #include <vector>
+class DemoColourSquare;
 class DemoPlayer; //forward declaration
 class DemoWrapper : public IWrapper {
 private:

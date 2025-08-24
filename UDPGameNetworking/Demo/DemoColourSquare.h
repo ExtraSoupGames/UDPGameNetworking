@@ -1,6 +1,6 @@
 #pragma once
 #include "../Wrapper/IEngineObject.h"
-#include "DemoWrapper.h"
+class DemoWrapper;
 class DemoColourSquare : public IEngineObject
 {
 private:

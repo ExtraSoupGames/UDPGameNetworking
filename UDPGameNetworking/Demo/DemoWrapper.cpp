@@ -1,6 +1,7 @@
 #include "DemoWrapper.h"
 #include "Demo.h"
 #include "DemoCallback.h"
+#include "DemoColourSquare.h"
 DemoWrapper::DemoWrapper(int port, int lerpDelay, bool lerpEnabled)
 {
 	plannedPort = port;

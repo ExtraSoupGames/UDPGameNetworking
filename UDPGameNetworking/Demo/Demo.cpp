@@ -6,6 +6,7 @@ DemoClient::DemoClient(bool server, int port, int lerpDelay, bool lerpEnabled)
 	isServer = server;
 	wrapper = new DemoWrapper(port, lerpDelay, lerpEnabled);
 	clientPlayer = new DemoPlayer(wrapper);
+	colourSquare = new DemoColourSquare(wrapper, 50);
 	started = false;
 	window = nullptr;
 	renderer = nullptr;

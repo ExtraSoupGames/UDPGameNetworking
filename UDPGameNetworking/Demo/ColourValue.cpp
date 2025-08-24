@@ -4,6 +4,7 @@ bool ColourValue::StreamReceived(std::string streamData, int time)
 {
 	//time variable is unused as colour is not lerped
 	val = Deserialize(streamData);
+	return true;
 }
 int ColourValue::GetPacketPayloadLength()
 {
@@ -22,12 +23,12 @@ uint32_t ColourValue::Deserialize(std::string data)
 
 std::string ColourValue::Serialize(uint32_t val)
 {
-	return (std::bitset<32>(val)).to_string()
+	return (std::bitset<32>(val)).to_string();
 }
 
 std::string ColourValue::Debug()
 {
-	std::cout << "Colour value with value of " << val << "!" << std::endl;
+	return "Colour value with value of " + val;
 }
 
 uint32_t ColourValue::GetCurrentValue(int currentTime, LibSettings* settings)
@@ -38,5 +39,5 @@ uint32_t ColourValue::GetCurrentValue(int currentTime, LibSettings* settings)
 
 void ColourValue::SetColour(uint32_t col)
 {
-	value = col;
+	val = col;
 }

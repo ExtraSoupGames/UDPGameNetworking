@@ -1,5 +1,6 @@
 #include "DemoColourSquare.h"
 #include "ColourValue.h"
+#include "DemoWrapper.h"
 DemoColourSquare::DemoColourSquare(DemoWrapper* demoWrapper, int xPos)
 {
 	wrapper = demoWrapper;
