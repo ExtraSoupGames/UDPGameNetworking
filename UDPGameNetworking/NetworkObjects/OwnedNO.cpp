@@ -17,7 +17,6 @@ void OwnedNetworkObject::SendIDRequest(EndpointInfo* server, SDLNet_DatagramSock
 
 void OwnedNetworkObject::SendInitializationMessage(EndpointInfo* server, SDLNet_DatagramSocket* socket, MessageSender* sender, IWrapper* wrapper)
 {
-	//TODO populate initInfo
 	//object id then
 	// 8 bits object type
 	// 8 bits value count

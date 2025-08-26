@@ -11,9 +11,6 @@
 
 //Big TODO
 // - Threading for server polling
-//is this actually needed?
-// - Custom serialised data
-// - Custom value registration
 int main()
 {
 	if (!SDLNet_Init()) {

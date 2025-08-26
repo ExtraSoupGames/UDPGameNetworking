@@ -61,7 +61,7 @@ void Client::ProcessObjectMessage(NetworkMessage* msg)
 		StartTimer(messageTimestamp);
 	}
 	//first we should check if the object is owned by this client and if so, ignore the message
-	int streamObjectID = NetworkUtilities::GetObjectIDFromMsg(msg);
+	int streamObjectID = ObjectDataProcessor::GetObjectIDFromMsg(msg);
 	if (AmIThisObjectsOwner(streamObjectID)) {
 		//std::cout << "Client received object data but it was ignored as the clients was the objects owner" << std::endl;
 		return;
@@ -73,7 +73,6 @@ void Client::ProcessObjectMessage(NetworkMessage* msg)
 		}
 	}
 	//if the object was not found then it was not initialized properly
-	// TODO re enable warning message
 	std::cout << "Object not initialized properly! object not found in initialized objects, but data received" << std::endl;
 
 }

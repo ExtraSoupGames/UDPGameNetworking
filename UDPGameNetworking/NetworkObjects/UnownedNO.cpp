@@ -2,7 +2,7 @@
 #include "../Wrapper/IWrapper.h"
 UnownedNetworkObject::UnownedNetworkObject(IEngineObject* engineObj, NetworkMessage* msg, IWrapper* wrapper)
 {
-	ID = NetworkUtilities::GetObjectIDFromMsg(msg);
+	ID = ObjectDataProcessor::GetObjectIDFromMsg(msg);
 	engineObject = engineObj;
 	networkedValues = new std::vector<INetworkedValue*>();
 	ObjectDataProcessor::InitializeValues(networkedValues, msg, wrapper);
@@ -14,7 +14,7 @@ UnownedNetworkObject::~UnownedNetworkObject()
 		delete v;
 	}
 	delete networkedValues;
-	//TODO destroy the engine object
+	delete engineObject;
 }
 
 bool UnownedNetworkObject::MatchID(int IDToMatch)
@@ -24,7 +24,7 @@ bool UnownedNetworkObject::MatchID(int IDToMatch)
 
 bool UnownedNetworkObject::StreamDataReceived(NetworkMessage* msg, LibSettings* settings)
 {
-	int streamObjectID = NetworkUtilities::GetObjectIDFromMsg(msg);
+	int streamObjectID = ObjectDataProcessor::GetObjectIDFromMsg(msg);
 	if (streamObjectID != ID) {
 		return false;
 	}

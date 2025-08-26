@@ -71,3 +71,10 @@ std::string ObjectDataProcessor::ConstructDataStream(std::vector<INetworkedValue
 	}
 	return msgData;
 }
+
+int ObjectDataProcessor::GetObjectIDFromMsg(NetworkMessage* msg)
+{
+	std::string IDData = msg->GetExtraData().substr(0, objectIDBits);
+	int ID = NetworkUtilities::IntFromBinaryString(IDData, objectIDDigits);
+	return ID;
+}

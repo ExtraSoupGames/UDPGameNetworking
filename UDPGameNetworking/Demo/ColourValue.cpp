@@ -49,6 +49,5 @@ void ColourValue::SetColour(uint32_t col)
 
 std::string ColourValue::GetMetadata()
 {
-	std::cout << "COLOUR VALUE BEING INITIALIZED HERE!!! <<<<<<" << std::endl;
 	return "00000001";
 }

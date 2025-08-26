@@ -197,13 +197,6 @@ bool NetworkUtilities::VeryifyMessageState(NetworkMessage* msg, std::string stat
 	if (messageState == stateCode) return true;
 	return false;
 }
-int NetworkUtilities::GetObjectIDFromMsg(NetworkMessage* msg)
-{
-	//TODO maybe move this to static function in object class, it doesnt really belong here
-	std::string IDData = msg->GetExtraData().substr(0, objectIDBits);
-	int ID = IntFromBinaryString(IDData, objectIDDigits);
-	return ID;
-}
 bool NetworkUtilities::IsBinaryOnly(std::string message) {
 	for (int i = 0; i < message.size(); i++) {
 		if (!(message.at(i) == '0' || message.at(i) == '1')) {

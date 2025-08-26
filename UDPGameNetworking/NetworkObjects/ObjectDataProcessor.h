@@ -22,4 +22,6 @@ public:
 	//constructs a string of 1s and 0s for a data stream detailing current value of all provided networked values
 	// @param values - the values whose data will be contained in the stream
 	static std::string ConstructDataStream(std::vector<INetworkedValue*>* values, int time, LibSettings* settings);
+
+	static int GetObjectIDFromMsg(NetworkMessage* msg);
 };

@@ -70,7 +70,7 @@ void DemoWrapper::InvokeRegisteredCallback(int callbackID, std::string optionalE
 		}
 	}
 }
-
+//TODO clean up object initialization pipeline (right now - int object type -> NewNetworkedObject -> Find object type again -> initialize values)
 IEngineObject* DemoWrapper::NewNetworkedObject(int objectType, bool belongsToClient)
 {
 	IEngineObject* newObj = nullptr;

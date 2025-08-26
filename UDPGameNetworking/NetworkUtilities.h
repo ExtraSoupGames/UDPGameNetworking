@@ -24,6 +24,7 @@ enum NetworkMessageTypes {
 
 class NetworkUtilities {
 private:
+	//TODO documentation expansion
 	friend class MessageSender;
 	//Packs message data into a buffer of unsigned ints to be sent
 	static std::vector<Uint8>* PackMessage(std::string inData);
@@ -33,7 +34,6 @@ private:
 	// all messages received of these type will trigger an important message response
 	static bool IsImportantType(NetworkMessage* message);
 	static bool IsImportantType(NetworkMessageTypes type);
-	//friend? TODO fix
 	static void SendMessageDirect(NetworkMessageTypes messageType, std::string message, SDLNet_DatagramSocket* socket, SDLNet_Address* address, int port);
 public:
 	//Gets the next incoming message on the socket
@@ -68,8 +68,6 @@ public:
 	static NetworkMessageTypes UnpackHeader(std::string message);
 
 	static bool VeryifyMessageState(NetworkMessage* msg, std::string stateCode);
-
-	static int GetObjectIDFromMsg(NetworkMessage* msg);
 
 
 	//converts a decimal integer into a binary coded decimal string
