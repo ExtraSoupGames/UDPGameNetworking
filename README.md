@@ -1,31 +1,36 @@
-# UDPGameNetworking Library
-UDPGameNetworking is a C++ library for game development networking, built on UDP. It is designed with Engine Agnosticity in mind, providing core functionality
-that can be wrapped or extended for use in game engines. Currently working for 2 clients running on one system, untested on LAN, NAT traversal not implemented or planned.
+# **UDPGameNetworking Library**
+A lightweight C++ UDP networking solution designed specifically for game development, featuring reliable messaging and interpolation without engine dependencies.
 
-### Features
-- Generic data streaming over UDP
-- Networked value lerping
-- Important message confirmation
-- Engine agnostic design
-- Simple demo to showcase engine functionality
+### **Features**
+- **Generic data streaming over UDP** (Define custom data types, with custom serialization and deserialization methods, and let the library do the rest)
+- **Networked value lerping** (Easily toggle in Library settings, customizable delay, smooth networked objects even with rocky connections)
+- **Important message confirmation** (Custom user messages can use message acknowledgement, even over UDP)
+- **Engine agnostic design** (Designed to be wrapped for use with any game engine, see Status)
+- **Simple demo to showcase engine functionality** (Fully functional example showing core capabilities)
 
-### Demo
-- Shows 2 Clients each controlling a cube whose location is streamed with the library
-- WASD movement controls
-- Hover with mouse over which client window to control that client
-- Also shows 2 coloured squares
-- Each client's own square is shown on the left of that client's screen
-- Press RGB on keyboard to change own squares colour
-- Updates on other client's screen
+### **Demo**
+- Two clients running simultaneously on one system
+- Each client controls a square with real time position streaming and a coloured cube
+- **Controls**:
+	- 'WASD' Move your square
+	- 'Mouse Hover' Select which client window to control
+	- 'R', 'G', 'B' Select your squares colour
 
-### Installation
+### **Installation**
 - Download the repo and build with CMake
 - Run UDPGameNetworking.cpp to see the demo
 
-### Status
-This project is still in development, the Demo works, and the project can be used for engineless development, but builds are not yet ready for a full library, and changes are going to be made.
+### **Status**
+- **Working**:
+- Demo fully functional
+- Core networking is stable
+- **Limitations**:
+- Localhost tested only (not yet LAN)
+- No NAT traversal implementation or planned
+- Library packaging in progress
 
-### Planned
-- Cleanup
-- Library building
-- Wrapper development
+### **Planned Improvements**
+- Cleanup and optimization
+- Full library packaging
+- Wrapper implementations for Godot and Unity
+- Additional documentation
