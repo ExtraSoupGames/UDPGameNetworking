@@ -1,5 +1,8 @@
 #include "Server.h"
 #include "../Wrapper/IWrapper.h"
+#include "../NetworkObjects/OwnedNO.h"
+#include "../NetworkObjects/UnownedNO.h"
+#include "../Senders/ServerMessageSender.h"
 int Server::GetNextFreeID()
 {
     int out = availableIDs->front();
@@ -66,6 +69,8 @@ void Server::ProcessMessage(NetworkMessage* msg)
     case IDRequest:
         ProcessIncomingIDRequest(msg);
         return;
+    case NetworkedObjectInit:
+        InitializeNewObject(msg);
     case NetworkedObjectMsg:
         ProcessObjectMessage(msg);
         return;
@@ -91,26 +96,14 @@ void Server::ProcessUserMessage(NetworkMessage* msg)
 
 void Server::ProcessObjectMessage(NetworkMessage* msg)
 {
-    //TODO does the server even need to keep track of objects if all it does is pass the info on? it doesnt need to lerp values like clients do
+    Broadcast(msg->GetMessageType(), msg->GetExtraData()); //TODO maybe skip broadcasting to client that sent the packet to save unnecessary packets
+    return;
 
-    for (UnownedNetworkObject* uno : *nonOwnedObjects) {
-        if (uno->StreamDataReceived(msg, settings)) {
-            //if the object exists we can return
-            Broadcast(msg->GetMessageType(), msg->GetExtraData()); //TODO maybe skip broadcasting to client that sent the packet to save unnecessary packets
-            return;
-        }
-    }
-    //if the object was not found then it should have already been created
-    std::cout << "Object not initialized properly! object not found in initialized objects, but data received" << std::endl;
 }
 
 void Server::InitializeNewObject(NetworkMessage* msg)
 {
-    //TODO fix type being 0 always
-    IEngineObject* engineObj = wrapper->NewNetworkedObject(0, false);
-    UnownedNetworkObject* uno = new UnownedNetworkObject(engineObj, msg, wrapper);
-    nonOwnedObjects->push_back(uno);
-    Broadcast(msg->GetMessageType(), msg->GetExtraData());
+    Broadcast(NetworkedObjectInit, msg->GetExtraData());
 }
 
 

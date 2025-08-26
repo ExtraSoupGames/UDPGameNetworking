@@ -1,4 +1,5 @@
 #include "PositionLerp2D.h"
+#include "../NetworkUtilities.h"
 int PositionLerp2D::clampToScreenSize(int clampVal)
 {
     int screenSize = 256;
@@ -56,6 +57,10 @@ Position* PositionLerp2D::GetCurrentValue(int currentTime, LibSettings* settings
         }
     }
     return new Position(x, y);
+}
+std::string PositionLerp2D::GetMetadata()
+{
+    return "00000000";
 }
 PositionLerp2D::PositionLerp2D(int ID, int initX, int initY) : NetworkedValue(ID)
 {

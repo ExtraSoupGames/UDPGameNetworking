@@ -1,5 +1,6 @@
 #include "OwnedNO.h"
-
+#include "../Wrapper/IWrapper.h"
+#include "../Demo/ColourValue.h"
 void OwnedNetworkObject::StreamSend(EndpointInfo* server, SDLNet_DatagramSocket* socket, int clientTime, LibSettings* settings)
 {
 	engineObject->UpdateLibraryValues(networkedValues);
@@ -19,19 +20,24 @@ void OwnedNetworkObject::SendInitializationMessage(EndpointInfo* server, SDLNet_
 	//TODO populate initInfo
 	//object id then
 	// 8 bits object type
+	// 8 bits value count
 	//8 bits value id
 	//8 bits value type
 	//and so on
 	std::string initInfo = "";
+	//object ID
 	initInfo += NetworkUtilities::AsBinaryString(ID, objectIDDigits);
+	//object Type
 	initInfo += NetworkUtilities::AsBinaryString(wrapper->EngineObjectMetadata(engineObject), 2);
+	//value count
+	initInfo += NetworkUtilities::AsBinaryString(networkedValues->size(), 2);
 	for (int i = 0; i < networkedValues->size(); i++) {
 		initInfo += wrapper->NetworkedValueMetadata(networkedValues->at(i));
 	}
-	NetworkUtilities::SendMessageTo(NetworkedObjectInit, initInfo, socket, server->address, server->port);
+	NetworkUtilities::SendMessageTo(NetworkedObjectInit, initInfo, socket, server->address, server->port, sender);
 }
 
-OwnedNetworkObject::OwnedNetworkObject(EndpointInfo* server, SDLNet_DatagramSocket* socket, IEngineObject* engineObj)
+OwnedNetworkObject::OwnedNetworkObject(EndpointInfo* server, SDLNet_DatagramSocket* socket, IEngineObject* engineObj, IWrapper* wrapper)
 {
 	//Until the server confirms the ID, the ID will be 0 and object will remain uninitialized
 	initialized = false;
@@ -39,9 +45,8 @@ OwnedNetworkObject::OwnedNetworkObject(EndpointInfo* server, SDLNet_DatagramSock
 	streamTimer = 0;
 	SendIDRequest(server, socket);
 	engineObject = engineObj;
-	networkedValues = new std::vector<INetworkedValue*>();
 	//TODO remove next line - values should depend on type of ono
-	networkedValues->push_back(new PositionLerp2D(18, 9));
+	networkedValues = wrapper->ObjectInitialValues(engineObj);
 }
 
 OwnedNetworkObject::~OwnedNetworkObject()

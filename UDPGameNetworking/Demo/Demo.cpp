@@ -1,6 +1,6 @@
 #include "Demo.h"
 #include "DemoColourSquare.h"
-
+#include "../CustomStreaming/PositionLerp2D.h"
 DemoClient::DemoClient(bool server, int port, int lerpDelay, bool lerpEnabled)
 {
 	isServer = server;
@@ -43,6 +43,7 @@ void DemoClient::Update()
 	const SDL_FRect rect = clientPlayer->GetRect();
 	SDL_RenderRect(renderer, &rect);
 	wrapper->DrawOtherPlayers(renderer);
+	colourSquare->Render(renderer);
 	SDL_RenderPresent(renderer);
 	wrapper->Update(1);
 }
@@ -55,6 +56,7 @@ void DemoClient::HandleInput(SDL_Event& e)
 {
 	if (SDL_GetKeyboardFocus() == window) {
 		clientPlayer->HandleInput(e);
+		colourSquare->HandleInput(e);
 	}
 }
 

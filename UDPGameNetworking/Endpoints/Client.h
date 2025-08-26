@@ -1,10 +1,11 @@
 #pragma once
 #include "../Senders/ClientMessageSender.h"
-#include "../NetworkObjects/OwnedNo.h"
-#include "../NetworkObjects/UnownedNO.h"
-#include "../Wrapper/IEngineObject.h"
 #include "SocketHolder.h"
 #include "../Wrapper/LibSettings.h"
+class IEngineObject;
+class OwnedNetworkObject;
+class UnownedNetworkObject;
+class IWrapper;
 class Client  : public SocketHolder{
 private:
 	EndpointInfo* serverInfo;

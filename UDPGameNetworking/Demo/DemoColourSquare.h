@@ -1,4 +1,5 @@
 #pragma once
+#include <SDL3/SDL.h>
 #include "../Wrapper/IEngineObject.h"
 class DemoWrapper;
 class DemoColourSquare : public IEngineObject
@@ -6,6 +7,7 @@ class DemoColourSquare : public IEngineObject
 private:
 	uint32_t colour;
 	DemoWrapper* wrapper;
+	int x;
 protected:
 public:
 	//TODO remove xpos and just render other clients' squares seperately

@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
-#include "../NetworkUtilities.h"
 #include "INetworkedValue.h"
+#include "../NetworkUtilities.h"
 template<typename T>
 class NetworkedValue : public INetworkedValue {
 private:

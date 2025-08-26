@@ -5,9 +5,8 @@
 #include "ObjectDataProcessor.h"
 #include "../Wrapper/IEngineObject.h"
 #include <vector>
-
 //forward declaration
-class IWrapper {};
+class IWrapper;
 //A network object owned by another client, it's incoming data is provided by the owning client, 
 // and it streams data to the wrapper for rendering
 class UnownedNetworkObject : public NetworkObject {

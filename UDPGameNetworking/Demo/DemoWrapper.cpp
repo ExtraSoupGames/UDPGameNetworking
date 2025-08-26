@@ -2,6 +2,11 @@
 #include "Demo.h"
 #include "DemoCallback.h"
 #include "DemoColourSquare.h"
+#include "../Wrapper/IEngineObject.h"
+#include "../Endpoints/Client.h"
+#include "../Endpoints/Server.h"
+#include "../Demo/ColourValue.h"
+#include "../CustomStreaming/PositionLerp2D.h"
 DemoWrapper::DemoWrapper(int port, int lerpDelay, bool lerpEnabled)
 {
 	plannedPort = port;
@@ -71,14 +76,16 @@ IEngineObject* DemoWrapper::NewNetworkedObject(int objectType, bool belongsToCli
 	IEngineObject* newObj = nullptr;
 	switch (objectType) {
 	case 0:
-		DemoPlayer * dp = new DemoPlayer(this);
-		newObj = dp;
+		newObj = new DemoPlayer(this);;
 		if (belongsToClient) {
-			otherPlayers->push_back(dp);
+			otherPlayers->push_back((DemoPlayer*)newObj);
 		}
 		break;
 	case 1:
 		newObj = new DemoColourSquare(this, 50);
+		if (belongsToClient) {
+			otherSquares->push_back((DemoColourSquare*)newObj);
+		}
 		break;
 	}
 	return newObj;
@@ -86,6 +93,7 @@ IEngineObject* DemoWrapper::NewNetworkedObject(int objectType, bool belongsToCli
 
 INetworkedValue* DemoWrapper::NewNetworkedValue(int valueID, int valueType)
 {
+	std::cout << "new networked value with type id: " << valueType << std::endl;
 	switch (valueType) {
 	case 0:
 		return new PositionLerp2D(valueID, 0 ,0);
@@ -100,14 +108,7 @@ std::string DemoWrapper::NetworkedValueMetadata(INetworkedValue* value)
 {
 	if (!value) return "";
 
-	if (auto* position = dynamic_cast<PositionLerp2D*>(value)) {
-
-		return NetworkUtilities::AsBinaryString(value->GetID(), 2) + "00000000";
-	}
-	else if (auto* colour = dynamic_cast<ColourValue*>(value)) {
-
-		return NetworkUtilities::AsBinaryString(value->GetID(), 2) + "00000001";
-	}
+	return NetworkUtilities::AsBinaryString(value->GetID(), 2) + value->GetMetadata();
 
 	return "";
 }
@@ -126,6 +127,21 @@ int DemoWrapper::EngineObjectMetadata(IEngineObject* obj)
 	}
 
 	return 0;
+}
+
+std::vector<INetworkedValue*>* DemoWrapper::ObjectInitialValues(IEngineObject* obj)
+{
+	int objectType = EngineObjectMetadata(obj);
+	std::vector<INetworkedValue*>* values = new std::vector<INetworkedValue*>();
+	switch (objectType) {
+	case 0:
+		values->push_back(new PositionLerp2D(0, 18, 18));
+		break;
+	case 1:
+		values->push_back(new ColourValue(0, 0));
+		break;
+	}
+	return values;
 }
 
 void DemoWrapper::DrawOtherPlayers(SDL_Renderer* renderer)

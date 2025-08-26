@@ -10,4 +10,5 @@ public:
     virtual int GetPacketPayloadLength() = 0;
     virtual std::string Debug() = 0;
     virtual std::string GetStreamData(int currentTime, LibSettings* settings) = 0;
+    virtual std::string GetMetadata() = 0;
 };

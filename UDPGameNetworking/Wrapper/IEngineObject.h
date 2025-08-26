@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
-#include "../CustomStreaming/NetworkedValue.h"
-#include "../Wrapper/LibSettings.h"
+#include "LibSettings.h"
+class INetworkedValue;
 //This class should be inherited with a reference to an engine specific object
 // for registering
 class IEngineObject {

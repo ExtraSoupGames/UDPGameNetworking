@@ -6,7 +6,7 @@
 #include "../CustomStreaming/NetworkedValue.h"
 #include "ObjectDataProcessor.h"
 #include "../Wrapper/IEngineObject.h"
-#include "../Wrapper/IWrapper.h"
+class IWrapper;
 //Note that object IDs are sent in BCD format so ID digits is this / 4
 static int objectIDBits = 8; // number of digits in an object ID
 static int objectIDDigits = objectIDBits / 4;
@@ -38,7 +38,7 @@ private:
 protected:
 public:
 	//Create the object in an uninitialized state and request an ID from the server
-	OwnedNetworkObject(EndpointInfo* server, SDLNet_DatagramSocket* socket, IEngineObject* engineObject);
+	OwnedNetworkObject(EndpointInfo* server, SDLNet_DatagramSocket* socket, IEngineObject* engineObject, IWrapper* wrapper);
 	~OwnedNetworkObject();
 	//Initialize the object with an ID provided by the server
 	//Returns true if object was initialized

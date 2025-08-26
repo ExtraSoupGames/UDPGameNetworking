@@ -1,5 +1,5 @@
 #include "UnownedNO.h"
-
+#include "../Wrapper/IWrapper.h"
 UnownedNetworkObject::UnownedNetworkObject(IEngineObject* engineObj, NetworkMessage* msg, IWrapper* wrapper)
 {
 	ID = NetworkUtilities::GetObjectIDFromMsg(msg);

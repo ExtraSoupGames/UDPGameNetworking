@@ -1,6 +1,8 @@
 #include "Client.h"
 #include "../Wrapper/IWrapper.h"
-
+#include "../NetworkObjects/OwnedNo.h"
+#include "../NetworkObjects/UnownedNO.h"
+#include "../Wrapper/IEngineObject.h"
 void Client::ProcessMessage(NetworkMessage* msg)
 {
 	switch (msg->GetMessageType()) {
@@ -71,17 +73,22 @@ void Client::ProcessObjectMessage(NetworkMessage* msg)
 		}
 	}
 	//if the object was not found then it was not initialized properly
-	std::cout << "Object not initialized properly! object not found in initialized objects, but data received" << std::endl;
+	// TODO re enable warning message
+	//std::cout << "Object not initialized properly! object not found in initialized objects, but data received" << std::endl;
 
 }
 
 void Client::InitializeNewObject(NetworkMessage* msg)
 {
-	//TODO fix type being 0 always
+	int objectID = NetworkUtilities::IntFromBinaryString(msg->GetExtraData().substr(0, objectIDBits), 2);
+	if (AmIThisObjectsOwner(objectID)) {
+		return;
+	}
 	int objectType = NetworkUtilities::IntFromBinaryString(msg->GetExtraData().substr(objectIDBits, 8), 2);
 	IEngineObject* engineObj = wrapper->NewNetworkedObject(objectType, true);
 	UnownedNetworkObject* uno = new UnownedNetworkObject(engineObj, msg, wrapper);
 	nonOwnedObjects->push_back(uno);
+	std::cout << "Unowned object initialized, type: " << objectType << std::endl;
 }
 
 void Client::UpdateObjects(float deltaTime)
@@ -199,6 +206,6 @@ void Client::SendServerMessage(NetworkMessageTypes type, std::string msg)
 
 void Client::RegisterObject(IEngineObject* obj)
 {
-	OwnedNetworkObject* ono = new OwnedNetworkObject(serverInfo, socket, obj);
+	OwnedNetworkObject* ono = new OwnedNetworkObject(serverInfo, socket, obj, wrapper);
 	ownedObjects->push_back(ono);
 }

@@ -4,7 +4,7 @@
 #include "../NetworkMessage.h"
 #include "OwnedNO.h"
 #include "../CustomStreaming/PositionLerp2D.h"
-#include "../Wrapper/IWrapper.h"
+class IWrapper;
 static const int timestampByteCount = 4;
 class ObjectDataProcessor {
 private:

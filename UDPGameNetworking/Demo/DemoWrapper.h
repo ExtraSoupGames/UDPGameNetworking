@@ -1,10 +1,11 @@
 #pragma once
 #include "../Wrapper/IWrapper.h"
-#include "../Wrapper/IEngineObject.h"
-#include "../Wrapper/Callback.h"
-#include "ColourValue.h"
+#include <SDL3/SDL.h>
 #include <vector>
+class ColourValue;
+class Callback;
 class DemoColourSquare;
+class IEngineObject;
 class DemoPlayer; //forward declaration
 class DemoWrapper : public IWrapper {
 private:
@@ -29,6 +30,7 @@ public:
 	virtual INetworkedValue* NewNetworkedValue(int valueID, int valueType) override;
 	virtual std::string NetworkedValueMetadata(INetworkedValue* value) override;
 	virtual int EngineObjectMetadata(IEngineObject* obj) override;
+	virtual std::vector<INetworkedValue*>* ObjectInitialValues(IEngineObject* obj) override;
 
 
 

@@ -1,10 +1,12 @@
 #pragma once
 #include <unordered_map>
 #include <vector>
-#include "../Endpoints/Client.h"
-#include "../Endpoints/Server.h"
+#include <string>
 #include "LibSettings.h"
-class IEngineObject{};
+class Client;
+class Server;
+class IEngineObject;
+class INetworkedValue;
 //This class should be inherited by wrapper to provide service specific
 // functionality relating to registering values for consistent broadcasting
 class IWrapper {
@@ -47,4 +49,6 @@ public:
 	virtual INetworkedValue* NewNetworkedValue(int valueID, int typeID) = 0;
 	//This defines how types are streamed initially, should match NewNetworkedValue method
 	virtual std::string NetworkedValueMetadata(INetworkedValue* val) = 0;
+	//This defines how objects values are initially constructed
+	virtual std::vector<INetworkedValue*>* ObjectInitialValues(IEngineObject* obj) = 0;
 };

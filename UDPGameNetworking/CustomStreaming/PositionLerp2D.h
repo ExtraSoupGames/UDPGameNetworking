@@ -1,6 +1,7 @@
 #pragma once
 #include "NetworkedValue.h"
-#include "../Wrapper/LibSettings.h"
+#include <vector>
+struct LibSettings;
 struct Position {
 private:
 protected:
@@ -49,4 +50,6 @@ public:
 	virtual std::string Serialize(Position*);
 
 	virtual Position* GetCurrentValue(int currentTime, LibSettings* settings) override;
+
+	virtual std::string GetMetadata() override;
 };

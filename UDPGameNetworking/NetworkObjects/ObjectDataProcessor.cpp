@@ -46,6 +46,7 @@ void ObjectDataProcessor::InitializeValues(std::vector<INetworkedValue*>* values
 	for (int i = 0; i < valueCount; i++) {
 		int valueID = NetworkUtilities::IntFromBinaryString(objectData.substr(0, 8), 2);
 		int valueType = NetworkUtilities::IntFromBinaryString(objectData.substr(8, 8), 2);
+		std::cout << "PROCESSING..." << valueType << std::endl;
 		objectData = objectData.substr(16);	
 		INetworkedValue* newVal = wrapper->NewNetworkedValue(valueID, valueType);
 		if (newVal) {
@@ -55,6 +56,7 @@ void ObjectDataProcessor::InitializeValues(std::vector<INetworkedValue*>* values
 			std::cout << "Value type could not be created by wrapper, type: " << valueType << std::endl;
 		}
 	}
+	std::cout << "Unowned Network Object initialized, value count: " << valueCount << std::endl;
 }
 std::string ObjectDataProcessor::ConstructDataStream(std::vector<INetworkedValue*>* values, int time, LibSettings* settings)
 {

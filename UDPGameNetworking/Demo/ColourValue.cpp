@@ -1,6 +1,6 @@
 #include "ColourValue.h"
-#include "ColourValue.h"
 #include <bitset>
+#include <iostream>
 ColourValue::ColourValue(int ID, uint32_t startingColour) : NetworkedValue<uint32_t>(ID)
 {
 	val = startingColour;
@@ -33,7 +33,7 @@ std::string ColourValue::Serialize(uint32_t val)
 
 std::string ColourValue::Debug()
 {
-	return "Colour value with value of " + val;
+	return "Colour value with value of " + std::to_string(val);
 }
 
 uint32_t ColourValue::GetCurrentValue(int currentTime, LibSettings* settings)
@@ -45,4 +45,10 @@ uint32_t ColourValue::GetCurrentValue(int currentTime, LibSettings* settings)
 void ColourValue::SetColour(uint32_t col)
 {
 	val = col;
+}
+
+std::string ColourValue::GetMetadata()
+{
+	std::cout << "COLOUR VALUE BEING INITIALIZED HERE!!! <<<<<<" << std::endl;
+	return "00000001";
 }

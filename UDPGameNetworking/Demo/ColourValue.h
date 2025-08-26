@@ -21,4 +21,7 @@ public:
 	virtual uint32_t GetCurrentValue(int currentTime, LibSettings* settings) override;
 
 	void SetColour(uint32_t col);
+
+	virtual std::string GetMetadata() override;
+
 };

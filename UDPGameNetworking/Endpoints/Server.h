@@ -1,9 +1,10 @@
 #pragma once
-#include "../Senders/ServerMessageSender.h"
 #include <string>
 #include <queue>
-#include "../NetworkObjects/OwnedNO.h"
-#include "../NetworkObjects/UnownedNO.h"
+#include "../Senders/ServerMessageSender.h"
+#include "../Wrapper/Libsettings.h"
+class OwnedNetworkObject;
+class UnownedNetworkObject;
 #include "SocketHolder.h"
 class Server : public SocketHolder{
 private:
