@@ -17,6 +17,11 @@ UnownedNetworkObject::~UnownedNetworkObject()
 	//TODO destroy the engine object
 }
 
+bool UnownedNetworkObject::MatchID(int IDToMatch)
+{
+	return ID == IDToMatch;
+}
+
 bool UnownedNetworkObject::StreamDataReceived(NetworkMessage* msg, LibSettings* settings)
 {
 	int streamObjectID = NetworkUtilities::GetObjectIDFromMsg(msg);
@@ -25,5 +30,6 @@ bool UnownedNetworkObject::StreamDataReceived(NetworkMessage* msg, LibSettings* 
 	}
 	ObjectDataProcessor::UpdateValues(networkedValues, msg);
 	engineObject->UpdateEngineValues(networkedValues, settings);
+
 	return true;
 }

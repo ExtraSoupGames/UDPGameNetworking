@@ -5,11 +5,14 @@ class DemoWrapper;
 class DemoColourSquare : public IEngineObject
 {
 private:
-	uint32_t colour;
+	//uint32_t colour;
 	DemoWrapper* wrapper;
-	int x;
+	//int x;
 protected:
 public:
+	//TODO make the private again
+	int x;
+	uint32_t colour;
 	//TODO remove xpos and just render other clients' squares seperately
 	DemoColourSquare(DemoWrapper* wrapper, int xPos);
 	~DemoColourSquare();

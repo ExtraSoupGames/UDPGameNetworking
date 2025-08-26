@@ -45,8 +45,7 @@ OwnedNetworkObject::OwnedNetworkObject(EndpointInfo* server, SDLNet_DatagramSock
 	streamTimer = 0;
 	SendIDRequest(server, socket);
 	engineObject = engineObj;
-	//TODO remove next line - values should depend on type of ono
-	networkedValues = wrapper->ObjectInitialValues(engineObj);
+	networkedValues = wrapper->ObjectInitialValues(engineObject);
 }
 
 OwnedNetworkObject::~OwnedNetworkObject()

@@ -17,5 +17,6 @@ protected:
 public:
 	UnownedNetworkObject(IEngineObject* engineObj, NetworkMessage* msg, IWrapper* wrapper);
 	~UnownedNetworkObject();
+	bool MatchID(int IDToMatch);
 	bool StreamDataReceived(NetworkMessage* msg, LibSettings* settings);
 };

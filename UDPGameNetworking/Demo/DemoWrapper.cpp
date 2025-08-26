@@ -77,13 +77,13 @@ IEngineObject* DemoWrapper::NewNetworkedObject(int objectType, bool belongsToCli
 	switch (objectType) {
 	case 0:
 		newObj = new DemoPlayer(this);;
-		if (belongsToClient) {
+		if (!belongsToClient) {
 			otherPlayers->push_back((DemoPlayer*)newObj);
 		}
 		break;
 	case 1:
-		newObj = new DemoColourSquare(this, 50);
-		if (belongsToClient) {
+		newObj = new DemoColourSquare(this, 100);
+		if (!belongsToClient) {
 			otherSquares->push_back((DemoColourSquare*)newObj);
 		}
 		break;
@@ -109,8 +109,6 @@ std::string DemoWrapper::NetworkedValueMetadata(INetworkedValue* value)
 	if (!value) return "";
 
 	return NetworkUtilities::AsBinaryString(value->GetID(), 2) + value->GetMetadata();
-
-	return "";
 }
 
 int DemoWrapper::EngineObjectMetadata(IEngineObject* obj)
@@ -141,6 +139,7 @@ std::vector<INetworkedValue*>* DemoWrapper::ObjectInitialValues(IEngineObject* o
 		values->push_back(new ColourValue(0, 0));
 		break;
 	}
+
 	return values;
 }
 

@@ -12,30 +12,22 @@ DemoColourSquare::~DemoColourSquare()
 }
 void DemoColourSquare::Render(SDL_Renderer* renderer)
 {
-	//TODO fix heap allocation of FRect
-	int r = (colour >> 24) & 0xff;
-	int g = (colour >> 16) & 0xff;
-	int b = (colour >> 8) & 0xff;
-	std::cout << "r is: " << r << " g: " << g << "b: " << b << std::endl;
+	uint8_t r = (colour >> 24) & 0xFF;
+	uint8_t g = (colour >> 16) & 0xFF;
+	uint8_t b = (colour >> 8) & 0xFF;
 	SDL_SetRenderDrawColor(renderer, r, g, b, 255);
-	const SDL_FRect* rect = new SDL_FRect{ (float)x, 100, 10, 10};
-	SDL_RenderRect(renderer, rect);
-	delete rect;
+	SDL_FRect rect{ (float)x, 100, 10, 10 };
+	SDL_RenderFillRect(renderer, &rect);
 }
 void DemoColourSquare::UpdateLibraryValues(std::vector<INetworkedValue*>* values)
 {
 	((ColourValue*)values->at(0))->SetColour(colour);
 	return;
-	std::cout << "Lib values being updated from demo square (client owned square)" << std::endl;
-	std::cout << "colour is: " << ((ColourValue*)values->at(0))->Debug() << std::endl;
 }
 void DemoColourSquare::UpdateEngineValues(std::vector<INetworkedValue*>* values, LibSettings* settings)
 {
 	colour = ((ColourValue*)values->at(0))->GetCurrentValue(wrapper->GetClientTime(), settings);
 	return;
-	std::cout << "colour square value being set from lib (foreign owned square)" << std::endl;
-	std::cout << "colour is: " << ((ColourValue*)values->at(0))->Debug() << std::endl;
-
 }
 void DemoColourSquare::Update(float deltaTime)
 {
@@ -43,14 +35,19 @@ void DemoColourSquare::Update(float deltaTime)
 }
 void DemoColourSquare::HandleInput(SDL_Event& e)
 {
+	bool colourChanged = false;
+
 	if (e.key.key == SDLK_R) {
-		std::cout << "setting colour to red!" << std::endl;
-		colour = 0xFF0000FF; // sets colour to full red
+		colour = 0xFF0000FF; // red
+		colourChanged = true;
 	}
 	if (e.key.key == SDLK_G) {
-		colour = 0x00FF00FF; // sets colour to full green
+		colour = 0x00FF00FF; // green
+		colourChanged = true;
 	}
 	if (e.key.key == SDLK_B) {
-		colour = 0x0000FFFF; // sets colour to full blue
+		colour = 0x0000FFFF; // blue
+		colourChanged = true;
 	}
+
 }

@@ -22,20 +22,24 @@ void ObjectDataProcessor::UpdateValues(std::vector<INetworkedValue*>* values, Ne
 		int valueID = NetworkUtilities::IntFromBinaryString(objectData.substr(0, 8), 2);
 		INetworkedValue* val = FindValueByID(values, valueID);
 
+
 		if (val) {
 			val->StreamReceived(objectData.substr(8, val->GetPacketPayloadLength()), timestamp);
 			objectData = objectData.substr(8 + val->GetPacketPayloadLength());
 		}
 		else {
-			std::cout << "Unkown value in received message, ending loop and updating nothing" << std::endl;
+			std::cout << "Unknown value ID received: " << valueID << " Skipping update." << std::endl;
 			done = true;
 		}
+
 
 		//if this was the last value then loop will terminate
 		if (objectData.size() < 9) {
 			done = true;
 		}
 	}
+
+
 }
 void ObjectDataProcessor::InitializeValues(std::vector<INetworkedValue*>* values, NetworkMessage* msg, IWrapper* wrapper)
 {
