@@ -11,7 +11,6 @@ ImportantMessage::ImportantMessage(NetworkMessage* msg)
 	}
 	//trim off the first 12 bits as they are the important message ID
 	extraData = msg->GetDataToForwardMessage().substr(12);
-	//TODO better error handling here
 	messageID = NetworkUtilities::IntFromBinaryString(msg->GetDataToForwardMessage().substr(0, 12), 3);
 }
 

@@ -80,7 +80,7 @@ public:
 	// @param digits - the number of BCD digits to read (each digit is 4 bits) note that if the string is longer then only the start will be read
 	static int IntFromBinaryString(std::string binaryString, int digits);
 
-	static std::string AsBinaryString(int outBytes, std::string value);
+	static std::string AsBinaryString(std::string value, int outBits);
 	static std::string StringFromBinaryString(std::string binaryString, int length);
 
 };
