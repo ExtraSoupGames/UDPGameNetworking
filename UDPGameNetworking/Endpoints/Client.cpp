@@ -46,7 +46,6 @@ void Client::ProcessIncomingIDRequest(NetworkMessage* msg)
 
 void Client::ProcessUserMessage(NetworkMessage* msg)
 {
-	//TODO test extra data parsing
 	std::string msgData = msg->GetExtraData();
 	int callbackID = NetworkUtilities::IntFromBinaryString(msgData.substr(0, 12), 3);
 	std::string optionalExtraData = msgData.substr(12);
@@ -55,7 +54,7 @@ void Client::ProcessUserMessage(NetworkMessage* msg)
 
 void Client::ProcessObjectMessage(NetworkMessage* msg)
 {
-	//TODO move this to a better location so server/client sync isnt dependent on networked objects being initialized (library should be able to work with no networked object and only user messages if desired)
+	//Perhaps this could be moved somewhere better so sync isnt dependent on networked objects
 	if (!TimerStarted()) {
 		int messageTimestamp = NetworkUtilities::IntFromBinaryString(msg->GetExtraData().substr(8, timestampByteCount * 8), timestampByteCount * 2);
 		StartTimer(messageTimestamp);

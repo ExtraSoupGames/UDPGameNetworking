@@ -96,7 +96,7 @@ void Server::ProcessUserMessage(NetworkMessage* msg)
 
 void Server::ProcessObjectMessage(NetworkMessage* msg)
 {
-    Broadcast(msg->GetMessageType(), msg->GetExtraData()); //TODO maybe skip broadcasting to client that sent the packet to save unnecessary packets
+    Broadcast(msg->GetMessageType(), msg->GetExtraData());
     return;
 
 }
