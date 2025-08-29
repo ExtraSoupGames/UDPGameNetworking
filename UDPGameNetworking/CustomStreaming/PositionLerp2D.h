@@ -1,5 +1,6 @@
 #pragma once
 #include "NetworkedValue.h"
+#include "../UDPGameNetworkingAPI.h"
 #include <vector>
 struct LibSettings;
 struct Position {
@@ -19,7 +20,7 @@ public:
 	int y;
 	int time;
 };
-class PositionLerp2D : public NetworkedValue<Position*> {
+class UDPGAMENETWORKING_API PositionLerp2D : public NetworkedValue<Position*> {
 private:
 	//for use when streaming out (I.E owned object)
 	int x;

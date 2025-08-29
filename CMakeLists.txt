@@ -25,12 +25,10 @@ if(WIN32)
     find_package(SDL3_net REQUIRED)
 endif()
 
-set(SOURCES
-    UDPGameNetworking/UDPGameNetworking.cpp
+set(LIBRARY_SOURCES
     UDPGameNetworking/NetworkUtilities.cpp
     UDPGameNetworking/ImportantMessage.cpp
     UDPGameNetworking/NetworkMessage.cpp
-    UDPGameNetworking/Testing/TestingFunctions.cpp
     UDPGameNetworking/Endpoints/Server.cpp
     UDPGameNetworking/Endpoints/Client.cpp
     UDPGameNetworking/Endpoints/SocketHolder.cpp
@@ -39,37 +37,89 @@ set(SOURCES
     UDPGameNetworking/NetworkObjects/UnownedNO.cpp
     UDPGameNetworking/NetworkObjects/ObjectDataProcessor.cpp
     UDPGameNetworking/CustomStreaming/PositionLerp2D.cpp
+    UDPGameNetworking/CustomStreaming/NetworkedValue.cpp
     UDPGameNetworking/Senders/MessageSender.cpp
     UDPGameNetworking/Senders/ServerMessageSender.cpp
     UDPGameNetworking/Senders/ClientMessageSender.cpp
     UDPGameNetworking/Wrapper/Callback.cpp
+)
+set(DEMO_SOURCES
+    UDPGameNetworking/UDPGameNetworking.cpp
+    UDPGameNetworking/Testing/TestingFunctions.cpp
     UDPGameNetworking/Demo/Demo.cpp
     UDPGameNetworking/Demo/DemoWrapper.cpp
     UDPGameNetworking/Demo/DemoCallback.cpp
     UDPGameNetworking/Demo/DemoColourSquare.cpp
     UDPGameNetworking/Demo/ColourValue.cpp
 )
-add_executable(UDPGameNetworking ${SOURCES})
+# 1. Build a shared library from the core source files
+add_library(UDPGameNetworking SHARED ${LIBRARY_SOURCES})
 
-target_include_directories(UDPGameNetworking PRIVATE 
-    ${SDL3_INCLUDE_DIR} 
-    ${SDL3_NET_INCLUDE_DIR}
+target_compile_definitions(UDPGameNetworking PRIVATE UDPGAMENETWORKING_EXPORTS)
+
+# 2. Expose the public header files and dependencies
+target_include_directories(UDPGameNetworking PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/UDPGameNetworking>
+    $<BUILD_INTERFACE:${SDL3_INCLUDE_DIR}>
+    $<BUILD_INTERFACE:${SDL3_NET_INCLUDE_DIR}>
 )
 
-set(OUTPUT_DIR "${CMAKE_BINARY_DIR}")
-set(LIBS_DIR "${CMAKE_SOURCE_DIR}/UDPGameNetworking/Libraries")
-
-target_link_libraries(UDPGameNetworking 
+# 3. Link the library against SDL3 and SDL3_net
+target_link_libraries(UDPGameNetworking PUBLIC
     ${SDL3_LIBRARY}
     ${SDL3_NET_LIBRARY}
 )
 
-add_custom_command(TARGET UDPGameNetworking POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    ${LIBS_DIR}/SDL3.dll
-    $<TARGET_FILE_DIR:UDPGameNetworking>)
+# 4. Build a separate executable for the demo
+add_executable(DemoApp ${DEMO_SOURCES})
+add_dependencies(DemoApp UDPGameNetworking)
 
-add_custom_command(TARGET UDPGameNetworking POST_BUILD
+
+# 5. Link the demo executable to your new library
+target_link_libraries(DemoApp PRIVATE UDPGameNetworking)
+
+# 6. Add installation rules to package the library for others
+install(TARGETS UDPGameNetworking
+    EXPORT UDPGameNetworkingTargets
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+)
+
+# Get the path to the SDL DLLs
+set(LIBS_DIR "${CMAKE_SOURCE_DIR}/UDPGameNetworking/Libraries")
+
+# Use a custom command to copy the SDL3 DLL to the build output directory
+add_custom_command(TARGET DemoApp POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    ${LIBS_DIR}/SDL3_net.dll
-    $<TARGET_FILE_DIR:UDPGameNetworking>)
+    "${LIBS_DIR}/SDL3.dll"
+    $<TARGET_FILE_DIR:DemoApp>
+)
+
+# Use a custom command to copy the SDL3_net DLL to the build output directory
+add_custom_command(TARGET DemoApp POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${LIBS_DIR}/SDL3_net.dll"
+    $<TARGET_FILE_DIR:DemoApp>
+)
+
+# Install the public header files
+install(DIRECTORY UDPGameNetworking/
+    DESTINATION include
+    FILES_MATCHING PATTERN "*.h"
+)
+
+# Install the necessary SDL3 DLLs with the library
+install(FILES
+    "${LIBS_DIR}/SDL3.dll"
+    "${LIBS_DIR}/SDL3_net.dll"
+    DESTINATION bin
+    OPTIONAL
+)
+
+# This creates a configuration file for use with find_package()
+install(EXPORT UDPGameNetworkingTargets
+    FILE UDPGameNetworkingConfig.cmake
+    NAMESPACE UDPGameNetworking::
+    DESTINATION lib/cmake/UDPGameNetworking
+)

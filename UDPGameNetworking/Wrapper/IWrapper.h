@@ -3,13 +3,14 @@
 #include <vector>
 #include <string>
 #include "LibSettings.h"
+#include "../UDPGameNetworkingAPI.h"
 class Client;
 class Server;
 class IEngineObject;
 class INetworkedValue;
 //This class should be inherited by wrapper to provide service specific
 // functionality relating to registering values for consistent broadcasting
-class IWrapper {
+class UDPGAMENETWORKING_API IWrapper {
 private:
 protected:
 	//objects being registered, currently waiting for an ID from the server

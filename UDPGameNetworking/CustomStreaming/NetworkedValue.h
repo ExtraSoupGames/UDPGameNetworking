@@ -2,8 +2,9 @@
 #include <string>
 #include "INetworkedValue.h"
 #include "../NetworkUtilities.h"
+#include "../UDPGameNetworkingAPI.h"
 template<typename T>
-class NetworkedValue : public INetworkedValue {
+class UDPGAMENETWORKING_API NetworkedValue : public INetworkedValue {
 private:
 protected:
 	int ID;

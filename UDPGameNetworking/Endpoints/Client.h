@@ -2,11 +2,12 @@
 #include "../Senders/ClientMessageSender.h"
 #include "SocketHolder.h"
 #include "../Wrapper/LibSettings.h"
+#include "../UDPGameNetworkingAPI.h"
 class IEngineObject;
 class OwnedNetworkObject;
 class UnownedNetworkObject;
 class IWrapper;
-class Client  : public SocketHolder{
+class UDPGAMENETWORKING_API Client  : public SocketHolder{
 private:
 	EndpointInfo* serverInfo;
 	int port;

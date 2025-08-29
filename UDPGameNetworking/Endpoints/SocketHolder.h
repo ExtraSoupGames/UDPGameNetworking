@@ -1,8 +1,9 @@
 #pragma once
 #include "../NetworkUtilities.h"
 #include "../Senders/MessageSender.h"
+#include "../UDPGameNetworkingAPI.h"
 class IWrapper; //forward declaration
-class SocketHolder {
+class UDPGAMENETWORKING_API SocketHolder {
 private:
 	int timerOffset = 0;
 protected:

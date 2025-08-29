@@ -1,5 +1,7 @@
 #pragma once
-struct LibSettings {
+#include "../UDPGameNetworkingAPI.h"
+
+struct UDPGAMENETWORKING_API LibSettings {
 private:
 protected:
 public:

@@ -3,10 +3,11 @@
 #include <queue>
 #include "../Senders/ServerMessageSender.h"
 #include "../Wrapper/Libsettings.h"
+#include "../UDPGameNetworkingAPI.h"
 class OwnedNetworkObject;
 class UnownedNetworkObject;
 #include "SocketHolder.h"
-class Server : public SocketHolder{
+class UDPGAMENETWORKING_API Server : public SocketHolder{
 private:
 	SDLNet_Address* address;
 	int port;

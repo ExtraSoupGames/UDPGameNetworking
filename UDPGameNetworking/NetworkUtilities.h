@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include "ImportantMessage.h"
+#include "UDPGameNetworkingAPI.h"
 //Forward declaration
 class MessageSender;
 //Different types of message that can be sent
@@ -22,7 +23,7 @@ enum NetworkMessageTypes {
 	Error
 };
 
-class NetworkUtilities {
+class UDPGAMENETWORKING_API NetworkUtilities {
 private:
 	//TODO documentation expansion
 	friend class MessageSender;

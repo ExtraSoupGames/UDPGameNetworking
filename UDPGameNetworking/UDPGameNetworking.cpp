@@ -1,12 +1,8 @@
-﻿// UDPGameNetworking.cpp : Defines the entry point for the application.
+﻿// UDPGameNetworking.cpp : Defines the entry point for the demo.
 //
 
 #include "UDPGameNetworking.h"
 #include <iostream>
-#include "Endpoints/Client.h"
-#include "Endpoints/Server.h"
-
-#include "Testing/TestingFunctions.h"
 #include "Demo/Demo.h"
 
 //Big TODO
