@@ -17,8 +17,11 @@ A lightweight C++ UDP networking solution designed specifically for game develop
 	- 'R', 'G', 'B' Select your squares colour
 
 ### **Installation**
-- Download the repo and build with CMake
-- Run UDPGameNetworking.cpp to see the demo
+- Download latest relase .lib and .dll files
+- Link as required
+- For Demo, download DemoApp.exe, as well as dll and lib files for UDPGameNetworking, and SDL3 and SDL3_net files
+- Include all in one folder
+- Run DemoApp.exe
 
 ### **Status**
 - **Working**:
@@ -27,10 +30,8 @@ A lightweight C++ UDP networking solution designed specifically for game develop
 - **Limitations**:
 - Localhost tested only (not yet LAN)
 - No NAT traversal implementation or planned
-- Library packaging in progress
 
 ### **Planned Improvements**
 - Cleanup and optimization
-- Full library packaging
 - Wrapper implementations for Godot and Unity
 - Additional documentation
